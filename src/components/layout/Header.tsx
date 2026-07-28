@@ -10,6 +10,7 @@ import { useWishlistStore } from "@/store/wishlist";
 import { PromoBar } from "@/components/layout/PromoBar";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { getCollectionImage, resolveImage } from "@/lib/images";
 
 export interface HeaderCollection {
   name: string;
@@ -199,7 +200,7 @@ export function Header({
                               className="group/card relative aspect-[4/5] overflow-hidden bg-[#1a1a1a]"
                             >
                               <SafeImage
-                                src={c.image}
+                                src={resolveImage(getCollectionImage(c.slug), c.image)}
                                 alt={c.name}
                                 fill
                                 className="object-cover transition duration-700 group-hover/card:scale-105"

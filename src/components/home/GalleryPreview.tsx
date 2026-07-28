@@ -5,7 +5,7 @@ import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { Button } from "@/components/ui/Button";
 import { cn, safeText } from "@/lib/utils";
-import { GALLERY_IMAGES } from "@/lib/images";
+import { GALLERY_IMAGES, resolveImage } from "@/lib/images";
 import type { PageSectionData } from "@/types";
 
 export interface GalleryPreviewItem {
@@ -71,7 +71,10 @@ export function GalleryPreview({
               >
                 <div className="relative overflow-hidden bg-[#141414]">
                   <SafeImage
-                    src={item.image}
+                    src={resolveImage(
+                      GALLERY_IMAGES[i % GALLERY_IMAGES.length],
+                      item.image
+                    )}
                     alt={
                       item.imageAlt ||
                       item.altText ||

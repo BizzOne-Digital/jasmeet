@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getGalleryItems, getCollections, getPageBySlug } from "@/lib/data/queries";
 import { serialize } from "@/lib/serialize";
 import { PageHero } from "@/components/layout/PageHero";
-import { getPageHeroImage, GALLERY_IMAGES } from "@/lib/images";
+import { getPageHeroImage, GALLERY_IMAGES, resolveImage } from "@/lib/images";
 import { GalleryClient } from "@/components/gallery/GalleryClient";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -33,7 +33,13 @@ export default async function GalleryPage() {
             altText?: string;
             collection?: { name?: string; slug?: string } | null;
           }>
-        >(itemsRaw)
+        >(itemsRaw).map((item, i) => ({
+          ...item,
+          image: resolveImage(
+            GALLERY_IMAGES[i % GALLERY_IMAGES.length],
+            item.image
+          ),
+        }))
       : GALLERY_IMAGES.map((image, i) => ({
           _id: `fallback-${i}`,
           image,

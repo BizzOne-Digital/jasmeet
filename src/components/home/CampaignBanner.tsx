@@ -6,7 +6,7 @@ import { MagneticButton } from "@/components/animations/MagneticButton";
 import { Button } from "@/components/ui/Button";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { cn, safeText } from "@/lib/utils";
-import { SECTION_IMAGES } from "@/lib/images";
+import { SECTION_IMAGES, resolveImage } from "@/lib/images";
 import type { PageSectionData } from "@/types";
 
 export interface CampaignBannerProps {
@@ -15,8 +15,7 @@ export interface CampaignBannerProps {
 }
 
 export function CampaignBanner({ section, className }: CampaignBannerProps) {
-  const image =
-    section?.backgroundImage || SECTION_IMAGES.campaign;
+  const image = resolveImage(SECTION_IMAGES.campaign, section?.backgroundImage);
 
   return (
     <section className={cn("relative min-h-[70vh] overflow-hidden bg-black", className)}>

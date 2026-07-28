@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { cn, safeText } from "@/lib/utils";
-import { SECTION_IMAGES } from "@/lib/images";
+import { SECTION_IMAGES, resolveImage } from "@/lib/images";
 import type { PageSectionData } from "@/types";
 
 export interface HiddenMessageSectionProps {
@@ -20,10 +20,10 @@ export function HiddenMessageSection({
   sampleMessage = "You are stronger than you think.",
 }: HiddenMessageSectionProps) {
   const [revealed, setRevealed] = useState(false);
-  const image =
-    section?.sideImage ||
-    section?.backgroundImage ||
-    SECTION_IMAGES.hiddenMessage;
+  const image = resolveImage(
+    SECTION_IMAGES.hiddenMessage,
+    section?.sideImage || section?.backgroundImage
+  );
 
   return (
     <section

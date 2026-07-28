@@ -5,7 +5,7 @@ import { RevealOnScroll } from "@/components/animations/RevealOnScroll";
 import { ParallaxImage } from "@/components/animations/ParallaxImage";
 import { Button } from "@/components/ui/Button";
 import { cn, safeText } from "@/lib/utils";
-import { SECTION_IMAGES } from "@/lib/images";
+import { SECTION_IMAGES, resolveImage } from "@/lib/images";
 import type { PageSectionData } from "@/types";
 
 export interface BrandStoryProps {
@@ -14,10 +14,10 @@ export interface BrandStoryProps {
 }
 
 export function BrandStory({ section, className }: BrandStoryProps) {
-  const image =
-    section?.sideImage ||
-    section?.backgroundImage ||
-    SECTION_IMAGES.brandStory;
+  const image = resolveImage(
+    SECTION_IMAGES.brandStory,
+    section?.sideImage || section?.backgroundImage
+  );
 
   return (
     <section className={cn("bg-black text-[#F5F0E6]", className)}>
