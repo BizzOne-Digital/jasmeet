@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Heart, Menu, Search, ShoppingBag, User } from "lucide-react";
+import { Heart, Menu, Search, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cart";
 import { useWishlistStore } from "@/store/wishlist";
@@ -259,13 +259,6 @@ export function Header({
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
-            </Link>
-            <Link
-              href="/admin/login"
-              className="hidden p-2 text-[#F5F0E6]/85 transition hover:text-[#D4AF37] sm:inline-flex"
-              aria-label="Account"
-            >
-              <User className="h-5 w-5" />
             </Link>
             <Link
               href="/wishlist"
