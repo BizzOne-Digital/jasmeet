@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getSiteSettings } from "@/lib/data/settings";
 import { NewsletterForm } from "@/components/home/NewsletterForm";
+import { SafeImage } from "@/components/ui/SafeImage";
 
 const FOOTER_COLUMNS = [
   {
@@ -47,11 +48,19 @@ export async function Footer() {
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
           {/* Brand + contact email + social */}
           <div className="min-w-0 space-y-6 lg:col-span-4">
-            <Link
-              href="/"
-              className="font-serif text-2xl tracking-[0.32em] text-beige"
-            >
-              {settings.businessName || "DAYAURA"}
+            <Link href="/" className="inline-flex items-center gap-3">
+              <span className="relative block h-14 w-14 shrink-0 sm:h-16 sm:w-16">
+                <SafeImage
+                  src={settings.logo || "/images/logo.png"}
+                  alt={settings.businessName || "DAYAURA"}
+                  fill
+                  className="object-contain"
+                  sizes="64px"
+                />
+              </span>
+              <span className="font-serif text-2xl tracking-[0.32em] text-beige">
+                {settings.businessName || "DAYAURA"}
+              </span>
             </Link>
             <p className="max-w-sm text-sm leading-relaxed text-beige/55">
               {settings.footerDescription ||

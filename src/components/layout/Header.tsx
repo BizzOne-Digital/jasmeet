@@ -138,7 +138,7 @@ export function Header({
       >
         <div
           className={cn(
-            "mx-auto flex h-16 w-full max-w-7xl items-center gap-1 px-3 sm:gap-4 sm:px-6 lg:h-[4.75rem] lg:px-8",
+            "mx-auto flex h-[4.5rem] w-full max-w-7xl items-center gap-1 px-3 sm:gap-4 sm:px-6 lg:h-[5.25rem] lg:px-8",
             "pt-[max(0px,env(safe-area-inset-top))]",
             isHome ? "justify-between lg:grid lg:grid-cols-3" : "justify-between"
           )}
@@ -158,17 +158,17 @@ export function Header({
             className="flex min-w-0 shrink items-center gap-2 sm:gap-3 lg:col-start-1"
           >
             {showLogoImg ? (
-              <span className="relative block h-9 w-9 shrink-0 sm:h-11 sm:w-11">
+              <span className="relative block h-12 w-12 shrink-0 sm:h-14 sm:w-14 lg:h-16 lg:w-16">
                 <SafeImage
                   src={logo}
                   alt={businessName}
                   fill
                   className="object-contain"
-                  sizes="44px"
+                  sizes="64px"
                 />
               </span>
             ) : null}
-            <span className="truncate font-display text-sm tracking-[0.14em] text-[#F5F0E6] sm:text-base sm:tracking-[0.18em] md:text-lg md:tracking-[0.24em] lg:text-xl lg:tracking-[0.28em]">
+            <span className="truncate font-display text-base tracking-[0.14em] text-[#F5F0E6] sm:text-lg sm:tracking-[0.18em] md:text-xl md:tracking-[0.24em] lg:text-2xl lg:tracking-[0.28em]">
               {businessName || "DAYAURA"}
             </span>
           </Link>

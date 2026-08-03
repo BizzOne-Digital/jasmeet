@@ -1,14 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-
-const CinematicIntro = dynamic(
-  () =>
-    import("@/components/animations/CinematicIntro").then(
-      (m) => m.CinematicIntro
-    ),
-  { ssr: false }
-);
+import { CinematicIntro } from "@/components/animations/CinematicIntro";
 
 const PageTransition = dynamic(
   () =>
@@ -18,7 +11,7 @@ const PageTransition = dynamic(
   { ssr: false }
 );
 
-/** Client-only motion shells (dynamic + ssr:false is not allowed in Server Components). */
+/** Intro is imported sync so a black blocker SSRs and covers the page first. */
 export function PublicMotionEffects() {
   return (
     <>

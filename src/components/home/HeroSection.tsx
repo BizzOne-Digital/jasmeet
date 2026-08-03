@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HERO_SLIDES, type HeroSlide } from "@/components/home/hero-slides";
 
@@ -18,15 +17,30 @@ function SlideContent({
   slide: HeroSlide;
   isActive: boolean;
 }) {
+  const alignRight = slide.layout === "right";
+
   return (
-    <div className="relative z-10 flex min-h-[100svh] w-full max-w-full flex-col justify-center px-5 pb-32 pt-28 sm:px-10 sm:pb-28 md:px-14 lg:px-20 xl:px-24">
-      <div className="flex w-full max-w-xl flex-col items-start text-left lg:max-w-2xl">
+    <div
+      className={cn(
+        "relative z-10 flex min-h-[100svh] w-full max-w-full flex-col justify-center px-5 pb-32 pt-28 sm:px-10 sm:pb-28 md:px-14 lg:px-20 xl:px-24",
+        alignRight && "items-end"
+      )}
+    >
+      <div
+        className={cn(
+          "flex w-full max-w-xl flex-col lg:max-w-2xl",
+          alignRight ? "items-end text-right" : "items-start text-left"
+        )}
+      >
         {slide.eyebrow ? (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-6 flex items-center gap-3"
+            className={cn(
+              "mb-6 flex items-center gap-3",
+              alignRight && "flex-row-reverse"
+            )}
           >
             <span className="h-px w-10 bg-gold" />
             <span className="eyebrow !text-[0.6875rem]">{slide.eyebrow}</span>
@@ -50,7 +64,10 @@ function SlideContent({
             initial={{ opacity: 0, y: 18 }}
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 0.9, delay: 0.48, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-6 max-w-md text-[15px] leading-relaxed text-beige/65 md:mt-7 md:text-base"
+            className={cn(
+              "mt-6 max-w-md text-[15px] leading-relaxed text-beige/65 md:mt-7 md:text-base",
+              alignRight && "ml-auto"
+            )}
           >
             {slide.body}
           </motion.p>
@@ -88,10 +105,6 @@ export function HeroSection() {
     setActive((prev) => (prev + 1) % total);
   }, [total]);
 
-  const prev = useCallback(() => {
-    setActive((prev) => (prev - 1 + total) % total);
-  }, [total]);
-
   useEffect(() => {
     if (reducedMotion || paused) return;
     const timer = window.setInterval(next, AUTO_INTERVAL);
@@ -102,7 +115,7 @@ export function HeroSection() {
 
   return (
     <section
-      className="relative -mt-[7.25rem] w-full max-w-full overflow-x-clip overflow-hidden pt-[7.25rem]"
+      className="relative -mt-[7.5rem] w-full max-w-full overflow-x-clip overflow-hidden pt-[7.5rem]"
       aria-label="Hero carousel"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
@@ -136,11 +149,21 @@ export function HeroSection() {
               fill
               priority={active === 0}
               fetchPriority={active === 0 ? "high" : "auto"}
-              className="object-cover object-center"
+              className={cn(
+                "object-cover",
+                current.imagePositionClass || "object-center"
+              )}
               sizes="100vw"
               quality={75}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/25" />
+            <div
+              className={cn(
+                "absolute inset-0",
+                current.layout === "right"
+                  ? "bg-gradient-to-l from-black/80 via-black/45 to-black/25"
+                  : "bg-gradient-to-r from-black/80 via-black/45 to-black/25"
+              )}
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
             <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/50 to-transparent" />
           </motion.div>
@@ -164,49 +187,10 @@ export function HeroSection() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Arrows */}
-      <div className="pointer-events-none absolute inset-y-0 z-20 hidden w-full items-center justify-between px-3 sm:flex sm:px-5 lg:px-8">
-        <button
-          type="button"
-          onClick={prev}
-          aria-label="Previous slide"
-          className="pointer-events-auto flex h-11 w-11 items-center justify-center border border-white/20 bg-black/35 text-[#F5F0E6] backdrop-blur-sm lux-btn hover:border-[#D4AF37]/60 hover:text-[#D4AF37]"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <button
-          type="button"
-          onClick={next}
-          aria-label="Next slide"
-          className="pointer-events-auto flex h-11 w-11 items-center justify-center border border-white/20 bg-black/35 text-[#F5F0E6] backdrop-blur-sm lux-btn hover:border-[#D4AF37]/60 hover:text-[#D4AF37]"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      </div>
-
-      {/* Dots + mobile arrows */}
+      {/* Dots */}
       <div className="absolute inset-x-0 bottom-0 z-20 overflow-x-clip pb-[env(safe-area-inset-bottom)]">
         <div className="border-t border-white/10 bg-black/30 backdrop-blur-sm">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-8 sm:py-4 lg:px-12">
-            <div className="flex items-center gap-2 sm:hidden">
-              <button
-                type="button"
-                onClick={prev}
-                aria-label="Previous slide"
-                className="flex h-11 w-11 items-center justify-center border border-white/20 text-[#F5F0E6]"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={next}
-                aria-label="Next slide"
-                className="flex h-11 w-11 items-center justify-center border border-white/20 text-[#F5F0E6]"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
             <div className="flex flex-1 items-center justify-center gap-1 sm:justify-start sm:gap-2.5">
               {HERO_SLIDES.map((slide, i) => (
                 <button
