@@ -9,6 +9,7 @@ export function PageHero({
   align = "left",
   image,
   imageAlt,
+  imagePositionClass = "object-center",
 }: {
   eyebrow?: string;
   title: string;
@@ -16,6 +17,8 @@ export function PageHero({
   align?: "left" | "center";
   image?: string;
   imageAlt?: string;
+  /** Tailwind object-position class, e.g. object-top / object-[center_20%] */
+  imagePositionClass?: string;
 }) {
   return (
     <header
@@ -34,7 +37,7 @@ export function PageHero({
             alt={imageAlt || safeText(title)}
             fill
             priority
-            className="object-cover object-center"
+            className={cn("object-cover", imagePositionClass)}
             sizes="100vw"
             quality={80}
           />

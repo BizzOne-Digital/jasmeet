@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     localPatterns: [
-      // Allow /public/images including cache-bust query strings (?v=…)
+      // Omit `search` so cache-bust query strings (?v=…) are allowed under /images
       { pathname: "/images/**" },
       { pathname: "/**", search: "" },
     ],

@@ -4,7 +4,7 @@ import { getCollectionBySlug, getProducts } from "@/lib/data/queries";
 import { serialize } from "@/lib/serialize";
 import { absoluteUrl, safeText } from "@/lib/utils";
 import { PageHero, Breadcrumbs } from "@/components/layout/PageHero";
-import { getCollectionImage } from "@/lib/images";
+import { getCollectionImage, COLLECTION_HERO_POSITION } from "@/lib/images";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { Pagination } from "@/components/shop/Pagination";
 import type { ProductCardData } from "@/components/product/ProductCard";
@@ -64,6 +64,9 @@ export default async function CollectionDetailPage({
         title={safeText(col.name)}
         description={safeText(col.description)}
         image={getCollectionImage(col.slug)}
+        imagePositionClass={
+          COLLECTION_HERO_POSITION[col.slug] || "object-center"
+        }
       />
       <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Breadcrumbs

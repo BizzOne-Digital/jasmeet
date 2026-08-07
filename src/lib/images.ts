@@ -32,6 +32,11 @@ export const COLLECTION_IMAGES: Record<string, string> = {
   accessories: img("collections/accessories.png"),
 };
 
+/** object-position for collection heroes (faces in frame). */
+export const COLLECTION_HERO_POSITION: Record<string, string> = {
+  aurawave: "object-[center_18%]",
+};
+
 /** Bump when collection cover files are replaced so browsers/Next Image refresh. */
 const COLLECTION_IMAGE_VERSION = "20260803b";
 

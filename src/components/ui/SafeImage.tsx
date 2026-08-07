@@ -24,6 +24,8 @@ export function SafeImage({
   width,
   height,
   sizes,
+  quality,
+  unoptimized,
   ...props
 }: SafeImageProps) {
   const placeholder = getPlaceholderImage(
@@ -42,6 +44,13 @@ export function SafeImage({
   const resolvedSizes =
     sizes ||
     (fill ? "(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" : undefined);
+  // Serve local product assets as-is so Next/sharp recompression doesn't soften them
+  const isLocalProduct =
+    typeof resolvedSrc === "string" &&
+    resolvedSrc.startsWith("/images/products/");
+  const skipOptimize =
+    unoptimized ??
+    (resolvedSrc.includes("placehold.co") || isLocalProduct);
 
   return (
     <Image
@@ -52,7 +61,8 @@ export function SafeImage({
       height={fill ? undefined : (height ?? fallbackHeight)}
       className={cn("bg-[#1a1a1a]", className)}
       onError={() => setFailed(true)}
-      unoptimized={resolvedSrc.includes("placehold.co")}
+      unoptimized={skipOptimize}
+      quality={quality ?? 95}
       sizes={resolvedSizes}
       {...props}
     />

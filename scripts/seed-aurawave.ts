@@ -136,10 +136,11 @@ const PRODUCTS: AuraWaveProduct[] = [
     ],
     colors: [{ name: "Matcha", hex: "#A3B18A" }],
     sizes: stockSMLXL(),
+    // Gallery order: front → back → side/detail
     images: [
       "/images/products/scallop-dress/01-front.png",
-      "/images/products/scallop-dress/02-three-quarter.png",
       "/images/products/scallop-dress/03-back.png",
+      "/images/products/scallop-dress/02-three-quarter.png",
       "/images/products/scallop-dress/04-tennis.png",
       "/images/products/scallop-dress/05-neckline-detail.png",
       "/images/products/scallop-dress/06-built-in-shorts.png",
@@ -195,7 +196,6 @@ const PRODUCTS: AuraWaveProduct[] = [
           "/images/products/scallop-one-shoulder-set/olive-green/01.png",
           "/images/products/scallop-one-shoulder-set/olive-green/02.png",
           "/images/products/scallop-one-shoulder-set/olive-green/03.png",
-          "/images/products/scallop-one-shoulder-set/olive-green/04.png",
         ],
       },
       {
@@ -203,8 +203,8 @@ const PRODUCTS: AuraWaveProduct[] = [
         hex: "#000000",
         images: [
           "/images/products/scallop-one-shoulder-set/black/01.png",
-          "/images/products/scallop-one-shoulder-set/black/02.png",
           "/images/products/scallop-one-shoulder-set/black/03.png",
+          "/images/products/scallop-one-shoulder-set/black/02.png",
         ],
       },
     ],
@@ -213,7 +213,6 @@ const PRODUCTS: AuraWaveProduct[] = [
       "/images/products/scallop-one-shoulder-set/olive-green/01.png",
       "/images/products/scallop-one-shoulder-set/olive-green/02.png",
       "/images/products/scallop-one-shoulder-set/olive-green/03.png",
-      "/images/products/scallop-one-shoulder-set/olive-green/04.png",
     ],
     sizeChart: SIZE_CHART.oneShoulder,
     sizeGuide: {
@@ -276,9 +275,9 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Olive Green",
         hex: "#556B2F",
         images: [
-          "/images/products/scallop-one-shoulder-bra/olive-green/01.png",
-          "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
           "/images/products/scallop-one-shoulder-bra/olive-green/03.png",
+          "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
+          "/images/products/scallop-one-shoulder-bra/olive-green/01.png",
           "/images/products/scallop-one-shoulder-bra/olive-green/04.png",
         ],
       },
@@ -286,18 +285,18 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Black",
         hex: "#000000",
         images: [
-          "/images/products/scallop-one-shoulder-bra/black/01.png",
-          "/images/products/scallop-one-shoulder-bra/black/02.png",
-          "/images/products/scallop-one-shoulder-bra/black/03.png",
           "/images/products/scallop-one-shoulder-bra/black/04.png",
+          "/images/products/scallop-one-shoulder-bra/black/01.png",
+          "/images/products/scallop-one-shoulder-bra/black/03.png",
+          "/images/products/scallop-one-shoulder-bra/black/02.png",
         ],
       },
     ],
     sizes: stockSMLXL(),
     images: [
-      "/images/products/scallop-one-shoulder-bra/olive-green/01.png",
-      "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
       "/images/products/scallop-one-shoulder-bra/olive-green/03.png",
+      "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
+      "/images/products/scallop-one-shoulder-bra/olive-green/01.png",
       "/images/products/scallop-one-shoulder-bra/olive-green/04.png",
     ],
     sizeChart: SIZE_CHART.oneShoulder,
@@ -345,26 +344,26 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Olive Green",
         hex: "#556B2F",
         images: [
+          "/images/products/aurawave-sculpt-leggings/olive-green/03.png",
           "/images/products/aurawave-sculpt-leggings/olive-green/01.png",
           "/images/products/aurawave-sculpt-leggings/olive-green/02.png",
-          "/images/products/aurawave-sculpt-leggings/olive-green/03.png",
         ],
       },
       {
         name: "Black",
         hex: "#000000",
         images: [
+          "/images/products/aurawave-sculpt-leggings/black/03.png",
           "/images/products/aurawave-sculpt-leggings/black/01.png",
           "/images/products/aurawave-sculpt-leggings/black/02.png",
-          "/images/products/aurawave-sculpt-leggings/black/03.png",
         ],
       },
     ],
     sizes: stockSMLXL(),
     images: [
+      "/images/products/aurawave-sculpt-leggings/olive-green/03.png",
       "/images/products/aurawave-sculpt-leggings/olive-green/01.png",
       "/images/products/aurawave-sculpt-leggings/olive-green/02.png",
-      "/images/products/aurawave-sculpt-leggings/olive-green/03.png",
     ],
     sizeChart: SIZE_CHART.oneShoulder,
     sizeGuide: {
@@ -414,18 +413,18 @@ const PRODUCTS: AuraWaveProduct[] = [
         images: [
           "/images/products/scallop-halter-flare-set/black/01.png",
           "/images/products/scallop-halter-flare-set/black/02.png",
-          "/images/products/scallop-halter-flare-set/black/03.png",
           "/images/products/scallop-halter-flare-set/black/04.png",
+          "/images/products/scallop-halter-flare-set/black/03.png",
         ],
       },
       {
         name: "Brown",
         hex: "#6F4E37",
         images: [
-          "/images/products/scallop-halter-flare-set/brown/01.png",
           "/images/products/scallop-halter-flare-set/brown/02.png",
-          "/images/products/scallop-halter-flare-set/brown/03.png",
+          "/images/products/scallop-halter-flare-set/brown/01.png",
           "/images/products/scallop-halter-flare-set/brown/04.png",
+          "/images/products/scallop-halter-flare-set/brown/03.png",
         ],
       },
     ],
@@ -433,8 +432,8 @@ const PRODUCTS: AuraWaveProduct[] = [
     images: [
       "/images/products/scallop-halter-flare-set/black/01.png",
       "/images/products/scallop-halter-flare-set/black/02.png",
-      "/images/products/scallop-halter-flare-set/black/03.png",
       "/images/products/scallop-halter-flare-set/black/04.png",
+      "/images/products/scallop-halter-flare-set/black/03.png",
     ],
     sizeChart: SIZE_CHART.halter,
     sizeGuide: {
@@ -496,25 +495,25 @@ const PRODUCTS: AuraWaveProduct[] = [
         hex: "#000000",
         images: [
           "/images/products/scallop-halter-bra/black/01.png",
-          "/images/products/scallop-halter-bra/black/02.png",
           "/images/products/scallop-halter-bra/black/03.png",
+          "/images/products/scallop-halter-bra/black/02.png",
         ],
       },
       {
         name: "Brown",
         hex: "#6F4E37",
         images: [
-          "/images/products/scallop-halter-bra/brown/01.png",
           "/images/products/scallop-halter-bra/brown/02.png",
           "/images/products/scallop-halter-bra/brown/03.png",
+          "/images/products/scallop-halter-bra/brown/01.png",
         ],
       },
     ],
     sizes: stockSMLXL(),
     images: [
       "/images/products/scallop-halter-bra/black/01.png",
-      "/images/products/scallop-halter-bra/black/02.png",
       "/images/products/scallop-halter-bra/black/03.png",
+      "/images/products/scallop-halter-bra/black/02.png",
     ],
     sizeChart: SIZE_CHART.halter,
     sizeGuide: {
@@ -560,26 +559,26 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Black",
         hex: "#000000",
         images: [
-          "/images/products/flared-leggings/black/01.png",
-          "/images/products/flared-leggings/black/02.png",
           "/images/products/flared-leggings/black/03.png",
+          "/images/products/flared-leggings/black/02.png",
+          "/images/products/flared-leggings/black/01.png",
         ],
       },
       {
         name: "Brown",
         hex: "#6F4E37",
         images: [
-          "/images/products/flared-leggings/brown/01.png",
           "/images/products/flared-leggings/brown/02.png",
+          "/images/products/flared-leggings/brown/01.png",
           "/images/products/flared-leggings/brown/03.png",
         ],
       },
     ],
     sizes: stockSMLXL(),
     images: [
-      "/images/products/flared-leggings/black/01.png",
-      "/images/products/flared-leggings/black/02.png",
       "/images/products/flared-leggings/black/03.png",
+      "/images/products/flared-leggings/black/02.png",
+      "/images/products/flared-leggings/black/01.png",
     ],
     sizeChart: SIZE_CHART.halter,
     sizeGuide: {

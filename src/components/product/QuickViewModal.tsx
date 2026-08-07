@@ -66,7 +66,9 @@ export function QuickViewModal({
   const activeHex = activeColorObj?.hex;
   const colorImages = activeColorObj?.images?.filter(Boolean) || [];
   const image = colorImages[0] || product.images?.[0];
-  const fitContain = product.collection?.slug === "accessories";
+  const isAccessories = product.collection?.slug === "accessories";
+  const fitContain =
+    isAccessories || product.collection?.slug === "aurawave";
   const onSale =
     product.isOnSale ||
     (product.compareAtPrice != null && product.compareAtPrice > product.price);
@@ -96,7 +98,7 @@ export function QuickViewModal({
       <div className="grid gap-6 md:grid-cols-2">
         <div
           className={
-            fitContain
+            isAccessories
               ? "relative aspect-[3/4] overflow-hidden bg-white"
               : "relative aspect-[3/4] overflow-hidden bg-[#141414]"
           }
@@ -107,7 +109,9 @@ export function QuickViewModal({
             fill
             className={
               fitContain
-                ? "bg-transparent object-contain p-4"
+                ? isAccessories
+                  ? "bg-transparent object-contain p-4"
+                  : "object-contain object-center p-2"
                 : "object-cover"
             }
             sizes="400px"
