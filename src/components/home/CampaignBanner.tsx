@@ -20,7 +20,7 @@ export function CampaignBanner({ section, className }: CampaignBannerProps) {
   return (
     <section
       className={cn(
-        "group relative min-h-[72vh] overflow-hidden bg-background md:min-h-[80vh]",
+        "group relative min-h-[48vh] overflow-hidden bg-background sm:min-h-[58vh] md:min-h-[72vh]",
         className
       )}
     >
@@ -28,7 +28,7 @@ export function CampaignBanner({ section, className }: CampaignBannerProps) {
         src={image}
         alt={safeText(section?.imageAlt, "DAYAURA campaign")}
         fill
-        className="lux-zoom object-cover"
+        className="object-contain object-center bg-black transition duration-700 group-hover:scale-[1.02] md:object-cover"
         sizes="100vw"
         fallbackWidth={1920}
         fallbackHeight={900}
@@ -36,7 +36,7 @@ export function CampaignBanner({ section, className }: CampaignBannerProps) {
       <div className="absolute inset-0 bg-black/50" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/35 to-transparent" />
 
-      <div className="relative z-10 mx-auto flex min-h-[72vh] max-w-7xl items-center px-5 py-24 sm:px-8 md:min-h-[80vh] lg:px-10">
+      <div className="relative z-10 mx-auto flex min-h-[48vh] max-w-7xl items-center px-5 py-16 sm:min-h-[58vh] sm:px-8 sm:py-20 md:min-h-[72vh] md:py-24 lg:px-10">
         <RevealOnScroll>
           <div className="max-w-xl text-beige">
             <p className="eyebrow mb-4">

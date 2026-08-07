@@ -48,13 +48,13 @@ export function MovementCategories({
             <RevealOnScroll key={item.name} index={i} direction="up">
               <Link
                 href={item.href}
-                className="group img-frame relative block aspect-[3/4] overflow-hidden"
+                className="group img-frame relative block aspect-[4/5] overflow-hidden bg-[#141414] sm:aspect-[3/4]"
               >
                 <SafeImage
                   src={item.image}
                   alt={item.name}
                   fill
-                  className="lux-zoom object-cover"
+                  className="object-contain object-center transition duration-700 group-hover:scale-[1.03] sm:object-cover"
                   sizes="(max-width:768px) 50vw, 20vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition duration-700 group-hover:from-black/80" />

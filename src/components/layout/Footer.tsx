@@ -54,7 +54,7 @@ export async function Footer() {
                   src={settings.logo || "/images/logo.png"}
                   alt={settings.businessName || "DAYAURA"}
                   fill
-                  className="object-contain"
+                  className="bg-transparent object-contain"
                   sizes="64px"
                 />
               </span>

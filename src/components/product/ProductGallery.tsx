@@ -106,7 +106,7 @@ export function ProductGallery({
               src={src}
               alt=""
               fill
-              quality={95}
+              quality={100}
               className="object-contain bg-[#141414] p-1"
               sizes="96px"
             />
@@ -133,7 +133,7 @@ export function ProductGallery({
             alt={activeIsChart ? `${alt} size chart` : alt}
             fill
             priority
-            quality={95}
+            quality={100}
             className={cn(
               "object-contain p-3 sm:p-6",
               activeIsChart && "p-3"
@@ -257,7 +257,7 @@ export function ProductGallery({
                 src={gallery[active]}
                 alt={alt}
                 fill
-                quality={95}
+                quality={100}
                 className={cn(
                   "object-contain transition-transform duration-200 ease-out",
                   lbZoomed && !activeIsChart && "scale-[2.4]"

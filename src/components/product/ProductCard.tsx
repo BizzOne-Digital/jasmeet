@@ -65,11 +65,7 @@ export function ProductCard({
     product.hoverImage ||
     (colorImages[0] ? product.images?.[0] : product.images?.[1]);
 
-  const collectionSlug = product.collection?.slug;
-  const isAccessories = collectionSlug === "accessories";
-  // Studio full-body shots need contain so garments aren't cropped in the card frame
-  const fitContain =
-    isAccessories || collectionSlug === "aurawave";
+  const isAccessories = product.collection?.slug === "accessories";
   const onSale =
     product.isOnSale ||
     (product.compareAtPrice != null && product.compareAtPrice > product.price);
@@ -121,6 +117,10 @@ export function ProductCard({
     [product.colors]
   );
 
+  const imageFitClass = isAccessories
+    ? "bg-transparent object-contain p-3 sm:p-5"
+    : "object-contain object-center p-1.5 sm:p-2";
+
   return (
     <>
       <article className={cn("group relative", className)}>
@@ -138,11 +138,7 @@ export function ProductCard({
               priority={priority}
               className={cn(
                 "transition duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)]",
-                fitContain
-                  ? isAccessories
-                    ? "bg-transparent object-contain p-3 sm:p-5"
-                    : "object-contain object-center p-1.5 sm:p-2"
-                  : "object-cover",
+                imageFitClass,
                 hover && "group-hover:opacity-0"
               )}
               sizes="(max-width:768px) 50vw, 25vw"
@@ -154,11 +150,7 @@ export function ProductCard({
                 fill
                 className={cn(
                   "opacity-0 transition duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100",
-                  fitContain
-                    ? isAccessories
-                      ? "bg-transparent object-contain p-3 sm:p-5"
-                      : "object-contain object-center p-1.5 sm:p-2"
-                    : "lux-zoom object-cover"
+                  imageFitClass
                 )}
                 sizes="(max-width:768px) 50vw, 25vw"
               />

@@ -67,8 +67,6 @@ export function QuickViewModal({
   const colorImages = activeColorObj?.images?.filter(Boolean) || [];
   const image = colorImages[0] || product.images?.[0];
   const isAccessories = product.collection?.slug === "accessories";
-  const fitContain =
-    isAccessories || product.collection?.slug === "aurawave";
   const onSale =
     product.isOnSale ||
     (product.compareAtPrice != null && product.compareAtPrice > product.price);
@@ -108,11 +106,9 @@ export function QuickViewModal({
             alt={product.name}
             fill
             className={
-              fitContain
-                ? isAccessories
-                  ? "bg-transparent object-contain p-4"
-                  : "object-contain object-center p-2"
-                : "object-cover"
+              isAccessories
+                ? "bg-transparent object-contain p-4"
+                : "object-contain object-center p-2"
             }
             sizes="400px"
           />

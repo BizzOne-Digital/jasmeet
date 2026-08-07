@@ -22,7 +22,7 @@ function SlideContent({
   return (
     <div
       className={cn(
-        "relative z-10 flex min-h-[100svh] w-full max-w-full flex-col justify-center px-5 pb-32 pt-28 sm:px-10 sm:pb-28 md:px-14 lg:px-20 xl:px-24",
+        "relative z-10 flex min-h-[62svh] w-full max-w-full flex-col justify-center px-5 pb-24 pt-24 sm:min-h-[75svh] sm:px-10 sm:pb-28 sm:pt-28 md:min-h-[100svh] md:px-14 lg:px-20 xl:px-24",
         alignRight && "items-end"
       )}
     >
@@ -149,12 +149,13 @@ export function HeroSection() {
               fill
               priority={active === 0}
               fetchPriority={active === 0 ? "high" : "auto"}
+              unoptimized={current.image.startsWith("/images/")}
               className={cn(
-                "object-cover",
+                "bg-black object-contain md:object-cover",
                 current.imagePositionClass || "object-center"
               )}
               sizes="100vw"
-              quality={75}
+              quality={100}
             />
             <div
               className={cn(

@@ -205,17 +205,60 @@ const PRODUCTS: AuraMeshProduct[] = [
       "Perfect for gym training, running, yoga, Pilates, sports, and everyday wear",
     ],
     colors: [
-      { name: "Black", hex: "#000000" },
-      { name: "White", hex: "#FFFFFF" },
+      {
+        name: "Black",
+        hex: "#000000",
+        images: [
+          "/images/products/mesh-sculpt-legging-set/black/02.png",
+          "/images/products/mesh-sculpt-legging-set/black/01.png",
+          "/images/products/mesh-sculpt-legging-set/black/03.png",
+        ],
+      },
+      {
+        name: "White",
+        hex: "#FFFFFF",
+        images: [
+          "/images/products/mesh-sculpt-legging-set/white/01.png",
+          "/images/products/mesh-sculpt-legging-set/white/02.png",
+          "/images/products/mesh-sculpt-legging-set/white/03.png",
+        ],
+      },
     ],
-    sizes: stockSML(),
-    images: [placeholder("Mesh+Sculpt+Legging+Set")],
-    // Dual size labels only — size chart + photos pending client.
+    sizes: [
+      { size: "S", stock: 30 },
+      { size: "M", stock: 30 },
+      { size: "L", stock: 30 },
+      { size: "XL", stock: 30 },
+    ],
+    images: [
+      "/images/products/mesh-sculpt-legging-set/black/02.png",
+      "/images/products/mesh-sculpt-legging-set/black/01.png",
+      "/images/products/mesh-sculpt-legging-set/black/03.png",
+    ],
+    hoverImage: "/images/products/mesh-sculpt-legging-set/black/01.png",
     sizeGuide: {
       unit: "CM",
       sections: [
-        { title: "Bra", columns: [], rows: [] },
-        { title: "Leggings", columns: [], rows: [] },
+        {
+          title: "Vest",
+          columns: ["Clothes length", "Chest", "Waistline"],
+          rows: [
+            { size: "S", values: ["31.5", "69", "60"] },
+            { size: "M", values: ["33.5", "73", "64"] },
+            { size: "L", values: ["34.5", "77", "68"] },
+            { size: "XL", values: ["35.5", "81", "72"] },
+          ],
+        },
+        {
+          title: "Trousers",
+          columns: ["Clothes length", "Waistline", "Hip", "Slack bottom"],
+          rows: [
+            { size: "S", values: ["88", "54", "71", "9"] },
+            { size: "M", values: ["90", "58", "75", "9.5"] },
+            { size: "L", values: ["92", "62", "79", "10"] },
+            { size: "XL", values: ["94", "66", "83", "10.5"] },
+          ],
+        },
       ],
     },
     isFeatured: true,

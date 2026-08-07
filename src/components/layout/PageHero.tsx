@@ -25,7 +25,7 @@ export function PageHero({
       className={cn(
         "relative w-full max-w-full overflow-hidden",
         image
-          ? "min-h-[48vh] md:min-h-[56vh]"
+          ? "min-h-[36vh] bg-black sm:min-h-[44vh] md:min-h-[56vh]"
           : "border-b border-white/10 bg-gradient-to-b from-[#12100e] to-background",
         align === "center" && "text-center"
       )}
@@ -37,9 +37,15 @@ export function PageHero({
             alt={imageAlt || safeText(title)}
             fill
             priority
-            className={cn("object-cover", imagePositionClass)}
+            unoptimized={image.startsWith("/images/")}
+            className={cn(
+              "bg-black object-contain object-center md:object-cover",
+              imagePositionClass !== "object-center"
+                ? imagePositionClass.replace(/^object-/, "md:object-")
+                : "md:object-center"
+            )}
             sizes="100vw"
-            quality={80}
+            quality={100}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/50 to-black/35" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30" />
@@ -48,8 +54,9 @@ export function PageHero({
 
       <div
         className={cn(
-          "relative z-10 w-full px-4 py-20 sm:px-6 md:py-28 lg:px-8",
-          image && "flex min-h-[48vh] items-end md:min-h-[56vh]"
+          "relative z-10 w-full px-4 py-14 sm:px-6 sm:py-20 md:py-28 lg:px-8",
+          image &&
+            "flex min-h-[36vh] items-end sm:min-h-[44vh] md:min-h-[56vh]"
         )}
       >
         <div className="container-lux px-0">

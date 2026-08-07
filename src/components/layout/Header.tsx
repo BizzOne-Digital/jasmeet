@@ -163,7 +163,7 @@ export function Header({
                   src={logo}
                   alt={businessName}
                   fill
-                  className="object-contain"
+                  className="bg-transparent object-contain"
                   sizes="64px"
                 />
               </span>
@@ -214,11 +214,11 @@ export function Header({
 
                     <div
                       className={cn(
-                        "invisible absolute left-1/2 top-full z-50 w-[min(90vw,640px)] -translate-x-1/2 pt-4 opacity-0 transition-all duration-300",
+                        "invisible absolute left-1/2 top-full z-50 w-[min(94vw,820px)] -translate-x-1/2 pt-4 opacity-0 transition-all duration-300",
                         megaOpen && "visible opacity-100"
                       )}
                     >
-                      <div className="border border-white/10 bg-[#0a0a0a]/95 p-6 shadow-2xl backdrop-blur-md">
+                      <div className="border border-white/10 bg-[#0a0a0a]/95 p-5 shadow-2xl backdrop-blur-md sm:p-6">
                         <div className="mb-4 flex items-end justify-between">
                           <p className="text-[10px] uppercase tracking-[0.28em] text-[#D4AF37]">
                             Shop collections
@@ -235,17 +235,17 @@ export function Header({
                             <Link
                               key={c.slug}
                               href={`/collections/${c.slug}`}
-                              className="group/card relative aspect-[4/5] overflow-hidden bg-[#1a1a1a]"
+                              className="group/card relative aspect-[16/10] overflow-hidden bg-[#1a1a1a] sm:aspect-[3/2]"
                             >
                               <SafeImage
                                 src={getCollectionImage(c.slug)}
                                 alt={c.name}
                                 fill
-                                className="object-cover transition duration-700 group-hover/card:scale-105"
-                                sizes="200px"
+                                className="object-contain object-center transition duration-700 group-hover/card:scale-[1.03]"
+                                sizes="(max-width:640px) 45vw, 260px"
                               />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                              <span className="absolute bottom-3 left-3 right-3 text-xs uppercase tracking-[0.18em] text-[#F5F0E6]">
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+                              <span className="absolute bottom-2.5 left-3 right-3 text-xs uppercase tracking-[0.18em] text-[#F5F0E6]">
                                 {c.name}
                               </span>
                             </Link>

@@ -44,13 +44,14 @@ export function SafeImage({
   const resolvedSizes =
     sizes ||
     (fill ? "(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" : undefined);
-  // Serve local product assets as-is so Next/sharp recompression doesn't soften them
-  const isLocalProduct =
+  // Serve local site assets as-is so Next/sharp recompression doesn't soften them
+  const isLocalAsset =
     typeof resolvedSrc === "string" &&
-    resolvedSrc.startsWith("/images/products/");
+    (resolvedSrc.startsWith("/images/") ||
+      resolvedSrc.startsWith("/uploads/"));
   const skipOptimize =
     unoptimized ??
-    (resolvedSrc.includes("placehold.co") || isLocalProduct);
+    (resolvedSrc.includes("placehold.co") || isLocalAsset);
 
   return (
     <Image
@@ -62,7 +63,7 @@ export function SafeImage({
       className={cn("bg-[#1a1a1a]", className)}
       onError={() => setFailed(true)}
       unoptimized={skipOptimize}
-      quality={quality ?? 95}
+      quality={quality ?? 100}
       sizes={resolvedSizes}
       {...props}
     />
