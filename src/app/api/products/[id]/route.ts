@@ -5,6 +5,7 @@ import { productUpdateSchema } from "@/lib/validations/api";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
+import { sanitizeProductImagePayload } from "@/lib/product-images-server";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
@@ -40,6 +41,8 @@ export async function PUT(request: Request, { params }: RouteParams) {
     if (data.description !== undefined) {
       data.description = sanitizeRichText(data.description);
     }
+
+    await sanitizeProductImagePayload(data);
 
     const { sizeGuide, ...rest } = data;
     const update: Record<string, unknown> = { ...rest };

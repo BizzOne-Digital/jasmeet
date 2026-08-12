@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Expand, X, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, ImageOff, X, ZoomIn } from "lucide-react";
 import { cn, getPlaceholderImage } from "@/lib/utils";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { sanitizeImageList } from "@/lib/product-images";
 
 export interface ProductGalleryProps {
   images: string[];
@@ -16,28 +17,100 @@ function isSizeChartImage(src: string) {
   return /size-chart/i.test(src);
 }
 
+function GalleryThumb({
+  src,
+  active,
+  onSelect,
+  onBroken,
+}: {
+  src: string;
+  active: boolean;
+  onSelect: () => void;
+  onBroken: (src: string) => void;
+}) {
+  const [broken, setBroken] = useState(false);
+
+  useEffect(() => {
+    setBroken(false);
+  }, [src]);
+
+  if (broken) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={cn(
+        "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border transition sm:h-28 sm:w-20",
+        active
+          ? "border-[#D4AF37]"
+          : "border-transparent opacity-70 hover:opacity-100"
+      )}
+    >
+      <SafeImage
+        src={src}
+        alt=""
+        fill
+        quality={100}
+        className="object-contain bg-[#141414] p-1"
+        sizes="96px"
+        onError={() => {
+          setBroken(true);
+          onBroken(src);
+        }}
+      />
+    </button>
+  );
+}
+
 export function ProductGallery({
   images,
   alt,
   className,
 }: ProductGalleryProps) {
+  const initialGallery = sanitizeImageList(images);
+  const fallback = getPlaceholderImage(900, 1200, "DAYAURA");
+
+  const [broken, setBroken] = useState<string[]>([]);
   const gallery =
-    images?.filter(Boolean).length > 0
-      ? images.filter(Boolean)
-      : [getPlaceholderImage(900, 1200, "DAYAURA")];
+    initialGallery.filter((src) => !broken.includes(src)).length > 0
+      ? initialGallery.filter((src) => !broken.includes(src))
+      : [fallback];
 
   const [active, setActive] = useState(0);
+  const [mainBroken, setMainBroken] = useState(false);
   const [lightbox, setLightbox] = useState(false);
   const [lbZoomed, setLbZoomed] = useState(false);
   const [lbOrigin, setLbOrigin] = useState({ x: 50, y: 50 });
   const lightboxImgRef = useRef<HTMLDivElement>(null);
 
-  const activeIsChart = isSizeChartImage(gallery[active] || "");
+  useEffect(() => {
+    setActive(0);
+    setMainBroken(false);
+    setBroken([]);
+  }, [images]);
 
-  const go = (dir: -1 | 1) => {
-    setActive((i) => (i + dir + gallery.length) % gallery.length);
-    setLbZoomed(false);
-  };
+  useEffect(() => {
+    if (active >= gallery.length) {
+      setActive(0);
+    }
+  }, [active, gallery.length]);
+
+  const markBroken = useCallback((src: string) => {
+    setBroken((prev) => (prev.includes(src) ? prev : [...prev, src]));
+  }, []);
+
+  const activeIsChart = isSizeChartImage(gallery[active] || "");
+  const mainSrc = mainBroken ? fallback : gallery[active] || fallback;
+
+  const go = useCallback(
+    (dir: -1 | 1) => {
+      setActive((i) => (i + dir + gallery.length) % gallery.length);
+      setLbZoomed(false);
+      setMainBroken(false);
+    },
+    [gallery.length]
+  );
 
   const openLightbox = () => {
     setLbZoomed(false);
@@ -88,26 +161,16 @@ export function ProductGallery({
     <div className={cn("grid gap-4 lg:grid-cols-[96px_1fr]", className)}>
       <div className="order-2 flex gap-2 overflow-x-auto scroll-touch pb-1 no-scrollbar lg:order-1 lg:max-h-[min(80vh,720px)] lg:flex-col lg:overflow-y-auto lg:overflow-x-visible lg:pb-0">
         {gallery.map((src, i) => (
-          <button
+          <GalleryThumb
             key={`${src}-${i}`}
-            type="button"
-            onClick={() => setActive(i)}
-            className={cn(
-              "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border transition sm:h-28 sm:w-20",
-              active === i
-                ? "border-[#D4AF37]"
-                : "border-transparent opacity-70 hover:opacity-100"
-            )}
-          >
-            <SafeImage
-              src={src}
-              alt=""
-              fill
-              quality={100}
-              className="object-contain bg-[#141414] p-1"
-              sizes="96px"
-            />
-          </button>
+            src={src}
+            active={active === i}
+            onSelect={() => {
+              setActive(i);
+              setMainBroken(false);
+            }}
+            onBroken={markBroken}
+          />
         ))}
       </div>
 
@@ -126,7 +189,7 @@ export function ProductGallery({
           }}
         >
           <SafeImage
-            src={gallery[active]}
+            src={mainSrc}
             alt={activeIsChart ? `${alt} size chart` : alt}
             fill
             priority
@@ -136,7 +199,17 @@ export function ProductGallery({
               activeIsChart && "p-3"
             )}
             sizes="(max-width:1024px) 100vw, 55vw"
+            onError={() => setMainBroken(true)}
           />
+
+          {mainBroken ? (
+            <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 text-white/45">
+              <ImageOff className="h-8 w-8" />
+              <span className="text-[10px] uppercase tracking-[0.2em]">
+                Image unavailable
+              </span>
+            </div>
+          ) : null}
 
           <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between bg-gradient-to-t from-black/50 to-transparent p-3 opacity-0 transition group-hover:opacity-100 sm:opacity-100">
             <span className="hidden items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-white/70 sm:inline-flex">
@@ -251,7 +324,7 @@ export function ProductGallery({
               onMouseMove={onLightboxMove}
             >
               <SafeImage
-                src={gallery[active]}
+                src={mainSrc}
                 alt={alt}
                 fill
                 quality={100}
@@ -265,6 +338,7 @@ export function ProductGallery({
                     : undefined
                 }
                 sizes="100vw"
+                onError={() => setMainBroken(true)}
               />
             </div>
 

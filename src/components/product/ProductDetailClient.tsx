@@ -30,17 +30,13 @@ export interface ProductDetailClientProduct {
   category?: { name?: string; slug?: string } | null;
 }
 
+import { resolveColorGalleryImages } from "@/lib/product-images";
+
 function imagesForColor(
   product: ProductDetailClientProduct,
   colorName: string
 ): string[] {
-  const match = product.colors?.find(
-    (c) => c.name.toLowerCase() === colorName.toLowerCase()
-  );
-  if (match?.images?.filter(Boolean).length) {
-    return match.images.filter(Boolean);
-  }
-  return (product.images || []).filter(Boolean);
+  return resolveColorGalleryImages(product, colorName);
 }
 
 export function ProductDetailClient({

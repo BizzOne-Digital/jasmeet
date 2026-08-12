@@ -8,6 +8,10 @@ import { Loader2, Plus, Trash2 } from "lucide-react";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import { adminFetch } from "@/lib/admin-fetch";
 import { buildInventoryMatrix } from "@/lib/inventory";
+import {
+  sanitizeImageList,
+  sanitizeProductColors,
+} from "@/lib/product-images";
 import { slugify } from "@/lib/utils";
 
 const productFormSchema = z.object({
@@ -293,6 +297,17 @@ export default function ProductForm({
             ? rest.inventory
             : buildInventoryMatrix(rest.colors || [], rest.sizes || [], []);
 
+        const colors = sanitizeProductColors(rest.colors || []).map(
+          (color, index) => ({
+            ...color,
+            images: sanitizeImageList(
+              color.images?.length
+                ? color.images
+                : rest.colors?.[index]?.images
+            ),
+          })
+        );
+
         // Keep size.stock as total across colours for cards / quick view fallback
         const sizes = (rest.sizes || []).map((sizeRow) => {
           const total = inventory
@@ -306,6 +321,9 @@ export default function ProductForm({
 
         await onSubmit({
           ...rest,
+          images: sanitizeImageList(rest.images),
+          hoverImage: sanitizeImageList([rest.hoverImage || ""])[0] || "",
+          colors,
           sizes,
           inventory,
           compareAtPrice: compare,

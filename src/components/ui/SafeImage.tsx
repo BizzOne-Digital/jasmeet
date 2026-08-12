@@ -6,12 +6,13 @@ import { cn, getPlaceholderImage } from "@/lib/utils";
 import { isLegacyLocalUploadUrl } from "@/lib/upload-folders";
 
 export interface SafeImageProps
-  extends Omit<ImageProps, "src" | "alt" | "onError"> {
+  extends Omit<ImageProps, "src" | "alt"> {
   src?: string | null;
   alt: string;
   fallbackLabel?: string;
   fallbackWidth?: number;
   fallbackHeight?: number;
+  onError?: () => void;
 }
 
 export function SafeImage({
@@ -27,6 +28,7 @@ export function SafeImage({
   sizes,
   quality,
   unoptimized,
+  onError,
   ...props
 }: SafeImageProps) {
   const placeholder = getPlaceholderImage(
@@ -63,7 +65,10 @@ export function SafeImage({
       width={fill ? undefined : (width ?? fallbackWidth)}
       height={fill ? undefined : (height ?? fallbackHeight)}
       className={cn("bg-[#1a1a1a]", className)}
-      onError={() => setFailed(true)}
+      onError={() => {
+        setFailed(true);
+        onError?.();
+      }}
       unoptimized={skipOptimize}
       quality={quality ?? 100}
       sizes={resolvedSizes}

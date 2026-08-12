@@ -8,6 +8,7 @@ import { getProducts, getProductsByIds } from "@/lib/data/queries";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { slugify, generateSKU } from "@/lib/utils";
 import { sanitizeRichText } from "@/lib/sanitize";
+import { sanitizeProductImagePayload } from "@/lib/product-images-server";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import type { ProductFilters } from "@/types";
 
@@ -86,7 +87,10 @@ export async function POST(request: Request) {
     const slug = data.slug || slugify(data.name);
     const sku = data.sku || generateSKU();
 
-    const { sizeGuide, ...rest } = data;
+    const parsed = { ...data } as Record<string, unknown>;
+    await sanitizeProductImagePayload(parsed);
+
+    const { sizeGuide, ...rest } = parsed as typeof data;
     const product = await Product.create({
       ...rest,
       slug,
