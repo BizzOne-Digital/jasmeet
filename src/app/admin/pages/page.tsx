@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FileText, Pencil } from "lucide-react";
+import { FileText } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
+import {
+  adminLinkActionClass,
+  adminPageClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useToast } from "@/components/admin/ToastProvider";
 
@@ -78,11 +82,10 @@ export default function AdminPagesPage() {
       render: (row) => (
         <Link
           href={`/admin/pages/${row.slug}`}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:border-amber-500/40 hover:text-amber-300"
+          className={adminLinkActionClass}
           onClick={(e) => e.stopPropagation()}
         >
-          <Pencil className="h-3.5 w-3.5" />
-          Edit sections
+          Edit
         </Link>
       ),
     },
@@ -95,7 +98,7 @@ export default function AdminPagesPage() {
         subtitle="Edit content sections for each public page"
         onMenuClick={openSidebar}
       />
-      <main className="flex-1 p-4 sm:p-6">
+      <main className={adminPageClass}>
         <DataTable
           columns={columns}
           data={pages}

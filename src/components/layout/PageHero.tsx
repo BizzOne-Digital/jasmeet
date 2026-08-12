@@ -17,46 +17,47 @@ export function PageHero({
   align?: "left" | "center";
   image?: string;
   imageAlt?: string;
-  /** Tailwind object-position class, e.g. object-top / object-[center_20%] */
+  /** Tailwind object-position class, e.g. object-top */
   imagePositionClass?: string;
 }) {
   return (
     <header
       className={cn(
         "relative w-full max-w-full overflow-hidden",
-        image
-          ? "min-h-[36vh] bg-black sm:min-h-[44vh] md:min-h-[56vh]"
-          : "border-b border-white/10 bg-gradient-to-b from-[#12100e] to-background",
+        !image &&
+          "border-b border-white/10 bg-gradient-to-b from-[#12100e] to-background",
         align === "center" && "text-center"
       )}
     >
       {image ? (
         <>
-          <Image
-            src={image}
-            alt={imageAlt || safeText(title)}
-            fill
-            priority
-            unoptimized={image.startsWith("/images/")}
-            className={cn(
-              "bg-black object-contain object-center md:object-cover",
-              imagePositionClass !== "object-center"
-                ? imagePositionClass.replace(/^object-/, "md:object-")
-                : "md:object-center"
-            )}
-            sizes="100vw"
-            quality={100}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/50 to-black/35" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30" />
+          <div className="relative w-full bg-black">
+            <Image
+              src={image}
+              alt={imageAlt || safeText(title)}
+              width={1920}
+              height={900}
+              priority
+              unoptimized={
+                image.startsWith("/images/") || image.startsWith("/api/uploads/")
+              }
+              className={cn(
+                "h-auto max-h-[min(70vh,820px)] w-full object-contain",
+                imagePositionClass
+              )}
+              sizes="100vw"
+              quality={100}
+            />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/78 via-black/50 to-black/35" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
         </>
       ) : null}
 
       <div
         className={cn(
-          "relative z-10 w-full px-4 py-14 sm:px-6 sm:py-20 md:py-28 lg:px-8",
-          image &&
-            "flex min-h-[36vh] items-end sm:min-h-[44vh] md:min-h-[56vh]"
+          "relative z-10 w-full px-4 py-10 sm:px-6 sm:py-14 md:py-16 lg:px-8",
+          image && "absolute inset-x-0 bottom-0"
         )}
       >
         <div className="container-lux px-0">

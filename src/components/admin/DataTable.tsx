@@ -1,5 +1,6 @@
 "use client";
 
+import { adminCardClass } from "@/components/admin/admin-ui";
 import { cn } from "@/lib/utils";
 
 export interface DataTableColumn<T> {
@@ -28,10 +29,10 @@ export default function DataTable<T>({
 }: DataTableProps<T>) {
   if (loading) {
     return (
-      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40">
-        <div className="space-y-3 p-4">
+      <div className={cn(adminCardClass, "overflow-hidden")}>
+        <div className="space-y-3 p-5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-10 animate-pulse rounded bg-zinc-800/80" />
+            <div key={i} className="h-12 animate-pulse rounded bg-white/[0.04]" />
           ))}
         </div>
       </div>
@@ -40,39 +41,50 @@ export default function DataTable<T>({
 
   if (!data.length) {
     return (
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 px-6 py-16 text-center text-sm text-zinc-500">
+      <div
+        className={cn(
+          adminCardClass,
+          "px-6 py-16 text-center text-sm text-zinc-500"
+        )}
+      >
         {emptyMessage}
       </div>
     );
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-900/40">
+    <div className={cn(adminCardClass, "overflow-x-auto")}>
       <table className="min-w-full text-left text-sm">
-        <thead className="border-b border-zinc-800 bg-zinc-900/80 text-xs uppercase tracking-wide text-zinc-500">
+        <thead className="border-b border-white/[0.06] text-[10px] uppercase tracking-[0.16em] text-zinc-500">
           <tr>
             {columns.map((col) => (
               <th
                 key={col.key}
-                className={cn("whitespace-nowrap px-4 py-3 font-medium", col.className)}
+                className={cn(
+                  "whitespace-nowrap px-5 py-3.5 font-medium",
+                  col.className
+                )}
               >
                 {col.header}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-800/80">
+        <tbody className="divide-y divide-white/[0.05]">
           {data.map((row) => (
             <tr
               key={rowKey(row)}
               onClick={() => onRowClick?.(row)}
               className={cn(
-                "text-zinc-300 transition hover:bg-zinc-800/40",
+                "text-zinc-300 transition hover:bg-white/[0.02]",
                 onRowClick && "cursor-pointer"
               )}
             >
               {columns.map((col) => (
-                <td key={col.key} className={cn("px-4 py-3", col.className)}>
+                <td
+                  key={col.key}
+                  className={cn("px-5 py-4 align-middle", col.className)}
+                >
                   {col.render(row)}
                 </td>
               ))}

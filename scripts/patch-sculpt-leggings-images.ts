@@ -51,7 +51,13 @@ async function main() {
   await mongoose.connect(uri);
   const result = await mongoose.connection.db!.collection("products").updateOne(
     { slug: "auraimpact-sculpt-leggings" },
-    { $set: { colors, images: colors[0].images } }
+    {
+      $set: {
+        colors,
+        images: colors[0].images,
+        hoverImage: colors[0].images![1],
+      },
+    }
   );
 
   console.log(`✓ AuraImpact Sculpt Leggings — ${result.modifiedCount} product updated`);

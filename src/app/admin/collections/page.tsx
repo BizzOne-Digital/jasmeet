@@ -9,6 +9,15 @@ import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import { ImageUpload } from "@/components/ui/ImageUpload";
+import {
+  adminCardClass,
+  adminCardInnerClass,
+  adminFieldClass,
+  adminLabelClass,
+  adminLinkActionClass,
+  adminPageClass,
+  adminPrimaryBtnClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useToast } from "@/components/admin/ToastProvider";
 import { slugify } from "@/lib/utils";
@@ -40,9 +49,8 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const fieldClass =
-  "w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-200 focus:border-amber-500/50 focus:outline-none";
-const labelClass = "mb-1 block text-xs font-medium uppercase tracking-wide text-zinc-500";
+const fieldClass = adminFieldClass;
+const labelClass = adminLabelClass;
 
 export default function AdminCollectionsPage() {
   const { openSidebar } = useAdminShell();
@@ -173,7 +181,7 @@ export default function AdminCollectionsPage() {
           <button
             type="button"
             onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-black hover:bg-amber-400"
+            className={adminPrimaryBtnClass}
           >
             <Plus className="h-4 w-4" />
             New collection
@@ -184,7 +192,7 @@ export default function AdminCollectionsPage() {
       {showForm ? (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mx-4 mb-8 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 sm:mx-6 sm:p-6"
+          className={`${adminCardClass} ${adminCardInnerClass} mx-auto mb-8 max-w-4xl`}
         >
           <h2 className="mb-4 text-lg font-medium text-zinc-100">
             {editing ? "Edit collection" : "New collection"}
@@ -247,7 +255,7 @@ export default function AdminCollectionsPage() {
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-black hover:bg-amber-400 disabled:opacity-50"
+              className={adminPrimaryBtnClass}
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Save
@@ -269,12 +277,12 @@ export default function AdminCollectionsPage() {
       <div className="mx-4 sm:mx-6">
         {loading ? (
           <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-amber-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#D4AF37]" />
           </div>
         ) : !items.length ? (
           <p className="py-16 text-center text-sm text-zinc-500">No collections yet.</p>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-zinc-800">
+          <div className={`${adminCardClass} mx-auto max-w-5xl overflow-x-auto`}>
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-zinc-800 bg-zinc-900/80 text-xs uppercase tracking-wide text-zinc-500">
                 <tr>
@@ -305,7 +313,7 @@ export default function AdminCollectionsPage() {
                         <button
                           type="button"
                           onClick={() => openEdit(item)}
-                          className="rounded p-2 text-zinc-400 hover:bg-zinc-800 hover:text-amber-400"
+                          className={`rounded p-2 text-zinc-400 hover:bg-white/[0.04] ${adminLinkActionClass}`}
                           aria-label={`Edit ${item.name}`}
                         >
                           <Pencil className="h-4 w-4" />

@@ -12,6 +12,11 @@ import ProductForm, {
   sizeGuideToFormFields,
 } from "@/components/admin/ProductForm";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import {
+  adminGhostBtnClass,
+  adminLinkActionClass,
+  adminPageClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { buildInventoryMatrix } from "@/lib/inventory";
 import { useToast } from "@/components/admin/ToastProvider";
@@ -194,18 +199,15 @@ export default function AdminEditProductPage() {
           <button
             type="button"
             onClick={() => setDeleteOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg border border-red-900/60 px-3 py-2 text-sm text-red-300 hover:bg-red-950/40"
+            className={`${adminGhostBtnClass} border-red-900/60 text-red-300 hover:border-red-800 hover:text-red-200`}
           >
             <Trash2 className="h-4 w-4" />
             Delete
           </button>
         }
       />
-      <main className="mx-auto w-full max-w-4xl flex-1 space-y-4 p-4 sm:p-6">
-        <Link
-          href="/admin/products"
-          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-amber-300"
-        >
+      <main className={`${adminPageClass} mx-auto max-w-4xl space-y-4`}>
+        <Link href="/admin/products" className={adminLinkActionClass}>
           <ArrowLeft className="h-4 w-4" />
           Back to products
         </Link>

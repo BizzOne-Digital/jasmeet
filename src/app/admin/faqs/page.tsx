@@ -15,6 +15,15 @@ import {
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import {
+  adminCardClass,
+  adminCardInnerClass,
+  adminFieldClass,
+  adminLinkActionClass,
+  adminPageClass,
+  adminPrimaryBtnClass,
+  adminSectionTitleClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useToast } from "@/components/admin/ToastProvider";
 
@@ -48,8 +57,7 @@ const faqSchema = z.object({
 
 type FAQFormValues = z.infer<typeof faqSchema>;
 
-const fieldClass =
-  "w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-200 focus:border-amber-500/50 focus:outline-none";
+const fieldClass = adminFieldClass;
 
 export default function AdminFAQsPage() {
   const { openSidebar } = useAdminShell();
@@ -203,21 +211,21 @@ export default function AdminFAQsPage() {
           <button
             type="button"
             onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-black hover:bg-amber-400"
+            className={adminPrimaryBtnClass}
           >
             <Plus className="h-4 w-4" />
             Add FAQ
           </button>
         }
       />
-      <main className="flex-1 space-y-6 p-4 sm:p-6">
+      <main className={`${adminPageClass} space-y-6`}>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setFilterCategory("all")}
             className={
               filterCategory === "all"
-                ? "rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-300"
+                ? "rounded-md border border-[#D4AF37]/40 px-3 py-1.5 text-xs font-medium text-[#D4AF37]"
                 : "rounded-lg border border-zinc-800 px-3 py-1.5 text-xs text-zinc-400 hover:bg-zinc-900"
             }
           >
@@ -230,7 +238,7 @@ export default function AdminFAQsPage() {
               onClick={() => setFilterCategory(cat)}
               className={
                 filterCategory === cat
-                  ? "rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-300"
+                  ? "rounded-md border border-[#D4AF37]/40 px-3 py-1.5 text-xs font-medium text-[#D4AF37]"
                   : "rounded-lg border border-zinc-800 px-3 py-1.5 text-xs text-zinc-400 hover:bg-zinc-900"
               }
             >
@@ -242,9 +250,9 @@ export default function AdminFAQsPage() {
         {showForm ? (
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 sm:p-6"
+            className={`${adminCardClass} ${adminCardInnerClass}`}
           >
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+            <h2 className={`${adminSectionTitleClass} mb-4`}>
               {editing ? "Edit FAQ" : "New FAQ"}
             </h2>
             <div className="grid gap-4">
@@ -306,7 +314,7 @@ export default function AdminFAQsPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-black hover:bg-amber-400 disabled:opacity-60"
+                className={adminPrimaryBtnClass}
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Save
@@ -325,7 +333,7 @@ export default function AdminFAQsPage() {
             ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 px-6 py-16 text-center text-sm text-zinc-500">
+          <div className={`${adminCardClass} px-6 py-16 text-center text-sm text-zinc-500`}>
             No FAQs found
           </div>
         ) : (
@@ -333,7 +341,7 @@ export default function AdminFAQsPage() {
             {filtered.map((faq, index) => (
               <div
                 key={faq._id}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4"
+                className={`${adminCardClass} p-4`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
@@ -379,7 +387,7 @@ export default function AdminFAQsPage() {
                     <button
                       type="button"
                       onClick={() => openEdit(faq)}
-                      className="rounded p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-amber-300"
+                      className={`rounded p-1.5 text-zinc-400 hover:bg-white/[0.04] ${adminLinkActionClass}`}
                     >
                       <Pencil className="h-4 w-4" />
                     </button>

@@ -1,15 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
+import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
+import {
+  adminLinkActionClass,
+  adminPageClass,
+  adminSearchClass,
+  adminSelectClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useToast } from "@/components/admin/ToastProvider";
 import { formatPrice } from "@/lib/utils";
 import {
   ORDER_STATUS_LABELS,
-  SHIPPING_METHOD_LABELS,
   type OrderStatus,
 } from "@/lib/order-status";
 
@@ -27,10 +35,12 @@ interface OrderRow {
 export default function AdminOrdersPage() {
   const { openSidebar } = useAdminShell();
   const { error: toastError } = useToast();
+  const router = useRouter();
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("all");
   const [preOrderOnly, setPreOrderOnly] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     void (async () => {
@@ -47,15 +57,126 @@ export default function AdminOrdersPage() {
     })();
   }, [status, preOrderOnly, toastError]);
 
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return orders;
+    return orders.filter((order) => {
+      const customer = [
+        order.shippingAddress?.firstName,
+        order.shippingAddress?.lastName,
+        order.shippingAddress?.email,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return (
+        order.orderNumber.toLowerCase().includes(q) || customer.includes(q)
+      );
+    });
+  }, [orders, search]);
+
+  const columns: DataTableColumn<OrderRow>[] = [
+    {
+      key: "order",
+      header: "Order",
+      render: (row) => (
+        <div>
+          <span className="font-medium text-white">{row.orderNumber}</span>
+          {row.hasPreOrderItems ? (
+            <span className="ml-2 text-[10px] uppercase tracking-[0.12em] text-[#D4AF37]">
+              Pre-order
+            </span>
+          ) : null}
+        </div>
+      ),
+    },
+    {
+      key: "customer",
+      header: "Customer",
+      render: (row) => (
+        <div>
+          <p className="text-zinc-200">
+            {row.shippingAddress?.firstName} {row.shippingAddress?.lastName}
+          </p>
+          <p className="text-xs text-zinc-500">{row.shippingAddress?.email}</p>
+        </div>
+      ),
+    },
+    {
+      key: "total",
+      header: "Total",
+      render: (row) => formatPrice(row.total),
+    },
+    {
+      key: "payment",
+      header: "Payment",
+      className: "hidden md:table-cell",
+      render: () => <span className="text-zinc-400">Stripe</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (row) => (
+        <span className="text-[11px] uppercase tracking-[0.1em] text-[#D4AF37]">
+          {ORDER_STATUS_LABELS[row.orderStatus] || row.orderStatus}
+        </span>
+      ),
+    },
+    {
+      key: "date",
+      header: "Date",
+      className: "hidden lg:table-cell",
+      render: (row) => (
+        <span className="text-zinc-500">
+          {new Date(row.createdAt).toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          })}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
+      render: (row) => (
+        <Link
+          href={`/admin/orders/${row._id}`}
+          className={adminLinkActionClass}
+          onClick={(e) => e.stopPropagation()}
+        >
+          View
+        </Link>
+      ),
+    },
+  ];
+
   return (
-    <div>
-      <AdminHeader title="Orders" onMenuClick={openSidebar} />
-      <div className="space-y-4 p-4 md:p-6">
-        <div className="flex flex-wrap items-center gap-3">
+    <>
+      <AdminHeader
+        title="Orders"
+        subtitle={
+          loading
+            ? "Loading orders…"
+            : `${filtered.length} order${filtered.length === 1 ? "" : "s"} — click a row for details`
+        }
+        onMenuClick={openSidebar}
+      />
+      <main className={`${adminPageClass} space-y-5`}>
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by order #, email, customer…"
+              className={adminSearchClass}
+            />
+          </div>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-200"
+            className={adminSelectClass}
           >
             <option value="all">All statuses</option>
             {Object.entries(ORDER_STATUS_LABELS).map(([value, label]) => (
@@ -64,77 +185,26 @@ export default function AdminOrdersPage() {
               </option>
             ))}
           </select>
-          <label className="flex items-center gap-2 text-sm text-zinc-400">
+          <label className="flex shrink-0 items-center gap-2 text-sm text-zinc-400">
             <input
               type="checkbox"
               checked={preOrderOnly}
               onChange={(e) => setPreOrderOnly(e.target.checked)}
+              className="rounded border-white/20 bg-black"
             />
-            Pre-order orders only
+            Pre-order only
           </label>
         </div>
 
-        {loading ? (
-          <p className="text-sm text-zinc-500">Loading orders…</p>
-        ) : orders.length === 0 ? (
-          <p className="text-sm text-zinc-500">No orders found.</p>
-        ) : (
-          <div className="overflow-x-auto rounded-lg border border-zinc-800">
-            <table className="min-w-full text-left text-sm">
-              <thead className="bg-zinc-900 text-xs uppercase tracking-wide text-zinc-500">
-                <tr>
-                  <th className="px-4 py-3">Order</th>
-                  <th className="px-4 py-3">Customer</th>
-                  <th className="px-4 py-3">Status</th>
-                  <th className="px-4 py-3">Ship</th>
-                  <th className="px-4 py-3">Total</th>
-                  <th className="px-4 py-3">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order._id} className="border-t border-zinc-800">
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/admin/orders/${order._id}`}
-                        className="font-medium text-amber-400 hover:underline"
-                      >
-                        {order.orderNumber}
-                      </Link>
-                      {order.hasPreOrderItems ? (
-                        <span className="ml-2 rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-amber-400">
-                          Pre-order
-                        </span>
-                      ) : null}
-                    </td>
-                    <td className="px-4 py-3 text-zinc-300">
-                      {order.shippingAddress?.firstName}{" "}
-                      {order.shippingAddress?.lastName}
-                      <div className="text-xs text-zinc-500">
-                        {order.shippingAddress?.email}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-zinc-300">
-                      {ORDER_STATUS_LABELS[order.orderStatus] ||
-                        order.orderStatus}
-                    </td>
-                    <td className="px-4 py-3 text-zinc-400">
-                      {SHIPPING_METHOD_LABELS[order.shippingMethod] ||
-                        order.shippingMethod}
-                    </td>
-                    <td className="px-4 py-3 text-zinc-200">
-                      {formatPrice(order.total)}
-                    </td>
-                    <td className="px-4 py-3 text-zinc-500">
-                      {new Date(order.createdAt).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </div>
+        <DataTable
+          columns={columns}
+          data={filtered}
+          rowKey={(row) => row._id}
+          loading={loading}
+          emptyMessage="No orders yet. Real Stripe checkouts will appear here."
+          onRowClick={(row) => router.push(`/admin/orders/${row._id}`)}
+        />
+      </main>
+    </>
   );
 }

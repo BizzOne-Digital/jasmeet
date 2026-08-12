@@ -10,6 +10,7 @@ import { useCartStore } from "@/store/cart";
 import { useWishlistStore } from "@/store/wishlist";
 import { QuickViewModal } from "@/components/product/QuickViewModal";
 import { isVariantPurchasable, isPreOrderOnlyProduct } from "@/lib/inventory";
+import { sanitizeImageList } from "@/lib/product-images";
 
 export interface ProductCardProduct {
   _id: string;
@@ -62,13 +63,11 @@ export function ProductCard({
   const showWishlisted = mounted && inWishlist;
 
   const selectedColor = product.colors?.[colorIndex] || product.colors?.[0];
-  const colorImages = selectedColor?.images?.filter(Boolean) || [];
+  const colorImages = sanitizeImageList(selectedColor?.images);
+  const productImages = sanitizeImageList(product.images);
 
-  const image = colorImages[0] || product.images?.[0];
-  const hover =
-    colorImages[1] ||
-    product.hoverImage ||
-    (colorImages[0] ? product.images?.[0] : product.images?.[1]);
+  const image = colorImages[0] || productImages[0];
+  const hover = colorImages[1] || productImages[1] || null;
 
   const isAccessories = product.collection?.slug === "accessories";
   const onSale =
@@ -127,8 +126,8 @@ export function ProductCard({
   );
 
   const imageFitClass = isAccessories
-    ? "bg-transparent object-contain p-3 sm:p-5"
-    : "object-contain object-center p-1.5 sm:p-2";
+    ? "object-contain object-center p-4"
+    : "object-contain object-center p-2 sm:p-3";
 
   const showComingSoon = Boolean(product.isComingSoon);
   const preOrderOnly = !showComingSoon && isPreOrderOnlyProduct(product);
@@ -137,23 +136,35 @@ export function ProductCard({
   const showBestSeller =
     !showComingSoon && !preOrderOnly && !showSale && !showNew && Boolean(product.isBestSeller);
 
+  const statusBadge = showComingSoon ? (
+    <Badge variant="soon">Coming soon</Badge>
+  ) : preOrderOnly ? (
+    <Badge variant="preorder">Pre-order</Badge>
+  ) : showSale ? (
+    <Badge variant="sale">Sale</Badge>
+  ) : showNew ? (
+    <Badge variant="new">New</Badge>
+  ) : showBestSeller ? (
+    <Badge variant="bestseller">Best seller</Badge>
+  ) : null;
+
   return (
     <>
-      <article className={cn("group relative", className)}>
+      <article className={cn("group relative flex flex-col", className)}>
         <div
           className={cn(
-            "relative aspect-[3/4] overflow-hidden",
-            isAccessories ? "bg-white" : "bg-[#141414]"
+            "relative aspect-square overflow-hidden rounded-xl bg-[#141414]",
+            isAccessories && "bg-[#1c1c1c]"
           )}
         >
-          <Link href={`/products/${product.slug}`} className="absolute inset-0">
+          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0">
             <SafeImage
               src={image}
               alt={product.name}
               fill
               priority={priority}
               className={cn(
-                "transition duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)]",
+                "transition duration-700 ease-out group-hover:scale-[1.03]",
                 imageFitClass,
                 hover && "group-hover:opacity-0"
               )}
@@ -165,7 +176,7 @@ export function ProductCard({
                 alt=""
                 fill
                 className={cn(
-                  "opacity-0 transition duration-[1.1s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100",
+                  "opacity-0 transition duration-700 ease-out group-hover:scale-[1.03] group-hover:opacity-100",
                   imageFitClass
                 )}
                 sizes="(max-width:768px) 50vw, 25vw"
@@ -173,48 +184,31 @@ export function ProductCard({
             ) : null}
           </Link>
 
-          <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 sm:left-3 sm:top-3 sm:gap-1.5">
-            {showComingSoon ? (
-              <Badge variant="soon" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
-                Coming soon
-              </Badge>
-            ) : null}
-            {preOrderOnly ? (
-              <Badge variant="preorder" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
-                Pre-order
-              </Badge>
-            ) : null}
-            {showSale ? (
-              <Badge variant="sale" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
-                Sale
-              </Badge>
-            ) : null}
-            {showNew ? (
-              <Badge variant="new" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
-                New
-              </Badge>
-            ) : null}
-            {showBestSeller ? (
-              <Badge variant="bestseller" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
-                Best seller
-              </Badge>
-            ) : null}
-          </div>
+          {statusBadge ? (
+            <div className="pointer-events-none absolute left-3 top-3 z-10">
+              {statusBadge}
+            </div>
+          ) : null}
 
-          <div className="absolute right-2 top-2 z-10 flex flex-col gap-1 opacity-100 transition sm:right-3 sm:top-3 sm:gap-1.5 sm:opacity-0 sm:group-hover:opacity-100">
+          <div className="absolute right-3 top-3 z-10 flex flex-col gap-2">
             <button
               type="button"
               suppressHydrationWarning
               onClick={onWishlist}
               className={cn(
-                "flex h-9 w-9 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37] sm:h-10 sm:w-10",
+                "flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/55",
                 showWishlisted && "text-[#D4AF37]"
               )}
               aria-label={
                 showWishlisted ? "Remove from wishlist" : "Add to wishlist"
               }
             >
-              <Heart className={cn("h-4 w-4", showWishlisted && "fill-current")} />
+              <Heart
+                className={cn(
+                  "h-[18px] w-[18px]",
+                  showWishlisted ? "fill-current" : "fill-none stroke-[1.75]"
+                )}
+              />
             </button>
             <button
               type="button"
@@ -224,10 +218,10 @@ export function ProductCard({
                 e.stopPropagation();
                 setQuickOpen(true);
               }}
-              className="flex h-9 w-9 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37] sm:h-10 sm:w-10"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition hover:bg-black/55 group-hover:opacity-100"
               aria-label="Quick view"
             >
-              <Eye className="h-4 w-4" />
+              <Eye className="h-[18px] w-[18px]" />
             </button>
           </div>
 
@@ -235,26 +229,21 @@ export function ProductCard({
             type="button"
             suppressHydrationWarning
             onClick={quickAdd}
-            className="absolute inset-x-0 bottom-0 z-10 flex min-h-10 translate-y-0 items-center justify-center gap-2 bg-gold py-2.5 text-[9px] uppercase tracking-[0.24em] text-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:min-h-11 sm:py-3 sm:text-[10px] sm:translate-y-full sm:group-hover:translate-y-0"
+            className="absolute inset-x-0 bottom-0 z-10 flex min-h-10 translate-y-0 items-center justify-center gap-2 bg-[#D4AF37] py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 ease-out sm:translate-y-full sm:group-hover:translate-y-0"
           >
             <Plus className="h-3.5 w-3.5" />
             {preOrderOnly ? "Pre-order" : "Quick add"}
           </button>
         </div>
 
-        <div className="mt-4 space-y-2">
-          {product.collection?.name ? (
-            <p className="text-[10px] uppercase tracking-[0.2em] text-beige/45">
-              {product.collection.name}
-            </p>
-          ) : null}
+        <div className="mt-3 space-y-1.5 px-0.5">
           <Link
             href={`/products/${product.slug}`}
-            className="block line-clamp-2 text-[14px] leading-snug tracking-wide text-beige transition duration-500 hover:text-gold sm:text-[15px]"
+            className="block line-clamp-2 text-[13px] leading-snug tracking-wide text-beige transition hover:text-gold sm:text-[14px]"
           >
             {product.name}
           </Link>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <span className="text-sm tracking-wide text-beige/90">
               {formatPrice(product.price, currency)}
             </span>
@@ -265,7 +254,7 @@ export function ProductCard({
             ) : null}
           </div>
           {visibleColors.length ? (
-            <div className="flex flex-wrap items-center gap-0.5 pt-1">
+            <div className="flex flex-wrap items-center gap-1 pt-0.5">
               {visibleColors.map((c, i) => (
                 <button
                   key={`${c.name}-${c.hex}`}
@@ -279,21 +268,21 @@ export function ProductCard({
                     e.stopPropagation();
                     setColorIndex(i);
                   }}
-                  className="flex h-9 w-9 items-center justify-center"
+                  className="flex h-7 w-7 items-center justify-center"
                 >
                   <span
                     className={cn(
-                      "h-3.5 w-3.5 rounded-full border transition",
+                      "h-3 w-3 rounded-full border transition",
                       colorIndex === i
                         ? "border-[#D4AF37] ring-1 ring-[#D4AF37]/40"
-                        : "border-white/25"
+                        : "border-white/30"
                     )}
                     style={{ backgroundColor: c.hex || "#000" }}
                   />
                 </button>
               ))}
               {(product.colors?.length || 0) > 5 ? (
-                <span className="pl-1 text-[10px] text-white/40">
+                <span className="pl-0.5 text-[10px] text-white/40">
                   +{(product.colors?.length || 0) - 5}
                 </span>
               ) : null}

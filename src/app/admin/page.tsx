@@ -11,11 +11,23 @@ import {
   Package,
   Plus,
   Settings,
+  ShoppingBag,
 } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
+import {
+  adminCardClass,
+  adminCardInnerClass,
+  adminLinkActionClass,
+  adminPageClass,
+  adminSectionTitleClass,
+  adminStatCardClass,
+  adminStatLabelClass,
+  adminStatValueClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useToast } from "@/components/admin/ToastProvider";
+import { cn } from "@/lib/utils";
 
 interface DashboardStats {
   products: { total: number; published: number; draft: number };
@@ -23,6 +35,7 @@ interface DashboardStats {
   faqs: number;
   newsletter: number;
   contact: number;
+  orders?: number;
 }
 
 export default function AdminDashboardPage() {
@@ -43,144 +56,126 @@ export default function AdminDashboardPage() {
     })();
   }, [toastError]);
 
-  const cards = [
+  const topStats = [
     {
-      label: "Total products",
+      label: "Orders",
+      value: stats?.orders ?? 0,
+      href: "/admin/orders",
+    },
+    {
+      label: "Products",
       value: stats?.products.total,
-      icon: Package,
       href: "/admin/products",
     },
     {
       label: "Published",
       value: stats?.products.published,
-      icon: Package,
       href: "/admin/products?status=published",
-    },
-    {
-      label: "Drafts",
-      value: stats?.products.draft,
-      icon: Package,
-      href: "/admin/products?status=draft",
-    },
-    {
-      label: "Gallery items",
-      value: stats?.gallery,
-      icon: Images,
-      href: "/admin/gallery",
-    },
-    {
-      label: "FAQs",
-      value: stats?.faqs,
-      icon: HelpCircle,
-      href: "/admin/faqs",
-    },
-    {
-      label: "Newsletter",
-      value: stats?.newsletter,
-      icon: Mail,
-      href: "/admin/settings",
-    },
-    {
-      label: "Contact messages",
-      value: stats?.contact,
-      icon: MessageSquare,
-      href: "/admin",
     },
   ];
 
   const quickActions = [
-    { href: "/admin/pages", label: "Edit pages", icon: FileText },
-    { href: "/admin/collections", label: "Manage collections", icon: FileText },
     { href: "/admin/products/new", label: "Add product", icon: Plus },
-    { href: "/admin/orders", label: "View orders", icon: Package },
-    { href: "/admin/gallery", label: "Manage gallery", icon: Images },
-    { href: "/admin/faqs", label: "Manage FAQs", icon: HelpCircle },
-    { href: "/admin/settings", label: "Site settings", icon: Settings },
+    { href: "/admin/orders", label: "View orders", icon: ShoppingBag },
+    { href: "/admin/pages", label: "Edit pages", icon: FileText },
+    { href: "/admin/collections", label: "Collections", icon: FileText },
+    { href: "/admin/gallery", label: "Gallery", icon: Images },
+    { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },
+    { href: "/admin/settings", label: "Settings", icon: Settings },
   ];
 
   return (
     <>
       <AdminHeader
         title="Dashboard"
-        subtitle="Overview of your DAYAURA storefront"
+        subtitle="Overview of DAYAURA performance"
         onMenuClick={openSidebar}
       />
-      <main className="flex-1 space-y-8 p-4 sm:p-6">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {cards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <Link
-                key={card.label}
-                href={card.href}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-5 transition hover:border-amber-500/30 hover:bg-zinc-900"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">
-                    {card.label}
-                  </p>
-                  <Icon className="h-4 w-4 text-amber-500/70" />
-                </div>
-                <p className="mt-3 text-3xl font-semibold text-zinc-100">
-                  {loading ? "—" : (card.value ?? 0)}
-                </p>
-              </Link>
-            );
-          })}
+      <main className={cn(adminPageClass, "space-y-8")}>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {topStats.map((card) => (
+            <Link key={card.label} href={card.href} className={adminStatCardClass}>
+              <p className={adminStatLabelClass}>{card.label}</p>
+              <p className={adminStatValueClass}>
+                {loading ? "—" : (card.value ?? 0)}
+              </p>
+            </Link>
+          ))}
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
-              Quick actions
-            </h2>
-            <div className="grid gap-2 sm:grid-cols-2">
+          <section className={adminCardClass}>
+            <div className={cn(adminCardInnerClass, "border-b border-white/[0.06]")}>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className={adminSectionTitleClass}>Recent activity</h2>
+                <Link href="/admin/products" className={adminLinkActionClass}>
+                  View all
+                </Link>
+              </div>
+            </div>
+            <ul className="divide-y divide-white/[0.05] px-5 py-2 sm:px-6">
+              {[
+                {
+                  label: "Published products on storefront",
+                  value: stats?.products.published,
+                },
+                {
+                  label: "Draft products awaiting publish",
+                  value: stats?.products.draft,
+                },
+                {
+                  label: "Newsletter subscribers",
+                  value: stats?.newsletter,
+                  icon: Mail,
+                },
+                {
+                  label: "Contact form submissions",
+                  value: stats?.contact,
+                  icon: MessageSquare,
+                },
+                {
+                  label: "Gallery items",
+                  value: stats?.gallery,
+                  icon: Images,
+                },
+                {
+                  label: "FAQ entries",
+                  value: stats?.faqs,
+                  icon: HelpCircle,
+                },
+              ].map((row) => (
+                <li
+                  key={row.label}
+                  className="flex items-center justify-between gap-4 py-3.5 text-sm"
+                >
+                  <span className="text-zinc-400">{row.label}</span>
+                  <span className="shrink-0 font-medium text-white">
+                    {loading ? "…" : (row.value ?? 0)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className={adminCardClass}>
+            <div className={cn(adminCardInnerClass, "border-b border-white/[0.06]")}>
+              <h2 className={adminSectionTitleClass}>Quick actions</h2>
+            </div>
+            <div className="grid gap-0 divide-y divide-white/[0.05] sm:grid-cols-2 sm:divide-y-0">
               {quickActions.map((action) => {
                 const Icon = action.icon;
                 return (
                   <Link
                     key={action.href}
                     href={action.href}
-                    className="flex items-center gap-3 rounded-lg border border-zinc-800 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-300 transition hover:border-amber-500/40 hover:text-amber-300"
+                    className="flex items-center gap-3 px-5 py-4 text-sm text-zinc-300 transition hover:bg-white/[0.02] hover:text-[#D4AF37] sm:px-6"
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-4 w-4 shrink-0 text-zinc-500" />
                     {action.label}
                   </Link>
                 );
               })}
             </div>
-          </section>
-
-          <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
-              Recent activity
-            </h2>
-            <ul className="space-y-3 text-sm text-zinc-400">
-              <li className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3">
-                <span>Published products ready on storefront</span>
-                <span className="shrink-0 text-zinc-200">
-                  {loading ? "…" : stats?.products.published ?? 0}
-                </span>
-              </li>
-              <li className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3">
-                <span>Draft products awaiting publish</span>
-                <span className="shrink-0 text-zinc-200">
-                  {loading ? "…" : stats?.products.draft ?? 0}
-                </span>
-              </li>
-              <li className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3">
-                <span>Active newsletter subscribers</span>
-                <span className="shrink-0 text-zinc-200">
-                  {loading ? "…" : stats?.newsletter ?? 0}
-                </span>
-              </li>
-              <li className="flex items-start justify-between gap-3">
-                <span>Contact form submissions received</span>
-                <span className="shrink-0 text-zinc-200">
-                  {loading ? "…" : stats?.contact ?? 0}
-                </span>
-              </li>
-            </ul>
           </section>
         </div>
       </main>

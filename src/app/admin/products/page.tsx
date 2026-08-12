@@ -3,11 +3,18 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Copy, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
+import {
+  adminLinkActionClass,
+  adminPageClass,
+  adminPrimaryBtnClass,
+  adminSearchClass,
+  adminSelectClass,
+} from "@/components/admin/admin-ui";
 import { adminFetch } from "@/lib/admin-fetch";
 import { useToast } from "@/components/admin/ToastProvider";
 import { formatPrice } from "@/lib/utils";
@@ -26,6 +33,7 @@ interface ProductRow {
   isBestSeller?: boolean;
   isComingSoon?: boolean;
   allowPreOrder?: boolean;
+  sizes?: { size: string; stock: number }[];
   collection?: { name?: string } | string;
 }
 
@@ -36,6 +44,10 @@ interface ProductsResponse {
   totalPages: number;
 }
 
+function productStock(row: ProductRow) {
+  return (row.sizes || []).reduce((sum, s) => sum + (s.stock || 0), 0);
+}
+
 function ProductsContent() {
   const { openSidebar } = useAdminShell();
   const { success, error: toastError } = useToast();
@@ -43,6 +55,7 @@ function ProductsContent() {
   const searchParams = useSearchParams();
 
   const [products, setProducts] = useState<ProductRow[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [status, setStatus] = useState(searchParams.get("status") || "all");
@@ -64,8 +77,10 @@ function ProductsContent() {
     if (!result.success) {
       toastError(result.error);
       setProducts([]);
+      setTotal(0);
     } else {
       setProducts(result.data.products);
+      setTotal(result.data.total);
     }
     setLoading(false);
   }, [search, status, toastError]);
@@ -145,7 +160,7 @@ function ProductsContent() {
       header: "Product",
       render: (row) => (
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 overflow-hidden rounded-lg bg-zinc-800">
+          <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-white/[0.04]">
             {row.images?.[0] ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -155,9 +170,10 @@ function ProductsContent() {
               />
             ) : null}
           </div>
-          <div>
-            <p className="font-medium text-zinc-100">{row.name}</p>
-            <p className="text-xs text-zinc-500">{row.sku}</p>
+          <div className="min-w-0">
+            <p className="truncate font-medium text-white">{row.name}</p>
+            <p className="truncate text-xs text-zinc-500">{row.slug}</p>
+            <p className="text-xs text-zinc-600">SKU {row.sku}</p>
           </div>
         </div>
       ),
@@ -165,28 +181,16 @@ function ProductsContent() {
     {
       key: "price",
       header: "Price",
-      render: (row) => formatPrice(row.price),
-    },
-    {
-      key: "collection",
-      header: "Collection",
-      className: "hidden lg:table-cell",
-      render: (row) =>
-        typeof row.collection === "object" ? row.collection?.name || "—" : "—",
-    },
-    {
-      key: "status",
-      header: "Status",
       render: (row) => (
-        <span
-          className={
-            row.status === "published"
-              ? "rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs text-emerald-400"
-              : "rounded-full bg-zinc-700/50 px-2.5 py-1 text-xs text-zinc-400"
-          }
-        >
-          {row.status}
-        </span>
+        <span className="text-zinc-200">{formatPrice(row.price)}</span>
+      ),
+    },
+    {
+      key: "stock",
+      header: "Stock",
+      className: "hidden sm:table-cell",
+      render: (row) => (
+        <span className="text-zinc-300">{productStock(row)}</span>
       ),
     },
     {
@@ -194,70 +198,44 @@ function ProductsContent() {
       header: "Flags",
       className: "hidden md:table-cell",
       render: (row) => (
-        <div className="flex flex-wrap gap-1">
-          {row.isFeatured ? (
-            <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-400">
-              Featured
-            </span>
-          ) : null}
-          {row.isBestSeller ? (
-            <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-300">
-              Best seller
-            </span>
-          ) : null}
-          {row.isNewArrival ? (
-            <span className="rounded bg-sky-500/10 px-1.5 py-0.5 text-[10px] text-sky-400">
-              New
-            </span>
-          ) : null}
-          {row.isOnSale ? (
-            <span className="rounded bg-rose-500/10 px-1.5 py-0.5 text-[10px] text-rose-400">
-              Sale
-            </span>
-          ) : null}
-          {row.isComingSoon ? (
-            <span className="rounded bg-zinc-500/20 px-1.5 py-0.5 text-[10px] text-zinc-300">
-              Coming soon
-            </span>
-          ) : null}
-          {row.allowPreOrder ? (
-            <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-300">
-              Pre-order
-            </span>
-          ) : null}
+        <div className="flex flex-wrap gap-x-2 gap-y-1 text-[11px] uppercase tracking-[0.08em] text-[#D4AF37]">
+          {row.status === "draft" ? <span>Draft</span> : null}
+          {row.isNewArrival ? <span>New</span> : null}
+          {row.isBestSeller ? <span>Bestseller</span> : null}
+          {row.isFeatured ? <span>Featured</span> : null}
+          {row.isOnSale ? <span>Sale</span> : null}
+          {row.isComingSoon ? <span>Coming soon</span> : null}
+          {row.allowPreOrder ? <span>Pre-order</span> : null}
         </div>
       ),
     },
     {
       key: "actions",
-      header: "",
+      header: "Actions",
       render: (row) => (
         <div
-          className="flex justify-end gap-1"
+          className="flex flex-wrap items-center gap-2"
           onClick={(e) => e.stopPropagation()}
         >
           <Link
             href={`/admin/products/${row._id}`}
-            className="rounded p-2 text-zinc-400 hover:bg-zinc-800 hover:text-amber-300"
-            aria-label="Edit"
+            className={adminLinkActionClass}
           >
-            <Pencil className="h-4 w-4" />
+            Edit
           </Link>
           <button
             type="button"
             onClick={() => void duplicateProduct(row)}
-            className="rounded p-2 text-zinc-400 hover:bg-zinc-800 hover:text-amber-300"
-            aria-label="Duplicate"
+            className={adminLinkActionClass}
           >
-            <Copy className="h-4 w-4" />
+            Duplicate
           </button>
           <button
             type="button"
             onClick={() => setDeleteId(row._id)}
-            className="rounded p-2 text-zinc-400 hover:bg-red-950/50 hover:text-red-400"
-            aria-label="Delete"
+            className={`${adminLinkActionClass} hover:text-red-400`}
           >
-            <Trash2 className="h-4 w-4" />
+            Delete
           </button>
         </div>
       ),
@@ -284,33 +262,34 @@ function ProductsContent() {
     <>
       <AdminHeader
         title="Products"
-        subtitle="Manage catalog, pricing, and publish status"
+        subtitle={
+          loading
+            ? "Loading catalog…"
+            : `${total} catalog item${total === 1 ? "" : "s"}`
+        }
         onMenuClick={openSidebar}
         actions={
-          <Link
-            href="/admin/products/new"
-            className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-3 py-2 text-sm font-medium text-black hover:bg-amber-400"
-          >
+          <Link href="/admin/products/new" className={adminPrimaryBtnClass}>
             <Plus className="h-4 w-4" />
             Add product
           </Link>
         }
       />
-      <main className="flex-1 space-y-4 p-4 sm:p-6">
+      <main className={`${adminPageClass} space-y-5`}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-600" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products…"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 py-2.5 pl-10 pr-3 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-amber-500/50 focus:outline-none"
+              className={adminSearchClass}
             />
           </div>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-zinc-200 focus:border-amber-500/50 focus:outline-none"
+            className={adminSelectClass}
           >
             <option value="all">All statuses</option>
             <option value="published">Published</option>

@@ -11,7 +11,7 @@ const AUTO_INTERVAL = 7000;
 const FADE_MS = 1.35;
 
 const heroHeadlineLineClass =
-  "block whitespace-nowrap text-[1.2rem] leading-[1.16] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3.25rem] xl:leading-[1.12]";
+  "block whitespace-nowrap text-[1rem] leading-[1.14] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3.25rem] xl:leading-[1.12]";
 
 function SlideContent({
   slide,
@@ -25,7 +25,10 @@ function SlideContent({
   return (
     <div
       className={cn(
-        "relative z-10 flex min-h-[52svh] w-full max-w-full flex-col justify-center px-5 pb-20 pt-24 sm:min-h-[68svh] sm:px-10 sm:pb-24 sm:pt-28 md:min-h-[100svh] md:px-14 md:pt-24 lg:px-20 xl:px-24",
+        "relative z-10 flex w-full max-w-full flex-col px-5 pt-[max(5.5rem, calc(4.5rem+env(safe-area-inset-top)))] sm:px-10 md:px-14 lg:px-20 xl:px-24",
+        "min-h-[calc(100svh-3.5rem)] min-h-[calc(100dvh-3.5rem)] justify-end pb-[max(6.75rem,calc(5.25rem+env(safe-area-inset-bottom)))]",
+        "sm:min-h-[68svh] sm:justify-center sm:pb-24 sm:pt-28",
+        "md:min-h-[100svh] md:pt-24",
         alignRight && "items-end"
       )}
     >
@@ -88,11 +91,11 @@ function SlideContent({
           initial={{ opacity: 0, y: 16 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.85, delay: 0.62, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 sm:mt-8"
+          className="mt-5 w-full shrink-0 sm:mt-8"
         >
           <Link
             href={slide.primaryCta.href}
-            className="inline-flex min-h-12 w-full items-center justify-center gap-3 bg-gold-soft px-8 py-3.5 text-[11px] uppercase tracking-[0.24em] text-black lux-btn sm:w-auto sm:min-h-12 sm:px-10"
+            className="inline-flex min-h-12 w-full items-center justify-center gap-3 bg-gold-soft px-6 py-3.5 text-[10px] uppercase tracking-[0.22em] text-black lux-btn sm:min-h-12 sm:w-auto sm:px-10 sm:text-[11px] sm:tracking-[0.24em]"
           >
             {slide.primaryCta.label}
           </Link>
@@ -126,7 +129,7 @@ export function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSlide[] }) 
 
   return (
     <section
-      className="relative -mt-[6rem] w-full max-w-full overflow-x-clip overflow-hidden pt-[6rem] sm:-mt-[7rem] sm:pt-[7rem] lg:-mt-[7.5rem] lg:pt-[7.5rem]"
+      className="relative -mt-[6rem] min-h-[100svh] min-h-[100dvh] w-full max-w-full overflow-x-clip pt-[6rem] sm:-mt-[7rem] sm:pt-[7rem] lg:-mt-[7.5rem] lg:pt-[7.5rem]"
       aria-label="Hero carousel"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
@@ -199,10 +202,10 @@ export function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSlide[] }) 
         </motion.div>
       </AnimatePresence>
 
-      {/* Dots */}
+      {/* Dots — reserve space so CTAs never sit underneath */}
       <div className="absolute inset-x-0 bottom-0 z-20 overflow-x-clip pb-[env(safe-area-inset-bottom)]">
-        <div className="border-t border-white/10 bg-black/30 backdrop-blur-sm">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-8 sm:py-4 lg:px-12">
+        <div className="border-t border-white/10 bg-black/40 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-8 sm:py-4 lg:px-12">
             <div className="flex flex-1 items-center justify-center gap-1 sm:justify-start sm:gap-2.5">
               {slides.map((slide, i) => (
                 <button

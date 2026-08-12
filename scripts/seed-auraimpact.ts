@@ -309,6 +309,7 @@ const PRODUCTS: AuraImpactProduct[] = [
       "/images/products/auraimpact-sculpt-leggings/black",
       2
     ),
+    hoverImage: "/images/products/auraimpact-sculpt-leggings/black/02.png",
     sizeGuide: {
       unit: "IN / CM",
       sections: [

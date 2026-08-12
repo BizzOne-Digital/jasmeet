@@ -12,6 +12,14 @@ import {
   sanitizeImageList,
   sanitizeProductColors,
 } from "@/lib/product-images";
+import {
+  adminCardClass,
+  adminCardInnerClass,
+  adminFieldClass,
+  adminLabelClass,
+  adminPrimaryBtnClass,
+  adminSectionTitleClass,
+} from "@/components/admin/admin-ui";
 import { slugify } from "@/lib/utils";
 
 const productFormSchema = z.object({
@@ -153,9 +161,10 @@ interface ProductFormProps {
   loading?: boolean;
 }
 
-const fieldClass =
-  "w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-amber-500/50 focus:outline-none";
-const labelClass = "mb-1 block text-xs font-medium uppercase tracking-wide text-zinc-500";
+const fieldClass = adminFieldClass;
+const labelClass = adminLabelClass;
+const sectionClass = `${adminCardClass} ${adminCardInnerClass}`;
+const sectionTitleClass = `${adminSectionTitleClass} mb-4 block`;
 
 const emptyDefaults: ProductFormValues = {
   name: "",
@@ -332,8 +341,8 @@ export default function ProductForm({
       })}
       className="space-y-8"
     >
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+      <section className={sectionClass}>
+        <h2 className={sectionTitleClass}>
           Basics
         </h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -405,8 +414,8 @@ export default function ProductForm({
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+      <section className={sectionClass}>
+        <h2 className={sectionTitleClass}>
           Pricing & status
         </h2>
         <div className="grid gap-4 md:grid-cols-3">
@@ -457,8 +466,8 @@ export default function ProductForm({
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+      <section className={sectionClass}>
+        <h2 className={sectionTitleClass}>
           Images
         </h2>
         <p className="mb-4 text-xs text-zinc-500">
@@ -507,9 +516,9 @@ export default function ProductForm({
         ) : null}
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
+      <section className={sectionClass}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+          <h2 className={sectionTitleClass.replace(" mb-4 block", "")}>
             Colors
           </h2>
           <button
@@ -593,9 +602,9 @@ export default function ProductForm({
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
+      <section className={sectionClass}>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+          <h2 className={sectionTitleClass.replace(" mb-4 block", "")}>
             Sizes
           </h2>
           <button
@@ -629,15 +638,15 @@ export default function ProductForm({
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
+      <section className={sectionClass}>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+          <h2 className={sectionTitleClass.replace(" mb-4 block", "")}>
             Inventory (colour × size)
           </h2>
           <button
             type="button"
             onClick={syncInventoryMatrix}
-            className="inline-flex items-center gap-1 rounded-lg border border-zinc-700 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
+            className="inline-flex items-center gap-1 rounded-md border border-white/15 px-2.5 py-1.5 text-xs text-zinc-300 hover:border-white/30"
           >
             Sync matrix from colours & sizes
           </button>
@@ -683,8 +692,8 @@ export default function ProductForm({
         )}
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+      <section className={sectionClass}>
+        <h2 className={sectionTitleClass}>
           Pre-order
         </h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -713,8 +722,8 @@ export default function ProductForm({
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+      <section className={sectionClass}>
+        <h2 className={sectionTitleClass}>
           Details
         </h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -743,7 +752,7 @@ export default function ProductForm({
             <textarea rows={3} className={fieldClass} {...register("hiddenMessage")} />
           </div>
           <div className="md:col-span-2 space-y-3 rounded-lg border border-zinc-800 p-4">
-            <p className="text-xs font-medium uppercase tracking-wide text-amber-400/90">
+            <p className={adminSectionTitleClass}>
               Size guide table
             </p>
             <p className="text-xs text-zinc-500">
@@ -829,8 +838,8 @@ export default function ProductForm({
         </div>
       </section>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-amber-400/90">
+      <section className={sectionClass}>
+        <h2 className={sectionTitleClass}>
           SEO
         </h2>
         <div className="grid gap-4">
@@ -849,7 +858,7 @@ export default function ProductForm({
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-semibold text-black hover:bg-amber-400 disabled:opacity-60"
+          className={adminPrimaryBtnClass}
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
           {submitLabel}
