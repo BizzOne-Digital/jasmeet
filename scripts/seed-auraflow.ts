@@ -332,7 +332,16 @@ const PRODUCTS: AuraFlowProduct[] = [
           "/images/products/auraflow-cozy-lounge-set/pink/04.png",
         ],
       },
-      { name: "Grey", hex: "#9A9590" },
+      {
+        name: "Grey",
+        hex: "#9A9590",
+        images: [
+          "/images/products/auraflow-cozy-lounge-set/grey/01.png",
+          "/images/products/auraflow-cozy-lounge-set/grey/02.png",
+          "/images/products/auraflow-cozy-lounge-set/grey/03.png",
+          "/images/products/auraflow-cozy-lounge-set/grey/04.png",
+        ],
+      },
     ],
     sizes: stockSML(),
     images: [

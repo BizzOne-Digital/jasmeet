@@ -22,7 +22,7 @@ function SlideContent({
   return (
     <div
       className={cn(
-        "relative z-10 flex min-h-[62svh] w-full max-w-full flex-col justify-center px-5 pb-24 pt-24 sm:min-h-[75svh] sm:px-10 sm:pb-28 sm:pt-28 md:min-h-[100svh] md:px-14 lg:px-20 xl:px-24",
+        "relative z-10 flex min-h-[52svh] w-full max-w-full flex-col justify-center px-5 pb-20 pt-20 sm:min-h-[68svh] sm:px-10 sm:pb-24 sm:pt-24 md:min-h-[100svh] md:px-14 lg:px-20 xl:px-24",
         alignRight && "items-end"
       )}
     >
@@ -51,7 +51,7 @@ function SlideContent({
           initial={{ opacity: 0, y: 28 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
           transition={{ duration: 1, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-          className="break-words font-display text-[2.05rem] leading-[1.05] tracking-[0.03em] text-beige sm:text-5xl md:text-6xl lg:text-7xl xl:text-[4.6rem]"
+          className="break-words font-display text-[1.65rem] leading-[1.12] tracking-[0.03em] text-beige sm:text-4xl sm:leading-[1.08] md:text-6xl lg:text-7xl xl:text-[4.6rem]"
         >
           {slide.heading}
           {slide.headingLine2 ? (
@@ -65,7 +65,7 @@ function SlideContent({
             animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
             transition={{ duration: 0.9, delay: 0.48, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "mt-6 max-w-md text-[15px] leading-relaxed text-beige/65 md:mt-7 md:text-base",
+              "mt-5 max-w-md text-sm leading-relaxed text-beige/65 md:mt-6 md:text-base",
               alignRight && "ml-auto"
             )}
           >
@@ -77,7 +77,7 @@ function SlideContent({
           initial={{ opacity: 0, y: 16 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
           transition={{ duration: 0.85, delay: 0.62, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10"
+          className="mt-6 sm:mt-8"
         >
           <Link
             href={slide.primaryCta.href}
@@ -91,11 +91,11 @@ function SlideContent({
   );
 }
 
-export function HeroSection() {
+export function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSlide[] }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const reducedMotion = useReducedMotion();
-  const total = HERO_SLIDES.length;
+  const total = slides.length;
 
   const goTo = useCallback((index: number) => {
     setActive(((index % total) + total) % total);
@@ -111,11 +111,11 @@ export function HeroSection() {
     return () => window.clearInterval(timer);
   }, [next, reducedMotion, paused, active]);
 
-  const current = HERO_SLIDES[active];
+  const current = slides[active];
 
   return (
     <section
-      className="relative -mt-[7.5rem] w-full max-w-full overflow-x-clip overflow-hidden pt-[7.5rem]"
+      className="relative -mt-[6rem] w-full max-w-full overflow-x-clip overflow-hidden pt-[6rem] sm:-mt-[7rem] sm:pt-[7rem] lg:-mt-[7.5rem] lg:pt-[7.5rem]"
       aria-label="Hero carousel"
       aria-roledescription="carousel"
       onMouseEnter={() => setPaused(true)}
@@ -193,7 +193,7 @@ export function HeroSection() {
         <div className="border-t border-white/10 bg-black/30 backdrop-blur-sm">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-8 sm:py-4 lg:px-12">
             <div className="flex flex-1 items-center justify-center gap-1 sm:justify-start sm:gap-2.5">
-              {HERO_SLIDES.map((slide, i) => (
+              {slides.map((slide, i) => (
                 <button
                   key={slide.id}
                   type="button"

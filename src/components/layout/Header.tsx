@@ -31,9 +31,8 @@ const NAV_LINKS = [
   { href: "/shop", label: "All Products" },
   { href: "/collections", label: "Collections" },
   { href: "/shop?newArrival=true", label: "New Arrivals" },
-  { href: "/shop?featured=true", label: "Best Sellers" },
+  { href: "/shop?featured=true", label: "Featured Picks" },
   { href: "/about", label: "About" },
-  { href: "/gallery", label: "Gallery" },
 ];
 
 const navLinkClass =
@@ -138,14 +137,14 @@ export function Header({
       >
         <div
           className={cn(
-            "mx-auto flex h-[4.5rem] w-full max-w-7xl items-center gap-1 px-3 sm:gap-4 sm:px-6 lg:h-[5.25rem] lg:px-8",
+            "mx-auto flex h-[4rem] w-full max-w-7xl items-center gap-1 px-3 sm:h-[4.5rem] sm:gap-4 sm:px-6 lg:h-[5.25rem] lg:px-8",
             "pt-[max(0px,env(safe-area-inset-top))]",
             isHome ? "justify-between lg:grid lg:grid-cols-3" : "justify-between"
           )}
         >
           <button
             type="button"
-            className="flex h-11 w-11 shrink-0 items-center justify-center text-[#F5F0E6] lg:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center text-[#F5F0E6] sm:h-11 sm:w-11 lg:hidden"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
             aria-expanded={mobileOpen}
@@ -158,7 +157,7 @@ export function Header({
             className="flex min-w-0 shrink items-center gap-2 sm:gap-3 lg:col-start-1"
           >
             {showLogoImg ? (
-              <span className="relative block h-12 w-12 shrink-0 sm:h-14 sm:w-14 lg:h-16 lg:w-16">
+              <span className="relative block h-10 w-10 shrink-0 sm:h-12 sm:w-12 lg:h-16 lg:w-16">
                 <SafeImage
                   src={logo}
                   alt={businessName}
@@ -168,7 +167,7 @@ export function Header({
                 />
               </span>
             ) : null}
-            <span className="truncate font-display text-base tracking-[0.14em] text-[#F5F0E6] sm:text-lg sm:tracking-[0.18em] md:text-xl md:tracking-[0.24em] lg:text-2xl lg:tracking-[0.28em]">
+            <span className="truncate font-display text-[0.9375rem] tracking-[0.12em] text-[#F5F0E6] sm:text-lg sm:tracking-[0.18em] md:text-xl md:tracking-[0.24em] lg:text-2xl lg:tracking-[0.28em]">
               {businessName || "DAYAURA"}
             </span>
           </Link>
@@ -238,7 +237,7 @@ export function Header({
                               className="group/card relative aspect-[16/10] overflow-hidden bg-[#1a1a1a] sm:aspect-[3/2]"
                             >
                               <SafeImage
-                                src={getCollectionImage(c.slug)}
+                                src={getCollectionImage(c.slug, c.image)}
                                 alt={c.name}
                                 fill
                                 className="object-contain object-center transition duration-700 group-hover/card:scale-[1.03]"
@@ -294,7 +293,7 @@ export function Header({
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="flex h-11 w-11 items-center justify-center text-[#F5F0E6]/85 transition hover:text-[#D4AF37]"
+              className="flex h-10 w-10 items-center justify-center text-[#F5F0E6]/85 transition hover:text-[#D4AF37] sm:h-11 sm:w-11"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />

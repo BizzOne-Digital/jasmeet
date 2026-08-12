@@ -90,6 +90,7 @@ export default function AdminDashboardPage() {
 
   const quickActions = [
     { href: "/admin/pages", label: "Edit pages", icon: FileText },
+    { href: "/admin/collections", label: "Manage collections", icon: FileText },
     { href: "/admin/products/new", label: "Add product", icon: Plus },
     { href: "/admin/orders", label: "View orders", icon: Package },
     { href: "/admin/gallery", label: "Manage gallery", icon: Images },

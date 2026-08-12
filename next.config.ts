@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
     qualities: [75, 90, 95, 100],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     localPatterns: [
-      // Omit `search` so cache-bust query strings (?v=…) are allowed under /images
       { pathname: "/images/**" },
+      { pathname: "/api/uploads/**" },
       { pathname: "/**", search: "" },
     ],
     remotePatterns: [

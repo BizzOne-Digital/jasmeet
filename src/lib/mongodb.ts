@@ -27,6 +27,10 @@ export async function connectDB(): Promise<typeof mongoose> {
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI!, {
       bufferCommands: false,
+      /** Serverless-friendly pool (Atlas + Vercel). */
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 15_000,
+      socketTimeoutMS: 45_000,
     });
   }
 

@@ -11,6 +11,10 @@ import { SafeImage } from "@/components/ui/SafeImage";
 import { formatPrice, cn } from "@/lib/utils";
 import { calculateShipping, isLocalDeliveryEligible } from "@/lib/shipping";
 import type { ShippingMethod } from "@/lib/order-status";
+import {
+  CartPreOrderBadge,
+  cartHasPreOrderItems,
+} from "@/components/cart/CartPreOrderBadge";
 
 export function CheckoutClient({
   shippingThreshold = 99,
@@ -35,10 +39,12 @@ export function CheckoutClient({
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [orderNumber, setOrderNumber] = useState("");
+  const [hadPreOrder, setHadPreOrder] = useState(false);
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>("standard");
   const [postalCode, setPostalCode] = useState("");
 
   const hasItems = items.length > 0;
+  const hasPreOrder = cartHasPreOrderItems(items);
   const localOk =
     localDeliveryEnabled &&
     isLocalDeliveryEligible(postalCode, localDeliveryPostalCodes);
@@ -124,6 +130,7 @@ export function CheckoutClient({
         throw new Error(json.error || "Unable to place order");
       }
       setOrderNumber(json.data?.orderNumber || "");
+      setHadPreOrder(cartHasPreOrderItems(items));
       setStatus("success");
       clearCart();
     } catch (err) {
@@ -145,6 +152,13 @@ export function CheckoutClient({
             <strong className="text-beige">{orderNumber}</strong>
           ) : null}{" "}
           has been created. A confirmation email is on its way.
+          {hadPreOrder ? (
+            <>
+              {" "}
+              Pre-order item(s) in your order will ship according to the
+              estimated dispatch times in your email.
+            </>
+          ) : null}
           {paymentConfigured
             ? " Payment confirmation will follow separately."
             : " (Test mode — no real charge.)"}
@@ -298,6 +312,12 @@ export function CheckoutClient({
 
       <aside className="h-fit border border-white/10 bg-surface p-6">
         <h2 className="font-heading text-2xl">Order summary</h2>
+        {hasPreOrder ? (
+          <p className="mt-4 border border-gold/30 bg-gold/5 px-3 py-2 text-xs leading-relaxed text-beige/80">
+            Includes pre-order item(s). Dispatch estimates are shown below each
+            product.
+          </p>
+        ) : null}
         <ul className="mt-6 space-y-4">
           {items.map((item) => (
             <li
@@ -318,6 +338,7 @@ export function CheckoutClient({
                 <p className="text-xs text-muted">
                   {item.size} / {item.color} × {item.quantity}
                 </p>
+                <CartPreOrderBadge item={item} />
               </div>
               <p className="text-sm">
                 {formatPrice(item.price * item.quantity)}

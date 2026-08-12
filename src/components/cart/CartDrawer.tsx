@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/Button";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { useCartStore } from "@/store/cart";
 import { cn, formatPrice } from "@/lib/utils";
+import {
+  CartPreOrderBadge,
+  cartHasPreOrderItems,
+} from "@/components/cart/CartPreOrderBadge";
 
 export interface CartDrawerProps {
   shippingThreshold?: number;
@@ -74,6 +78,7 @@ export function CartDrawer({
                           {item.color}
                           {item.size ? ` / ${item.size}` : ""}
                         </p>
+                        <CartPreOrderBadge item={item} />
                       </div>
                       <button
                         type="button"
@@ -135,6 +140,12 @@ export function CartDrawer({
 
         {items.length > 0 ? (
           <div className="border-t border-white/10 px-5 py-5 space-y-4">
+            {cartHasPreOrderItems(items) ? (
+              <p className="border border-gold/30 bg-gold/5 px-3 py-2 text-[11px] leading-relaxed text-beige/80">
+                Your bag includes pre-order item(s). Estimated dispatch times are
+                shown on each line and in your confirmation email.
+              </p>
+            ) : null}
             <div>
               <div className="mb-2 flex justify-between text-xs text-white/55">
                 <span>

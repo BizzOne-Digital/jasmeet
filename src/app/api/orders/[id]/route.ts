@@ -1,10 +1,12 @@
 import { connectDB } from "@/lib/mongodb";
 import Order from "@/models/Order";
+import Product from "@/models/Product";
 import { requireAdmin } from "@/lib/auth";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import { ORDER_STATUSES, EMAIL_ON_STATUS } from "@/lib/order-status";
 import { sendOrderStatusEmail } from "@/lib/email/order-emails";
 import { getSiteSettings } from "@/lib/data/settings";
+import { restoreInventory } from "@/lib/inventory";
 import { z } from "zod";
 
 const updateSchema = z.object({
@@ -16,6 +18,8 @@ const updateSchema = z.object({
 });
 
 type Params = Promise<{ id: string }>;
+
+const RESTORE_STATUSES = new Set(["cancelled", "refunded"]);
 
 export async function GET(
   _request: Request,
@@ -47,6 +51,7 @@ export async function PATCH(
     if (!order) return jsonError("Order not found", 404);
 
     const prevStatus = order.orderStatus;
+    const inventoryWasRestored = Boolean(order.notes?.includes("[inventory-restored]"));
 
     if (body.orderStatus) order.orderStatus = body.orderStatus;
     if (body.courierName !== undefined) order.courierName = body.courierName;
@@ -62,6 +67,25 @@ export async function PATCH(
           400
         );
       }
+    }
+
+    const shouldRestore =
+      RESTORE_STATUSES.has(order.orderStatus) &&
+      !RESTORE_STATUSES.has(prevStatus) &&
+      !inventoryWasRestored;
+
+    if (shouldRestore) {
+      for (const item of order.items) {
+        if (item.isPreOrder) continue;
+        const product = await Product.findById(item.productId);
+        if (!product) continue;
+        restoreInventory(product, item.color, item.size, item.quantity);
+        await product.save();
+      }
+      const noteTag = "[inventory-restored]";
+      order.notes = order.notes?.includes(noteTag)
+        ? order.notes
+        : `${order.notes ? `${order.notes}\n` : ""}${noteTag}`;
     }
 
     await order.save();

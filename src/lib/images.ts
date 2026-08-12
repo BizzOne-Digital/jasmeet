@@ -1,6 +1,6 @@
 /**
- * Central image paths for DAYAURA.
- * Replace files in /public/images/ — prompts in IMAGE_PROMPTS.md
+ * Central image paths for DAYAURA static fallbacks.
+ * Admin-uploaded images (MongoDB) and DB fields take priority when set.
  */
 
 const img = (path: string) => `/images/${path}`;
@@ -32,12 +32,10 @@ export const COLLECTION_IMAGES: Record<string, string> = {
   accessories: img("collections/accessories.png"),
 };
 
-/** object-position for collection heroes (faces in frame). */
 export const COLLECTION_HERO_POSITION: Record<string, string> = {
   aurawave: "object-[center_18%]",
 };
 
-/** Bump when collection cover files are replaced so browsers/Next Image refresh. */
 const COLLECTION_IMAGE_VERSION = "20260803b";
 
 export const SECTION_IMAGES = {
@@ -58,24 +56,37 @@ export const GALLERY_IMAGES = Array.from({ length: 8 }, (_, i) =>
   img(`gallery/${String(i + 1).padStart(2, "0")}.png`)
 );
 
-export function getCollectionImage(slug: string, fallback?: string): string {
-  const path = COLLECTION_IMAGES[slug] || fallback || img("hero-1.png");
+/** Prefer admin/DB image, then static collection file, then generic fallback. */
+export function getCollectionImage(slug: string, dbImage?: string | null): string {
+  if (dbImage && dbImage.trim() && !dbImage.includes("placehold.co")) {
+    return dbImage;
+  }
+  const path = COLLECTION_IMAGES[slug] || img("hero-1.png");
   const sep = path.includes("?") ? "&" : "?";
   return `${path}${sep}v=${COLLECTION_IMAGE_VERSION}`;
 }
 
-/**
- * Prefer local /images/ assets over legacy placeholder URLs from seed.
- * Collection covers always use files in /public/images/collections/.
- */
 export function resolveImage(localPath: string, dbImage?: string | null): string {
-  if (localPath.includes("/images/collections/")) return localPath;
-  if (!dbImage || dbImage.includes("placehold.co")) return localPath;
-  return dbImage;
+  if (dbImage && dbImage.trim() && !dbImage.includes("placehold.co")) {
+    return dbImage;
+  }
+  return localPath;
 }
 
 export function getPageHeroImage(
-  key: keyof typeof PAGE_HERO_IMAGES
+  key: keyof typeof PAGE_HERO_IMAGES,
+  override?: string | null
 ): string {
+  if (override && override.trim() && !override.includes("placehold.co")) {
+    return override;
+  }
   return PAGE_HERO_IMAGES[key];
+}
+
+/** Page hero from a CMS section (e.g. page-hero) or static fallback. */
+export function resolvePageHeroImage(
+  key: keyof typeof PAGE_HERO_IMAGES,
+  sectionImage?: string | null
+): string {
+  return getPageHeroImage(key, sectionImage);
 }

@@ -10,7 +10,7 @@
   --dark-surface: #0a0a0a;
   --dark-elevated: #121212;
   --line: rgba(245, 240, 230, 0.1);
-  --section-y: clamp(4.5rem, 8vw, 8rem);
+  --section-y: clamp(2.75rem, 6vw, 8rem);
 }
 
 @theme inline {

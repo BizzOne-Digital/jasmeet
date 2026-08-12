@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image, { type ImageProps } from "next/image";
 import { cn, getPlaceholderImage } from "@/lib/utils";
+import { isLegacyLocalUploadUrl } from "@/lib/upload-folders";
 
 export interface SafeImageProps
   extends Omit<ImageProps, "src" | "alt" | "onError"> {
@@ -40,15 +41,16 @@ export function SafeImage({
     setFailed(false);
   }, [validSrc]);
 
-  const resolvedSrc = failed || !validSrc ? placeholder : validSrc;
+  const legacyBroken = isLegacyLocalUploadUrl(validSrc);
+  const resolvedSrc =
+    failed || !validSrc || legacyBroken ? placeholder : validSrc;
   const resolvedSizes =
     sizes ||
     (fill ? "(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" : undefined);
-  // Serve local site assets as-is so Next/sharp recompression doesn't soften them
   const isLocalAsset =
     typeof resolvedSrc === "string" &&
     (resolvedSrc.startsWith("/images/") ||
-      resolvedSrc.startsWith("/uploads/"));
+      resolvedSrc.startsWith("/api/uploads/"));
   const skipOptimize =
     unoptimized ??
     (resolvedSrc.includes("placehold.co") || isLocalAsset);

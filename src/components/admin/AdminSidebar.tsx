@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   FileText,
+  FolderOpen,
   HelpCircle,
   Images,
   LayoutDashboard,
@@ -20,6 +21,7 @@ const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/pages", label: "Pages", icon: FileText },
   { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/collections", label: "Collections", icon: FolderOpen },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/gallery", label: "Gallery", icon: Images },
   { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },

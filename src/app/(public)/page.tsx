@@ -6,35 +6,29 @@ import {
   getCollections,
   getFeaturedProducts,
   getNewArrivals,
-  getGalleryItems,
 } from "@/lib/data/queries";
 import { getSiteSettings } from "@/lib/data/settings";
 import { serialize } from "@/lib/serialize";
 import { absoluteUrl } from "@/lib/utils";
 import { getCollectionImage } from "@/lib/images";
+import { resolveHeroSlides } from "@/lib/hero-cms";
 import type { PageSectionData } from "@/types";
 import type { ProductCardData } from "@/components/product/ProductCard";
 import { HeroSection } from "@/components/home/HeroSection";
 import { TrustSection } from "@/components/home/TrustSection";
 import { CollectionsShowcase } from "@/components/home/CollectionsShowcase";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
-import { MovementCategories } from "@/components/home/MovementCategories";
 import { NewArrivalsSection } from "@/components/home/NewArrivalsSection";
 
-/** Below-fold sections — lazy-loaded to keep initial JS/LCP lighter. */
-const CampaignBanner = dynamic(() =>
-  import("@/components/home/CampaignBanner").then((m) => m.CampaignBanner)
-);
 const TestimonialsSection = dynamic(() =>
   import("@/components/home/TestimonialsSection").then(
     (m) => m.TestimonialsSection
   )
 );
-const GalleryPreview = dynamic(() =>
-  import("@/components/home/GalleryPreview").then((m) => m.GalleryPreview)
-);
 const NewsletterSection = dynamic(() =>
-  import("@/components/home/NewsletterSection").then((m) => m.NewsletterSection)
+  import("@/components/home/NewsletterSection").then(
+    (m) => m.NewsletterSection
+  )
 );
 
 /** Fixed homepage order (Footer lives in the site layout). */
@@ -42,12 +36,9 @@ const HOME_LAYOUT = [
   "hero",
   "trust",
   "collections",
-  "featured-products",
-  "shop-by-movement",
   "new-arrivals",
-  "campaign-banner",
+  "featured-products",
   "testimonials",
-  "gallery-preview",
   "newsletter",
 ] as const;
 
@@ -110,14 +101,12 @@ function toSection(raw: Record<string, unknown>): PageSectionData {
 }
 
 export default async function HomePage() {
-  const [sectionsRaw, collectionsRaw, featuredRaw, newRaw, galleryRaw] =
-    await Promise.all([
-      getPageSections("home"),
-      getCollections(),
-      getFeaturedProducts(8),
-      getNewArrivals(8),
-      getGalleryItems(),
-    ]);
+  const [sectionsRaw, collectionsRaw, featuredRaw, newRaw] = await Promise.all([
+    getPageSections("home"),
+    getCollections(),
+    getFeaturedProducts(8),
+    getNewArrivals(8),
+  ]);
 
   const byKey = new Map(
     serialize<Record<string, unknown>[]>(sectionsRaw)
@@ -136,18 +125,12 @@ export default async function HomePage() {
     }>
   >(collectionsRaw).map((c) => ({
     ...c,
-    image: getCollectionImage(c.slug),
+    image: getCollectionImage(c.slug, c.image),
   }));
   const featured = serialize<ProductCardData[]>(featuredRaw);
   const arrivals = serialize<ProductCardData[]>(newRaw);
-  const gallery = serialize<
-    Array<{
-      _id: string;
-      image: string;
-      altText?: string;
-      caption?: string;
-    }>
-  >(galleryRaw);
+
+  const heroSlides = resolveHeroSlides(byKey);
 
   return (
     <div className="overflow-x-clip">
@@ -156,9 +139,9 @@ export default async function HomePage() {
 
         switch (key) {
           case "hero":
-            return <HeroSection key="hero" />;
+            return <HeroSection key="hero" slides={heroSlides} />;
           case "trust":
-            return <TrustSection key="trust" />;
+            return <TrustSection key="trust" section={section} />;
           case "collections":
             return (
               <CollectionsShowcase
@@ -168,41 +151,10 @@ export default async function HomePage() {
                     eyebrow: "Featured Collections",
                     heading: "Shop by Collection",
                     subheading:
-                      "Editorial silhouettes for every rhythm of movement.",
+                      "Six curated worlds — each designed for a different rhythm of movement.",
                   }
                 }
                 collections={collections}
-              />
-            );
-          case "featured-products":
-            return (
-              <FeaturedProducts
-                key="best-sellers"
-                section={
-                  section || {
-                    eyebrow: "Bestsellers",
-                    heading: "Best Sellers",
-                    subheading:
-                      "Pieces women return to — sculpted, soft, and performance-ready.",
-                    ctaLabel: "Shop best sellers",
-                    ctaUrl: "/shop?featured=true",
-                  }
-                }
-                products={featured}
-              />
-            );
-          case "shop-by-movement":
-            return (
-              <MovementCategories
-                key="movement"
-                section={
-                  section || {
-                    eyebrow: "Shop by movement",
-                    heading: "Move your way.",
-                    subheading:
-                      "From high-intensity training to quiet mornings — find your rhythm.",
-                  }
-                }
               />
             );
           case "new-arrivals":
@@ -213,7 +165,8 @@ export default async function HomePage() {
                   section || {
                     eyebrow: "Just in",
                     heading: "New Arrivals",
-                    subheading: "Fresh silhouettes for the season ahead.",
+                    subheading:
+                      "Fresh pieces designed for movement, confidence and everyday wear.",
                     ctaLabel: "Shop new",
                     ctaUrl: "/shop?newArrival=true",
                   }
@@ -221,19 +174,21 @@ export default async function HomePage() {
                 products={arrivals}
               />
             );
-          case "campaign-banner":
+          case "featured-products":
             return (
-              <CampaignBanner
-                key="campaign"
+              <FeaturedProducts
+                key="featured-picks"
                 section={
                   section || {
-                    eyebrow: "Campaign",
-                    heading: "This season’s aura.",
-                    body: "Bold lines. Soft strength. A collection made to be lived in — and remembered.",
-                    ctaLabel: "Shop the campaign",
-                    ctaUrl: "/shop",
+                    eyebrow: "Curated for you",
+                    heading: "Featured Picks",
+                    subheading:
+                      "Hand-selected styles from across the DAYAURA collections.",
+                    ctaLabel: "Shop featured",
+                    ctaUrl: "/shop?featured=true",
                   }
                 }
+                products={featured}
               />
             );
           case "testimonials":
@@ -247,23 +202,6 @@ export default async function HomePage() {
                     subheading: "Real stories from women who wear DAYAURA.",
                   }
                 }
-              />
-            );
-          case "gallery-preview":
-            return (
-              <GalleryPreview
-                key="instagram"
-                section={
-                  section || {
-                    eyebrow: "Instagram",
-                    heading: "In the wild.",
-                    subheading:
-                      "A glimpse of DAYAURA in motion — gym floors, studio light, city mornings.",
-                    ctaLabel: "View gallery",
-                    ctaUrl: "/gallery",
-                  }
-                }
-                items={gallery}
               />
             );
           case "newsletter":

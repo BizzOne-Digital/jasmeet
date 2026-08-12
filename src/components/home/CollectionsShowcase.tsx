@@ -66,21 +66,21 @@ export function CollectionsShowcase({
                     className="img-frame relative block aspect-[16/9] overflow-hidden bg-[#141414] sm:aspect-[16/10] lg:aspect-[3/2]"
                   >
                     <SafeImage
-                      src={getCollectionImage(c.slug)}
+                      src={getCollectionImage(c.slug, c.image)}
                       alt={`${c.name} collection cover`}
                       fill
                       className="object-contain object-center transition duration-700 group-hover:scale-[1.03]"
                       sizes="(max-width:768px) 100vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-95 transition duration-700 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />
                     <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 lg:p-6">
                       <h3 className="font-serif text-xl tracking-[0.04em] text-beige sm:text-2xl lg:text-[1.65rem]">
                         {c.name}
                       </h3>
-                      <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-beige/65 sm:mt-2">
+                      <p className="mt-1.5 line-clamp-1 text-sm leading-snug text-beige/75 sm:mt-2">
                         {description}
                       </p>
-                      <span className="mt-4 inline-flex min-h-10 items-center border border-gold/60 px-4 text-[10px] uppercase tracking-[0.24em] text-gold transition duration-500 group-hover:bg-gold group-hover:text-black sm:mt-5">
+                      <span className="mt-3 inline-flex min-h-9 items-center border border-gold/60 px-4 text-[10px] uppercase tracking-[0.24em] text-gold transition duration-500 group-hover:bg-gold group-hover:text-black sm:mt-4">
                         Shop Collection
                       </span>
                     </div>

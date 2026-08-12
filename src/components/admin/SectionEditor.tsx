@@ -174,7 +174,14 @@ export default function SectionEditor({
           <input className={fieldClass} {...register("subheading")} />
         </div>
         <div className="md:col-span-2">
-          <label className={labelClass}>Body</label>
+          <label className={labelClass}>
+            Body
+            {section.sectionKey === "trust" ? (
+              <span className="ml-2 normal-case tracking-normal text-zinc-600">
+                (one benefit label per line)
+              </span>
+            ) : null}
+          </label>
           <textarea rows={4} className={fieldClass} {...register("body")} />
         </div>
         <div>
@@ -222,7 +229,7 @@ export default function SectionEditor({
           onClear={() =>
             setValue("backgroundImage", "", { shouldDirty: true })
           }
-          folder="dayaura/sections"
+          folder="pages"
         />
         <div>
           <label className={labelClass}>Image alt text</label>
@@ -233,14 +240,14 @@ export default function SectionEditor({
           value={sideImage}
           onChange={(url) => setValue("sideImage", url, { shouldDirty: true })}
           onClear={() => setValue("sideImage", "", { shouldDirty: true })}
-          folder="dayaura/sections"
+          folder="pages"
         />
         <ImageUpload
           label="Mobile image"
           value={mobileImage}
           onChange={(url) => setValue("mobileImage", url, { shouldDirty: true })}
           onClear={() => setValue("mobileImage", "", { shouldDirty: true })}
-          folder="dayaura/sections"
+          folder="pages"
           className="md:col-span-2"
         />
       </div>

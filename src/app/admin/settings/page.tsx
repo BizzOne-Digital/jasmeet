@@ -150,7 +150,7 @@ export default function AdminSettingsPage() {
                   value={logo || ""}
                   onChange={(url) => setValue("logo", url, { shouldDirty: true })}
                   onClear={() => setValue("logo", "", { shouldDirty: true })}
-                  folder="dayaura/brand"
+                  folder="misc"
                 />
                 <ImageUpload
                   label="Favicon"
@@ -159,7 +159,7 @@ export default function AdminSettingsPage() {
                     setValue("favicon", url, { shouldDirty: true })
                   }
                   onClear={() => setValue("favicon", "", { shouldDirty: true })}
-                  folder="dayaura/brand"
+                  folder="misc"
                   aspectClassName="aspect-square max-w-[160px]"
                 />
               </div>

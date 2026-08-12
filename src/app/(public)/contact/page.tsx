@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getPageBySlug } from "@/lib/data/queries";
+import { getPageBySlug, getPageSections } from "@/lib/data/queries";
 import { getSiteSettings } from "@/lib/data/settings";
 import { PageHero } from "@/components/layout/PageHero";
-import { getPageHeroImage } from "@/lib/images";
+import { resolvePageHeroImage } from "@/lib/images";
 import { ContactForm } from "@/components/contact/ContactForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,15 +19,29 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const settings = await getSiteSettings();
+  const [settings, sectionsRaw] = await Promise.all([
+    getSiteSettings(),
+    getPageSections("contact"),
+  ]);
+
+  const heroSection = sectionsRaw.find(
+    (s) => s.sectionKey === "page-hero" || s.sectionKey === "hero"
+  );
+  const heroImage = resolvePageHeroImage(
+    "contact",
+    heroSection?.backgroundImage
+  );
 
   return (
     <div>
       <PageHero
-        eyebrow="Contact"
-        title="Get in Touch"
-        description="Questions about orders, sizing, or the brand — we're here."
-        image={getPageHeroImage("contact")}
+        eyebrow={heroSection?.eyebrow || "Contact"}
+        title={heroSection?.heading || "Get in Touch"}
+        description={
+          heroSection?.subheading ||
+          "Questions about orders, sizing, or the brand — we're here."
+        }
+        image={heroImage}
       />
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-14 lg:grid-cols-2 lg:px-8">
         <div className="space-y-8">
@@ -77,40 +91,54 @@ export default async function ContactPage() {
           <div>
             <h3 className="text-xs uppercase tracking-[0.2em] text-gold">Social</h3>
             <ul className="mt-4 flex flex-wrap gap-4 text-sm">
-              <li>
-                <a href={settings.instagramUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gold">
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href={settings.tiktokUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gold">
-                  TikTok
-                </a>
-              </li>
-              <li>
-                <a href={settings.facebookUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gold">
-                  Facebook
-                </a>
-              </li>
+              {settings.instagramUrl ? (
+                <li>
+                  <a
+                    href={settings.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gold"
+                  >
+                    Instagram
+                  </a>
+                </li>
+              ) : null}
+              {settings.tiktokUrl ? (
+                <li>
+                  <a
+                    href={settings.tiktokUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gold"
+                  >
+                    TikTok
+                  </a>
+                </li>
+              ) : null}
+              {settings.facebookUrl ? (
+                <li>
+                  <a
+                    href={settings.facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-gold"
+                  >
+                    Facebook
+                  </a>
+                </li>
+              ) : null}
             </ul>
           </div>
 
-          <div className="border border-white/10 p-6">
-            <p className="text-sm text-beige/80">
-              Looking for quick answers? Visit our{" "}
-              <Link href="/faq" className="text-gold">
-                FAQ
-              </Link>
-              . Want first-order savings? Join the list on the homepage for{" "}
-              {settings.firstOrderDiscountText.toLowerCase()}.
-            </p>
-          </div>
+          <p className="text-sm text-muted">
+            Prefer email?{" "}
+            <Link href={`mailto:${settings.contactEmail}`} className="text-gold hover:underline">
+              {settings.contactEmail}
+            </Link>
+          </p>
         </div>
 
-        <div className="border border-white/10 bg-surface p-6 md:p-8">
-          <h2 className="mb-6 font-heading text-3xl">Send a message</h2>
-          <ContactForm />
-        </div>
+        <ContactForm />
       </div>
     </div>
   );

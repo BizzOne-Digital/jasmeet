@@ -97,6 +97,10 @@ export function ProductCard({
       size: firstSize,
       color: colorName,
       colorHex: selectedColor?.hex,
+      isPreOrder: check.isPreOrder,
+      preOrderLeadTime: check.isPreOrder
+        ? product.preOrderLeadTime || "Pre-Order – Ships in 2–3 weeks"
+        : undefined,
     });
   };
 
@@ -120,6 +124,12 @@ export function ProductCard({
   const imageFitClass = isAccessories
     ? "bg-transparent object-contain p-3 sm:p-5"
     : "object-contain object-center p-1.5 sm:p-2";
+
+  const showComingSoon = Boolean(product.isComingSoon);
+  const showSale = !showComingSoon && onSale;
+  const showNew = !showComingSoon && !showSale && Boolean(product.isNewArrival);
+  const showBestSeller =
+    !showComingSoon && !showSale && !showNew && Boolean(product.isBestSeller);
 
   return (
     <>
@@ -157,21 +167,35 @@ export function ProductCard({
             ) : null}
           </Link>
 
-          <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
-            {product.isComingSoon ? <Badge variant="soon">Coming soon</Badge> : null}
-            {onSale ? <Badge variant="sale">Sale</Badge> : null}
-            {product.isNewArrival ? <Badge variant="new">New</Badge> : null}
-            {product.isBestSeller ? (
-              <Badge variant="bestseller">Best seller</Badge>
+          <div className="absolute left-2 top-2 z-10 flex flex-col gap-1 sm:left-3 sm:top-3 sm:gap-1.5">
+            {showComingSoon ? (
+              <Badge variant="soon" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
+                Coming soon
+              </Badge>
+            ) : null}
+            {showSale ? (
+              <Badge variant="sale" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
+                Sale
+              </Badge>
+            ) : null}
+            {showNew ? (
+              <Badge variant="new" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
+                New
+              </Badge>
+            ) : null}
+            {showBestSeller ? (
+              <Badge variant="bestseller" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
+                Best seller
+              </Badge>
             ) : null}
           </div>
 
-          <div className="absolute right-3 top-3 z-10 flex flex-col gap-2 opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100">
+          <div className="absolute right-2 top-2 z-10 flex flex-col gap-1 opacity-100 transition sm:right-3 sm:top-3 sm:gap-1.5 sm:opacity-0 sm:group-hover:opacity-100">
             <button
               type="button"
               onClick={onWishlist}
               className={cn(
-                "flex h-11 w-11 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37]",
+                "flex h-9 w-9 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37] sm:h-10 sm:w-10",
                 inWishlist && "text-[#D4AF37]"
               )}
               aria-label={
@@ -187,7 +211,7 @@ export function ProductCard({
                 e.stopPropagation();
                 setQuickOpen(true);
               }}
-              className="flex h-11 w-11 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37]"
+              className="flex h-9 w-9 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37] sm:h-10 sm:w-10"
               aria-label="Quick view"
             >
               <Eye className="h-4 w-4" />
@@ -197,7 +221,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={quickAdd}
-            className="absolute inset-x-0 bottom-0 z-10 flex min-h-11 translate-y-0 items-center justify-center gap-2 bg-gold py-3 text-[10px] uppercase tracking-[0.24em] text-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:translate-y-full sm:group-hover:translate-y-0"
+            className="absolute inset-x-0 bottom-0 z-10 flex min-h-10 translate-y-0 items-center justify-center gap-2 bg-gold py-2.5 text-[9px] uppercase tracking-[0.24em] text-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:min-h-11 sm:py-3 sm:text-[10px] sm:translate-y-full sm:group-hover:translate-y-0"
           >
             <Plus className="h-3.5 w-3.5" />
             Quick add
@@ -212,7 +236,7 @@ export function ProductCard({
           ) : null}
           <Link
             href={`/products/${product.slug}`}
-            className="block text-[15px] leading-snug tracking-wide text-beige transition duration-500 hover:text-gold"
+            className="block line-clamp-2 text-[14px] leading-snug tracking-wide text-beige transition duration-500 hover:text-gold sm:text-[15px]"
           >
             {product.name}
           </Link>

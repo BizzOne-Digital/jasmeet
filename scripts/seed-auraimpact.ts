@@ -91,6 +91,58 @@ function placeholder(label: string) {
   return `https://placehold.co/800x1000/1a1a1a/D4AF37/png?text=${text}&font=montserrat`;
 }
 
+/** Model shots (03–05) first, then flat/product shots (01–02). */
+function modelFirstGallery(base: string, maxIndex: number): string[] {
+  const order: number[] = [];
+  for (const n of [3, 4, 5]) {
+    if (n <= maxIndex) order.push(n);
+  }
+  for (const n of [1, 2]) {
+    if (n <= maxIndex) order.push(n);
+  }
+  return order.map((n) => `${base}/${String(n).padStart(2, "0")}.png`);
+}
+
+const FLARED_LEGGINGS_SIZE_GUIDE = {
+  unit: "IN",
+  sections: [
+    {
+      title: "Detailed Size Chart (Inches)",
+      columns: [
+        "1/2 Waist Width",
+        "Waist Height",
+        "Front Rise Length",
+        "Back Rise Length",
+        "1/2 Hip Circumference",
+        "Side Length (Total)",
+        "Inseam",
+      ],
+      rows: [
+        {
+          size: "XS",
+          values: ["10.2", "2.6", "7.1", "6.7", "13.0", "34.6", "29.9"],
+        },
+        {
+          size: "S",
+          values: ["11.0", "2.6", "7.5", "7.1", "14.0", "35.4", "30.3"],
+        },
+        {
+          size: "M",
+          values: ["11.8", "2.6", "7.9", "7.5", "15.0", "36.2", "30.7"],
+        },
+        {
+          size: "L",
+          values: ["12.6", "2.6", "8.3", "7.9", "15.9", "37.0", "31.1"],
+        },
+        {
+          size: "XL",
+          values: ["13.4", "2.6", "8.7", "8.3", "16.9", "37.8", "31.5"],
+        },
+      ],
+    },
+  ],
+};
+
 const PRODUCTS: AuraImpactProduct[] = [
   {
     name: "AuraImpact Sculpt Shorts",
@@ -125,21 +177,33 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: ["/images/products/auraimpact-sculpt-shorts/black/01.png"],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-shorts/black",
+          3
+        ),
       },
       {
         name: "Brown",
         hex: "#5C4033",
-        images: ["/images/products/auraimpact-sculpt-shorts/brown/01.png"],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-shorts/brown",
+          3
+        ),
       },
       {
         name: "Shark Grey",
         hex: "#6B6E73",
-        images: ["/images/products/auraimpact-sculpt-shorts/shark-grey/01.png"],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-shorts/shark-grey",
+          3
+        ),
       },
     ],
     sizes: stockSML(),
-    images: ["/images/products/auraimpact-sculpt-shorts/black/01.png"],
+    images: modelFirstGallery(
+      "/images/products/auraimpact-sculpt-shorts/black",
+      3
+    ),
     sizeGuide: {
       unit: "IN",
       columns: [
@@ -211,26 +275,33 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: [
-          "/images/products/auraimpact-sculpt-leggings/black/01.png",
-          "/images/products/auraimpact-sculpt-leggings/black/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-leggings/black",
+          4
+        ),
       },
-      { name: "Brown", hex: "#5C4033" },
+      {
+        name: "Brown",
+        hex: "#5C4033",
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-leggings/brown",
+          4
+        ),
+      },
       {
         name: "Shark Grey",
         hex: "#6B6E73",
-        images: [
-          "/images/products/auraimpact-sculpt-leggings/shark-grey/01.png",
-          "/images/products/auraimpact-sculpt-leggings/shark-grey/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-leggings/shark-grey",
+          4
+        ),
       },
     ],
     sizes: stockSML(),
-    images: [
-      "/images/products/auraimpact-sculpt-leggings/black/01.png",
-      "/images/products/auraimpact-sculpt-leggings/black/02.png",
-    ],
+    images: modelFirstGallery(
+      "/images/products/auraimpact-sculpt-leggings/black",
+      4
+    ),
     sizeGuide: {
       unit: "IN / CM",
       sections: [
@@ -329,16 +400,22 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: ["/images/products/auraimpact-sculpt-bra/black/01.png"],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-bra/black",
+          3
+        ),
       },
       {
         name: "Burgundy",
         hex: "#6B2D3C",
-        images: ["/images/products/auraimpact-sculpt-bra/burgundy/01.png"],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-bra/burgundy",
+          3
+        ),
       },
     ],
     sizes: stockSML(),
-    images: ["/images/products/auraimpact-sculpt-bra/black/01.png"],
+    images: modelFirstGallery("/images/products/auraimpact-sculpt-bra/black", 3),
     sizeGuide: {
       unit: "IN",
       sections: [
@@ -413,33 +490,33 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: [
-          "/images/products/auraimpact-performance-tee/black/01.png",
-          "/images/products/auraimpact-performance-tee/black/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-performance-tee/black",
+          4
+        ),
       },
       {
         name: "Shark Grey",
         hex: "#6B6E73",
-        images: [
-          "/images/products/auraimpact-performance-tee/shark-grey/01.png",
-          "/images/products/auraimpact-performance-tee/shark-grey/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-performance-tee/shark-grey",
+          4
+        ),
       },
       {
         name: "Brown",
         hex: "#5C4033",
-        images: [
-          "/images/products/auraimpact-performance-tee/brown/01.png",
-          "/images/products/auraimpact-performance-tee/brown/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-performance-tee/brown",
+          4
+        ),
       },
     ],
     sizes: stockSML(),
-    images: [
-      "/images/products/auraimpact-performance-tee/black/01.png",
-      "/images/products/auraimpact-performance-tee/black/02.png",
-    ],
+    images: modelFirstGallery(
+      "/images/products/auraimpact-performance-tee/black",
+      4
+    ),
     sizeGuide: {
       unit: "IN",
       columns: [
@@ -510,25 +587,25 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: [
-          "/images/products/auraimpact-performance-jacket/black/01.png",
-          "/images/products/auraimpact-performance-jacket/black/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-performance-jacket/black",
+          4
+        ),
       },
       {
         name: "Shark Grey",
         hex: "#6B6E73",
-        images: [
-          "/images/products/auraimpact-performance-jacket/shark-grey/01.png",
-          "/images/products/auraimpact-performance-jacket/shark-grey/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-performance-jacket/shark-grey",
+          4
+        ),
       },
     ],
     sizes: stockSML(),
-    images: [
-      "/images/products/auraimpact-performance-jacket/black/01.png",
-      "/images/products/auraimpact-performance-jacket/black/02.png",
-    ],
+    images: modelFirstGallery(
+      "/images/products/auraimpact-performance-jacket/black",
+      4
+    ),
     sizeGuide: {
       unit: "IN",
       sections: [
@@ -651,33 +728,33 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: [
-          "/images/products/auraimpact-halter-tank/black/01.png",
-          "/images/products/auraimpact-halter-tank/black/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-halter-tank/black",
+          4
+        ),
       },
       {
         name: "Copper",
         hex: "#B87333",
-        images: [
-          "/images/products/auraimpact-halter-tank/copper/01.png",
-          "/images/products/auraimpact-halter-tank/copper/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-halter-tank/copper",
+          4
+        ),
       },
       {
         name: "Shark Grey",
         hex: "#6B6E73",
-        images: [
-          "/images/products/auraimpact-halter-tank/shark-grey/01.png",
-          "/images/products/auraimpact-halter-tank/shark-grey/02.png",
-        ],
+        images: modelFirstGallery(
+          "/images/products/auraimpact-halter-tank/shark-grey",
+          4
+        ),
       },
     ],
     sizes: stockSML(),
-    images: [
-      "/images/products/auraimpact-halter-tank/black/01.png",
-      "/images/products/auraimpact-halter-tank/black/02.png",
-    ],
+    images: modelFirstGallery(
+      "/images/products/auraimpact-halter-tank/black",
+      4
+    ),
     sizeGuide: {
       unit: "IN",
       sections: [
@@ -772,6 +849,63 @@ const PRODUCTS: AuraImpactProduct[] = [
     isFeatured: true,
     isNewArrival: true,
     order: 6,
+  },
+  {
+    name: "AuraImpact Sculpt Flared Leggings",
+    slug: "auraimpact-sculpt-flared-leggings",
+    sku: "AI-FLARED-LEG",
+    categorySlug: "leggings",
+    price: 59,
+    compareAtPrice: 79,
+    shortDescription:
+      "High-rise sculpt flared leggings with a body-contouring fit, 4-way stretch, and signature front-waist DAYAURA logo — performance meets everyday style.",
+    description: [
+      "Move with confidence in the DAYAURA AuraImpact Sculpt Flared Leggings. Designed with a supportive high-rise waistband and a sleek, body-contouring fit, these leggings sculpt comfortably through the waist, hips, and thighs before flowing into a flattering flared silhouette.",
+      "Crafted from premium performance fabric with 4-way stretch, they offer the perfect balance of support, flexibility, and all-day comfort. The breathable, moisture-wicking fabric keeps you comfortable whether you're training, stretching, or styling them for everyday wear.",
+      "Finished with the signature DAYAURA vertical logo on the front waistband and our hidden motivational message, these flared leggings combine performance, confidence, and effortless style.",
+      'Signature Hidden Motivation: "THE FIRE TO KEEP GOING."',
+    ].join("\n\n"),
+    materials:
+      "90% Nylon, 10% Spandex. Premium performance construction. Fabric weight: 200–230 GSM. Mid-to-high compression.",
+    careInstructions: CARE_STANDARD,
+    fitDetails:
+      "High-waisted fit. True to size. Compression support. Sculpting fit through waist, hips, and thighs. Flared from the knee down. Full-length silhouette. Model wears Size S.",
+    highlights: [
+      "High-rise sculpting waistband",
+      "Flattering flared-leg silhouette",
+      "Contoured fit through the hips and thighs",
+      "Smooth, clean back design",
+      "Mid-to-high compression support",
+      "4-way stretch for unrestricted movement",
+      "Squat-proof coverage",
+      "Breathable performance fabric",
+      "Moisture-wicking technology",
+      "Soft, second-skin feel",
+      "Lightweight yet durable",
+      "Quick-drying fabric",
+      "Excellent stretch and shape retention",
+      "Signature DAYAURA front-waist logo",
+      "Designed for workouts and everyday wear",
+    ],
+    colors: [
+      {
+        name: "Black",
+        hex: "#000000",
+        images: modelFirstGallery(
+          "/images/products/auraimpact-sculpt-flared-leggings/black",
+          3
+        ),
+      },
+    ],
+    sizes: stockSML(),
+    images: modelFirstGallery(
+      "/images/products/auraimpact-sculpt-flared-leggings/black",
+      3
+    ),
+    sizeGuide: FLARED_LEGGINGS_SIZE_GUIDE,
+    isFeatured: true,
+    isNewArrival: true,
+    order: 7,
   },
 ];
 

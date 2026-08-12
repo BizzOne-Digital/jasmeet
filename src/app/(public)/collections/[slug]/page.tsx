@@ -63,7 +63,7 @@ export default async function CollectionDetailPage({
         eyebrow="Collection"
         title={safeText(col.name)}
         description={safeText(col.description)}
-        image={getCollectionImage(col.slug)}
+        image={getCollectionImage(col.slug, col.image)}
         imagePositionClass={
           COLLECTION_HERO_POSITION[col.slug] || "object-center"
         }

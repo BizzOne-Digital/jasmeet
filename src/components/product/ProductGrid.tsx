@@ -35,7 +35,7 @@ export function ProductGrid({
 }: ProductGridProps) {
   if (loading) {
     return (
-    <div className={cn("grid w-full max-w-full gap-x-4 gap-y-10 sm:gap-x-5 sm:gap-y-12 lg:gap-x-6 lg:gap-y-14", colClasses[columns], className)}>
+    <div className={cn("grid w-full max-w-full gap-x-3 gap-y-8 sm:gap-x-5 sm:gap-y-10 lg:gap-x-6 lg:gap-y-12", colClasses[columns], className)}>
         {Array.from({ length: skeletonCount }).map((_, i) => (
           <ProductCardSkeleton key={i} />
         ))}
@@ -53,7 +53,7 @@ export function ProductGrid({
   }
 
   return (
-    <div className={cn("grid w-full max-w-full gap-x-4 gap-y-10 sm:gap-x-5 sm:gap-y-12 lg:gap-x-6 lg:gap-y-14", colClasses[columns], className)}>
+    <div className={cn("grid w-full max-w-full gap-x-3 gap-y-8 sm:gap-x-5 sm:gap-y-10 lg:gap-x-6 lg:gap-y-12", colClasses[columns], className)}>
       {products.map((product, index) => (
         <RevealOnScroll key={String(product._id)} index={index} direction="up">
           <ProductCard

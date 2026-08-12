@@ -6,7 +6,7 @@ import { generateOrderNumber, isPaymentProviderConfigured } from "@/lib/orders";
 import { getSiteSettings } from "@/lib/data/settings";
 import { calculateShipping } from "@/lib/shipping";
 import {
-  decrementInventory,
+  decrementPurchasableInventory,
   isVariantPurchasable,
 } from "@/lib/inventory";
 import { sendOrderStatusEmail, sendAdminNewOrderEmail } from "@/lib/email/order-emails";
@@ -72,21 +72,21 @@ export async function POST(request: Request) {
 
       if (check.isPreOrder) {
         hasPreOrderItems = true;
-      } else {
-        const ok = decrementInventory(
-          product,
-          item.color,
-          item.size,
-          item.quantity
-        );
-        if (!ok) {
-          return jsonError(
-            `Insufficient stock for ${product.name} (${item.color} / ${item.size}).`,
-            400
-          );
-        }
-        await product.save();
       }
+
+      const ok = decrementPurchasableInventory(
+        product,
+        item.color,
+        item.size,
+        item.quantity
+      );
+      if (!ok) {
+        return jsonError(
+          `Insufficient stock for ${product.name} (${item.color} / ${item.size}).`,
+          400
+        );
+      }
+      await product.save();
 
       lineItems.push({
         productId: String(product._id),

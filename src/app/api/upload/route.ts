@@ -1,6 +1,12 @@
 import { auth } from "@/lib/auth";
-import { uploadImage } from "@/lib/cloudinary";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
+import {
+  deleteStoredUploadByUrl,
+  saveStoredUpload,
+} from "@/lib/stored-uploads";
+import { normalizeUploadFolder } from "@/lib/upload-folders";
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   try {
@@ -16,14 +22,40 @@ export async function POST(request: Request) {
       return jsonError("No file provided", 400);
     }
 
-    if (!file.type.startsWith("image/")) {
-      return jsonError("Only image files are allowed", 400);
+    const folder = normalizeUploadFolder(formData.get("folder") as string | null);
+    const result = await saveStoredUpload(file, folder);
+
+    return jsonSuccess({
+      url: result.url,
+      filename: result.filename,
+      size: result.size,
+      folder: result.folder,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("allowed")) {
+      return jsonError(error.message, 400);
+    }
+    if (error instanceof Error && error.message.includes("8MB")) {
+      return jsonError(error.message, 400);
+    }
+    return handleRouteError(error);
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return jsonError("Unauthorized", 401);
     }
 
-    const folder = (formData.get("folder") as string) || "dayaura";
-    const result = await uploadImage(file, folder);
+    const body = (await request.json()) as { url?: string };
+    if (!body.url) {
+      return jsonError("URL is required", 400);
+    }
 
-    return jsonSuccess({ url: result.url, publicId: result.publicId ?? null });
+    await deleteStoredUploadByUrl(body.url);
+    return jsonSuccess({ deleted: true });
   } catch (error) {
     return handleRouteError(error);
   }

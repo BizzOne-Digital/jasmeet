@@ -8,6 +8,10 @@ export interface CartItem {
   size: string;
   color: string;
   colorHex?: string;
+  /** True when this line is a pre-order (OOS but allowPreOrder enabled). */
+  isPreOrder?: boolean;
+  /** e.g. "Pre-Order – Ships in 2–3 weeks" */
+  preOrderLeadTime?: string;
 }
 
 export interface WishlistItem {

@@ -23,7 +23,11 @@ const productFormSchema = z.object({
   images: z.array(z.string()),
   hoverImage: z.string().optional(),
   colors: z.array(
-    z.object({ name: z.string().min(1), hex: z.string() })
+    z.object({
+      name: z.string().min(1),
+      hex: z.string(),
+      images: z.array(z.string()).optional(),
+    })
   ),
   sizes: z.array(
     z.object({ size: z.string().min(1), stock: z.coerce.number().int().min(0) })
@@ -450,14 +454,14 @@ export default function ProductForm({
             onChange={(url) => {
               if (url) setValue("images", [...images, url], { shouldDirty: true });
             }}
-            folder="dayaura/products"
+            folder="products"
           />
           <ImageUpload
             label="Hover image"
             value={hoverImage || ""}
             onChange={(url) => setValue("hoverImage", url, { shouldDirty: true })}
             onClear={() => setValue("hoverImage", "", { shouldDirty: true })}
-            folder="dayaura/products"
+            folder="products"
           />
         </div>
         {images.length > 0 ? (
@@ -492,34 +496,82 @@ export default function ProductForm({
           </h2>
           <button
             type="button"
-            onClick={() => appendColor({ name: "", hex: "#000000" })}
+            onClick={() => appendColor({ name: "", hex: "#000000", images: [] })}
             className="inline-flex items-center gap-1 rounded-lg border border-zinc-700 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-800"
           >
             <Plus className="h-3.5 w-3.5" /> Add color
           </button>
         </div>
-        <div className="space-y-2">
-          {colorFields.map((field, index) => (
-            <div key={field.id} className="flex gap-2">
-              <input
-                placeholder="Color name"
-                className={fieldClass}
-                {...register(`colors.${index}.name`)}
-              />
-              <input
-                type="color"
-                className="h-10 w-14 rounded border border-zinc-700 bg-zinc-950"
-                {...register(`colors.${index}.hex`)}
-              />
-              <button
-                type="button"
-                onClick={() => removeColor(index)}
-                className="rounded p-2 text-red-400 hover:bg-red-950/40"
+        <div className="space-y-4">
+          {colorFields.map((field, index) => {
+            const colorImages = watch(`colors.${index}.images`) || [];
+            return (
+              <div
+                key={field.id}
+                className="space-y-3 rounded-lg border border-zinc-800 p-3"
               >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
+                <div className="flex gap-2">
+                  <input
+                    placeholder="Color name"
+                    className={fieldClass}
+                    {...register(`colors.${index}.name`)}
+                  />
+                  <input
+                    type="color"
+                    className="h-10 w-14 rounded border border-zinc-700 bg-zinc-950"
+                    {...register(`colors.${index}.hex`)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeColor(index)}
+                    className="rounded p-2 text-red-400 hover:bg-red-950/40"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <ImageUpload
+                  label={`${watch(`colors.${index}.name`) || "Color"} gallery images`}
+                  value=""
+                  folder="products"
+                  aspectClassName="aspect-[3/2]"
+                  onChange={(url) => {
+                    if (!url) return;
+                    setValue(
+                      `colors.${index}.images`,
+                      [...colorImages, url],
+                      { shouldDirty: true }
+                    );
+                  }}
+                />
+                {colorImages.length > 0 ? (
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                    {colorImages.map((img, imgIdx) => (
+                      <div
+                        key={`${img}-${imgIdx}`}
+                        className="relative overflow-hidden rounded border border-zinc-800"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={img} alt="" className="aspect-square w-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setValue(
+                              `colors.${index}.images`,
+                              colorImages.filter((_, i) => i !== imgIdx),
+                              { shouldDirty: true }
+                            )
+                          }
+                          className="absolute right-1 top-1 rounded bg-black/70 p-1 text-red-300"
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       </section>
 

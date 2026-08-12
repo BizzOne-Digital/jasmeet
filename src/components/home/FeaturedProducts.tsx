@@ -31,14 +31,14 @@ export function FeaturedProducts({
     >
       <div className="container-lux">
         <RevealOnScroll>
-          <div className="mb-12 flex flex-col gap-8 md:mb-16 md:flex-row md:items-end md:justify-between">
+          <div className="mb-8 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
             <SectionHeader
               className="mb-0"
-              eyebrow={safeText(section?.eyebrow, "Bestsellers")}
-              heading={safeText(section?.heading, "Best Sellers")}
+              eyebrow={safeText(section?.eyebrow, "Curated for you")}
+              heading={safeText(section?.heading, "Featured Picks")}
               subheading={safeText(
                 section?.subheading,
-                "Pieces women return to — sculpted, soft, and performance-ready."
+                "Hand-selected styles from across the DAYAURA collections."
               )}
             />
             <Link href={safeText(section?.ctaUrl, "/shop")} className="shrink-0">

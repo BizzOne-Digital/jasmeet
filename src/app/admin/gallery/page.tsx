@@ -237,7 +237,7 @@ export default function AdminGalleryPage() {
                   setValue("image", url, { shouldDirty: true })
                 }
                 onClear={() => setValue("image", "", { shouldDirty: true })}
-                folder="dayaura/gallery"
+                folder="gallery"
               />
               <div className="space-y-4">
                 <div>

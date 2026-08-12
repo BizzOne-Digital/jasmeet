@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -83,6 +84,7 @@ export function ProductPurchasePanel({
   selectedColor?: string;
   onColorChange?: (color: string) => void;
 }) {
+  const router = useRouter();
   const colors = product.colors?.length ? product.colors : [{ name: "Default", hex: "#000000" }];
   const baseSizes = product.sizes?.length ? product.sizes : [{ size: "One Size", stock: 0 }];
   const dualSize = isBraTrouserSetGuide(product.sizeGuide);
@@ -136,7 +138,13 @@ export function ProductPurchasePanel({
     : dualSize
       ? anyPurchasable
       : purchaseCheck.ok;
-  const isPreOrder = !comingSoon && !dualSize && purchaseCheck.isPreOrder;
+  const isPreOrder =
+    !comingSoon &&
+    (dualSize
+      ? Boolean(topSize && bottomSize) &&
+        (isVariantPurchasable(product, color, topSize, qty).isPreOrder ||
+          isVariantPurchasable(product, color, bottomSize, qty).isPreOrder)
+      : purchaseCheck.isPreOrder);
   const selectedColor = colors.find((c) => c.name === color) || colors[0];
   const cartImage =
     selectedColor.images?.find(Boolean) ||
@@ -168,6 +176,7 @@ export function ProductPurchasePanel({
         return;
       }
       setError("");
+      const linePreOrder = topOk.isPreOrder || bottomOk.isPreOrder;
       addItem({
         productId: product._id,
         name: product.name,
@@ -178,6 +187,10 @@ export function ProductPurchasePanel({
         size: `${dualLabels.top} ${topSize} / ${dualLabels.bottom} ${bottomSize}`,
         color: selectedColor.name,
         colorHex: selectedColor.hex,
+        isPreOrder: linePreOrder,
+        preOrderLeadTime: linePreOrder
+          ? product.preOrderLeadTime || "Pre-Order – Ships in 2–3 weeks"
+          : undefined,
       });
     } else {
       if (!size) {
@@ -199,11 +212,15 @@ export function ProductPurchasePanel({
         size,
         color: selectedColor.name,
         colorHex: selectedColor.hex,
+        isPreOrder: purchaseCheck.isPreOrder,
+        preOrderLeadTime: purchaseCheck.isPreOrder
+          ? product.preOrderLeadTime || "Pre-Order – Ships in 2–3 weeks"
+          : undefined,
       });
     }
 
     if (buyNow) {
-      window.location.href = "/checkout";
+      router.push("/checkout");
     } else {
       openCart();
     }

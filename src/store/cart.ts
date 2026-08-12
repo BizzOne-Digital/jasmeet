@@ -45,7 +45,12 @@ export const useCartStore = create<CartStore>()(
               i.productId === item.productId &&
               i.size === item.size &&
               i.color === item.color
-                ? { ...i, quantity: i.quantity + item.quantity }
+                ? {
+                    ...i,
+                    quantity: i.quantity + item.quantity,
+                    isPreOrder: item.isPreOrder ?? i.isPreOrder,
+                    preOrderLeadTime: item.preOrderLeadTime ?? i.preOrderLeadTime,
+                  }
                 : i
             ),
             isOpen: true,

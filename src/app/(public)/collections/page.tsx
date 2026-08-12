@@ -62,7 +62,7 @@ export default async function CollectionsPage() {
                     className="img-frame relative block aspect-[16/9] overflow-hidden bg-[#141414] sm:aspect-[16/10] lg:aspect-[3/2]"
                   >
                     <SafeImage
-                      src={getCollectionImage(col.slug)}
+                      src={getCollectionImage(col.slug, col.image)}
                       alt={safeText(col.imageAlt, `${col.name} collection cover`)}
                       fill
                       className="object-contain object-center transition duration-700 group-hover:scale-[1.03]"

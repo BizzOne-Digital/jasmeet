@@ -87,6 +87,8 @@ export function QuickViewModal({
       size: activeSize || "One Size",
       color: activeColor,
       colorHex: activeHex,
+      isPreOrder: purchase.isPreOrder,
+      preOrderLeadTime: purchase.isPreOrder ? preOrderLabel : undefined,
     });
     onClose();
   };

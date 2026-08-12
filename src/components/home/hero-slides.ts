@@ -16,6 +16,7 @@ export interface HeroSlide {
   primaryCta: { label: string; href: string };
 }
 
+/** Three focused hero slides — opening message, new arrivals, collections. */
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: "wear-your-aura",
@@ -23,7 +24,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     image: "/images/hero-1.png",
     theme: "dark",
     layout: "left",
-    // Model on the right of the photo
     imagePositionClass: "object-[78%_center] md:object-center",
     eyebrow: "DAYAURA",
     heading: "Wear Your Aura.",
@@ -37,11 +37,10 @@ export const HERO_SLIDES: HeroSlide[] = [
     image: "/images/hero-2.png",
     theme: "dark",
     layout: "right",
-    // Model on the left of the photo
     imagePositionClass: "object-[22%_center] md:object-center",
     eyebrow: "Just arrived",
     heading: "New Arrivals",
-    body: "Fresh silhouettes for the season — sculpted, soft, and performance-ready.",
+    body: "Fresh pieces designed for movement, confidence and everyday wear.",
     primaryCta: { label: "Shop New Arrivals", href: "/shop?newArrival=true" },
   },
   {
@@ -49,25 +48,11 @@ export const HERO_SLIDES: HeroSlide[] = [
     tab: "Collections",
     image: "/images/hero-3.png",
     theme: "dark",
-    layout: "right",
-    // Model on the left edge of the photo
-    imagePositionClass: "object-[16%_center] md:object-center",
+    layout: "left",
+    imagePositionClass: "object-[84%_center] md:object-center",
     eyebrow: "The archive",
     heading: "Explore Our Collections",
-    body: "Showcase every DAYAURA world — AuraWave, AuraImpact, AuraFlow, AuraMesh, Outerwear, and Accessories.",
+    body: "AuraWave, AuraImpact, AuraFlow, AuraMesh, Outerwear, and Accessories.",
     primaryCta: { label: "Explore Collections", href: "/collections" },
-  },
-  {
-    id: "lifestyle",
-    tab: "Lifestyle",
-    image: "/images/hero-4.png",
-    theme: "dark",
-    layout: "left",
-    // Model on the right of the photo
-    imagePositionClass: "object-[84%_center] md:object-center",
-    eyebrow: "Campaign",
-    heading: "Lifestyle",
-    body: "DAYAURA beyond the gym — confidence worn into every moment outside the studio.",
-    primaryCta: { label: "Discover DAYAURA", href: "/about" },
   },
 ];

@@ -98,6 +98,62 @@ export function buildInventoryMatrix(
   return rows;
 }
 
+/** Decrement stock for in-stock portions; skip pre-order portions. */
+export function decrementPurchasableInventory(
+  product: IProduct,
+  colorName: string,
+  size: string,
+  qty: number
+): boolean {
+  const parts = parseCompoundSize(size);
+  if (parts.length > 1) {
+    for (const part of parts) {
+      const check = isVariantPurchasable(product, colorName, part, qty);
+      if (!check.ok) return false;
+      if (!check.isPreOrder) {
+        if (!decrementInventory(product, colorName, part, qty)) return false;
+      }
+    }
+    return true;
+  }
+
+  const check = isVariantPurchasable(product, colorName, size, qty);
+  if (!check.ok) return false;
+  if (check.isPreOrder) return true;
+  return decrementInventory(product, colorName, size, qty);
+}
+
+/** Restore stock when an order is cancelled or refunded (non-pre-order lines only). */
+export function restoreInventory(
+  product: IProduct,
+  colorName: string,
+  size: string,
+  qty: number
+): void {
+  const parts = parseCompoundSize(size);
+  const sizesToRestore = parts.length > 1 ? parts : [size];
+
+  for (const part of sizesToRestore) {
+    const inventory = product.inventory;
+    if (inventory?.length) {
+      const row = inventory.find(
+        (r) =>
+          r.colorName.toLowerCase() === colorName.toLowerCase() &&
+          r.size.toLowerCase() === part.toLowerCase()
+      );
+      if (row) {
+        row.stock += qty;
+        continue;
+      }
+    }
+
+    const sizeRow = product.sizes?.find(
+      (s) => s.size.toLowerCase() === part.toLowerCase()
+    );
+    if (sizeRow) sizeRow.stock += qty;
+  }
+}
+
 /** Decrement stock for an ordered line (mutates lean/doc-friendly product object). */
 export function decrementInventory(
   product: IProduct,

@@ -91,6 +91,10 @@ function placeholder(label: string) {
   return `https://placehold.co/800x1000/1a1a1a/D4AF37/png?text=${text}&font=montserrat`;
 }
 
+function gallery(base: string, ...nums: number[]): string[] {
+  return nums.map((n) => `${base}/${String(n).padStart(2, "0")}.png`);
+}
+
 const PRODUCTS: AuraMeshProduct[] = [
   {
     name: "AuraMesh High-Neck Set",
@@ -208,20 +212,24 @@ const PRODUCTS: AuraMeshProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: [
-          "/images/products/mesh-sculpt-legging-set/black/02.png",
-          "/images/products/mesh-sculpt-legging-set/black/01.png",
-          "/images/products/mesh-sculpt-legging-set/black/03.png",
-        ],
+        images: gallery(
+          "/images/products/AuraMesh-Mesh-sculpt-leggig-set/black",
+          1,
+          2,
+          3,
+          4
+        ),
       },
       {
         name: "White",
         hex: "#FFFFFF",
-        images: [
-          "/images/products/mesh-sculpt-legging-set/white/01.png",
-          "/images/products/mesh-sculpt-legging-set/white/02.png",
-          "/images/products/mesh-sculpt-legging-set/white/03.png",
-        ],
+        images: gallery(
+          "/images/products/AuraMesh-Mesh-sculpt-leggig-set/white",
+          1,
+          2,
+          3,
+          4
+        ),
       },
     ],
     sizes: [
@@ -230,12 +238,15 @@ const PRODUCTS: AuraMeshProduct[] = [
       { size: "L", stock: 30 },
       { size: "XL", stock: 30 },
     ],
-    images: [
-      "/images/products/mesh-sculpt-legging-set/black/02.png",
-      "/images/products/mesh-sculpt-legging-set/black/01.png",
-      "/images/products/mesh-sculpt-legging-set/black/03.png",
-    ],
-    hoverImage: "/images/products/mesh-sculpt-legging-set/black/01.png",
+    images: gallery(
+      "/images/products/AuraMesh-Mesh-sculpt-leggig-set/black",
+      1,
+      2,
+      3,
+      4
+    ),
+    hoverImage:
+      "/images/products/AuraMesh-Mesh-sculpt-leggig-set/black/01.png",
     sizeGuide: {
       unit: "CM",
       sections: [
@@ -294,19 +305,24 @@ const PRODUCTS: AuraMeshProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: ["/images/products/mesh-high-neck-sports-bra/black/01.png"],
+        images: gallery(
+          "/images/products/mesh-high-neck-sports-bra/black",
+          1,
+          2
+        ),
       },
       {
         name: "White",
         hex: "#FFFFFF",
-        images: ["/images/products/mesh-high-neck-sports-bra/white/01.png"],
+        images: gallery(
+          "/images/products/mesh-high-neck-sports-bra/white",
+          1,
+          2
+        ),
       },
     ],
     sizes: stockSML(),
-    images: [
-      "/images/products/mesh-high-neck-sports-bra/black/01.png",
-      "/images/products/mesh-high-neck-sports-bra/white/01.png",
-    ],
+    images: gallery("/images/products/mesh-high-neck-sports-bra/black", 1, 2),
     hoverImage: "/images/products/mesh-high-neck-sports-bra/black/01.png",
     sizeGuide: {
       unit: "CM",
@@ -352,19 +368,16 @@ const PRODUCTS: AuraMeshProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: ["/images/products/mesh-sculpt-shorts/black/01.png"],
+        images: gallery("/images/products/mesh-sculpt-shorts/black", 1, 2),
       },
       {
         name: "White",
         hex: "#FFFFFF",
-        images: ["/images/products/mesh-sculpt-shorts/white/01.png"],
+        images: gallery("/images/products/mesh-sculpt-shorts/white", 1, 2),
       },
     ],
     sizes: stockSML(),
-    images: [
-      "/images/products/mesh-sculpt-shorts/black/01.png",
-      "/images/products/mesh-sculpt-shorts/white/01.png",
-    ],
+    images: gallery("/images/products/mesh-sculpt-shorts/black", 1, 2),
     hoverImage: "/images/products/mesh-sculpt-shorts/black/01.png",
     sizeGuide: {
       unit: "CM",
@@ -407,11 +420,20 @@ const PRODUCTS: AuraMeshProduct[] = [
       "Perfect for gym training, running, yoga, Pilates, sports, and everyday activewear",
     ],
     colors: [
-      { name: "Black", hex: "#000000" },
-      { name: "White", hex: "#FFFFFF" },
+      {
+        name: "Black",
+        hex: "#000000",
+        images: gallery("/images/products/mesh-sculpt-legging-set/black", 1, 2),
+      },
+      {
+        name: "White",
+        hex: "#FFFFFF",
+        images: gallery("/images/products/mesh-sculpt-legging-set/white", 1, 2),
+      },
     ],
     sizes: stockSML(),
-    images: [placeholder("Mesh+Sculpt+Leggings")],
+    images: gallery("/images/products/mesh-sculpt-legging-set/black", 1, 2),
+    hoverImage: "/images/products/mesh-sculpt-legging-set/black/01.png",
     isFeatured: false,
     isNewArrival: true,
     order: 5,

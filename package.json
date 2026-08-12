@@ -13,7 +13,8 @@
     "seed:auraflow": "tsx scripts/seed-auraflow.ts",
     "seed:auramesh": "tsx scripts/seed-auramesh.ts",
     "seed:outerwear": "tsx scripts/seed-outerwear.ts",
-    "seed:accessories": "tsx scripts/seed-accessories.ts"
+    "seed:accessories": "tsx scripts/seed-accessories.ts",
+    "verify:atlas": "tsx scripts/verify-atlas.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",

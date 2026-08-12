@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Expand, X, ZoomIn } from "lucide-react";
 import { cn, getPlaceholderImage } from "@/lib/utils";
@@ -34,13 +34,10 @@ export function ProductGallery({
 
   const activeIsChart = isSizeChartImage(gallery[active] || "");
 
-  const go = useCallback(
-    (dir: -1 | 1) => {
-      setActive((i) => (i + dir + gallery.length) % gallery.length);
-      setLbZoomed(false);
-    },
-    [gallery.length]
-  );
+  const go = (dir: -1 | 1) => {
+    setActive((i) => (i + dir + gallery.length) % gallery.length);
+    setLbZoomed(false);
+  };
 
   const openLightbox = () => {
     setLbZoomed(false);

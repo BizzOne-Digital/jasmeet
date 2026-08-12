@@ -23,7 +23,8 @@ export function NewArrivalsSection({
       section={{
         eyebrow: "Just in",
         heading: "New Arrivals",
-        subheading: "Fresh silhouettes for the season ahead.",
+        subheading:
+          "Fresh pieces designed for movement, confidence and everyday wear.",
         ctaLabel: "Shop new",
         ctaUrl: "/shop?newArrival=true",
         ...section,
