@@ -91,6 +91,13 @@ function placeholder(label: string) {
   return `https://placehold.co/800x1000/1a1a1a/D4AF37/png?text=${text}&font=montserrat`;
 }
 
+/** Flat gallery using 01.png, 02.png, … in order (for folders with only product shots). */
+function orderedGallery(base: string, maxIndex: number): string[] {
+  return Array.from({ length: maxIndex }, (_, i) =>
+    `${base}/${String(i + 1).padStart(2, "0")}.png`
+  );
+}
+
 /** Model shots (03–05) first, then flat/product shots (01–02). */
 function modelFirstGallery(base: string, maxIndex: number): string[] {
   const order: number[] = [];
@@ -275,32 +282,32 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: modelFirstGallery(
+        images: orderedGallery(
           "/images/products/auraimpact-sculpt-leggings/black",
-          4
+          2
         ),
       },
       {
         name: "Brown",
         hex: "#5C4033",
-        images: modelFirstGallery(
+        images: orderedGallery(
           "/images/products/auraimpact-sculpt-leggings/brown",
-          4
+          2
         ),
       },
       {
         name: "Shark Grey",
         hex: "#6B6E73",
-        images: modelFirstGallery(
+        images: orderedGallery(
           "/images/products/auraimpact-sculpt-leggings/shark-grey",
-          4
+          2
         ),
       },
     ],
     sizes: stockSML(),
-    images: modelFirstGallery(
+    images: orderedGallery(
       "/images/products/auraimpact-sculpt-leggings/black",
-      4
+      2
     ),
     sizeGuide: {
       unit: "IN / CM",
