@@ -12,6 +12,8 @@ export interface HeroSlide {
   eyebrow?: string;
   heading: string;
   headingLine2?: string;
+  headingLine3?: string;
+  headingLine4?: string;
   body?: string;
   primaryCta: { label: string; href: string };
 }
@@ -25,11 +27,13 @@ export const HERO_SLIDES: HeroSlide[] = [
     theme: "dark",
     layout: "left",
     imagePositionClass: "object-[78%_center] md:object-center",
-    eyebrow: "DAYAURA",
-    heading: "Wear Your Aura.",
-    headingLine2: "Move with Confidence.",
-    body: "Premium activewear designed to empower every movement — from the studio to everyday life.",
-    primaryCta: { label: "Shop Collection", href: "/collections" },
+    eyebrow: "Wear Your Aura",
+    heading: "Move with Confidence",
+    headingLine2: "Premium women's activewear",
+    headingLine3: "designed for gym, yoga,",
+    headingLine4: "and everyday movement.",
+    body: "Discover sculpted silhouettes, elevated fabrics, and a hidden motivational message in every piece.",
+    primaryCta: { label: "Shop Collections", href: "/collections" },
   },
   {
     id: "new-arrivals",

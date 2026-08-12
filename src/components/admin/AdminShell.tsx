@@ -36,5 +36,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     </ToastProvider>
   );
 
-  return <SessionProvider>{content}</SessionProvider>;
+  return (
+    <SessionProvider basePath="/api/auth" refetchOnWindowFocus={false}>
+      {content}
+    </SessionProvider>
+  );
 }

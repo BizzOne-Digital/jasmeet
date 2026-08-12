@@ -5,6 +5,7 @@ import { connectDB } from "./mongodb";
 import AdminUser from "@/models/AdminUser";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     Credentials({
       name: "credentials",
@@ -15,24 +16,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        await connectDB();
-        const user = await AdminUser.findOne({
-          email: (credentials.email as string).toLowerCase(),
-        });
+        try {
+          await connectDB();
+          const email = (credentials.email as string).toLowerCase().trim();
+          const user = await AdminUser.findOne({ email });
 
-        if (!user) return null;
+          if (!user) return null;
 
-        const valid = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        );
-        if (!valid) return null;
+          const valid = await bcrypt.compare(
+            credentials.password as string,
+            user.password
+          );
+          if (!valid) return null;
 
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
-        };
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+          };
+        } catch (error) {
+          console.error("[auth] authorize failed:", error);
+          return null;
+        }
       },
     }),
   ],
@@ -51,8 +56,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
+    authorized({ auth, request }) {
+      const { pathname } = request.nextUrl;
+      if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
+        return !!auth?.user;
+      }
+      return true;
+    },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
 });
 
 export async function requireAdmin() {

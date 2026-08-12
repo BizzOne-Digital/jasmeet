@@ -81,6 +81,10 @@ async function main() {
   const published = await Product.countDocuments({ status: "published" });
   console.log(`\nPublished products: ${published}`);
 
+  const AdminUser = (await import("../src/models/AdminUser")).default;
+  const adminCount = await AdminUser.countDocuments();
+  console.log(`Admin users: ${adminCount}${adminCount === 0 ? " (run npm run seed:admin)" : ""}`);
+
   const StoredUpload = (await import("../src/models/StoredUpload")).default;
   await StoredUpload.syncIndexes();
   console.log("OK: StoredUpload indexes synced (uploads ready for Atlas/Vercel)");

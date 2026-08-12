@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -18,8 +18,15 @@ type LoginValues = z.infer<typeof loginSchema>;
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { error: toastError } = useToast();
+  const { error: toastError, success: toastSuccess } = useToast();
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("expired") === "1") {
+      toastSuccess("Session expired. Please sign in again.");
+    }
+  }, [toastSuccess]);
 
   const {
     register,
@@ -40,7 +47,11 @@ export default function AdminLoginPage() {
       });
 
       if (result?.error) {
-        toastError("Invalid email or password");
+        if (result.error === "Configuration") {
+          toastError("Auth is not configured on the server. Check AUTH_SECRET and MONGODB_URI.");
+        } else {
+          toastError("Invalid email or password");
+        }
         return;
       }
 

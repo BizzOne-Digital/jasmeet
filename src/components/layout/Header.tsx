@@ -36,7 +36,7 @@ const NAV_LINKS = [
 ];
 
 const navLinkClass =
-  "group relative whitespace-nowrap py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors xl:tracking-[0.18em]";
+  "group relative inline-flex items-center whitespace-nowrap py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors xl:tracking-[0.18em]";
 
 function isNavLinkActive(
   href: string,
@@ -187,7 +187,7 @@ export function Header({
                 return (
                   <div
                     key={link.href}
-                    className="relative"
+                    className="relative flex items-center self-center"
                     onMouseEnter={() => setMegaOpen(true)}
                     onMouseLeave={() => setMegaOpen(false)}
                   >

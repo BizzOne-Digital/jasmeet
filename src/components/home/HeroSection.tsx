@@ -10,6 +10,9 @@ import { HERO_SLIDES, type HeroSlide } from "@/components/home/hero-slides";
 const AUTO_INTERVAL = 7000;
 const FADE_MS = 1.35;
 
+const heroHeadlineLineClass =
+  "block whitespace-nowrap text-[1.2rem] leading-[1.16] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3.25rem] xl:leading-[1.12]";
+
 function SlideContent({
   slide,
   isActive,
@@ -22,13 +25,13 @@ function SlideContent({
   return (
     <div
       className={cn(
-        "relative z-10 flex min-h-[52svh] w-full max-w-full flex-col justify-center px-5 pb-20 pt-20 sm:min-h-[68svh] sm:px-10 sm:pb-24 sm:pt-24 md:min-h-[100svh] md:px-14 lg:px-20 xl:px-24",
+        "relative z-10 flex min-h-[52svh] w-full max-w-full flex-col justify-center px-5 pb-20 pt-24 sm:min-h-[68svh] sm:px-10 sm:pb-24 sm:pt-28 md:min-h-[100svh] md:px-14 md:pt-24 lg:px-20 xl:px-24",
         alignRight && "items-end"
       )}
     >
       <div
         className={cn(
-          "flex w-full max-w-xl flex-col lg:max-w-2xl",
+          "flex w-full max-w-xl flex-col sm:max-w-2xl lg:max-w-3xl",
           alignRight ? "items-end text-right" : "items-start text-left"
         )}
       >
@@ -51,11 +54,19 @@ function SlideContent({
           initial={{ opacity: 0, y: 28 }}
           animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
           transition={{ duration: 1, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-          className="break-words font-display text-[1.65rem] leading-[1.12] tracking-[0.03em] text-beige sm:text-4xl sm:leading-[1.08] md:text-6xl lg:text-7xl xl:text-[4.6rem]"
+          className="w-full font-display tracking-[0.03em] text-beige"
         >
-          {slide.heading}
+          <span className={heroHeadlineLineClass}>{slide.heading}</span>
           {slide.headingLine2 ? (
-            <span className="mt-1.5 block">{slide.headingLine2}</span>
+            <span className={cn("mt-1 sm:mt-1.5", heroHeadlineLineClass)}>
+              {slide.headingLine2}
+            </span>
+          ) : null}
+          {slide.headingLine3 ? (
+            <span className={heroHeadlineLineClass}>{slide.headingLine3}</span>
+          ) : null}
+          {slide.headingLine4 ? (
+            <span className={heroHeadlineLineClass}>{slide.headingLine4}</span>
           ) : null}
         </motion.h1>
 

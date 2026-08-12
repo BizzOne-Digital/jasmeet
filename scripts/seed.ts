@@ -115,11 +115,15 @@ async function main() {
   }
 
   const existingAdmin = await AdminUser.findOne({ email: adminEmail.toLowerCase() });
+  const hashed = await bcrypt.hash(adminPassword, 12);
   if (existingAdmin) {
-    console.log(`↷ Admin already exists: ${adminEmail}`);
+    await AdminUser.updateOne(
+      { email: adminEmail.toLowerCase() },
+      { $set: { password: hashed, name: existingAdmin.name || "DAYAURA Admin" } }
+    );
+    console.log(`✓ Admin password synced: ${adminEmail}`);
     counts.skipped++;
   } else {
-    const hashed = await bcrypt.hash(adminPassword, 12);
     await AdminUser.create({
       email: adminEmail.toLowerCase(),
       password: hashed,
@@ -830,12 +834,13 @@ async function main() {
         internalName: "Home Hero",
         eyebrow: "Wear Your Aura",
         heading: "Move with Confidence",
-        subheading: "Premium women's activewear designed for gym, yoga, and everyday movement.",
+        subheading:
+          "Premium women's activewear\ndesigned for gym, yoga,\nand everyday movement.",
         body: "Discover sculpted silhouettes, elevated fabrics, and a hidden motivational message in every piece.",
         ctaLabel: "Shop Collections",
         ctaUrl: "/collections",
-        backgroundImage: getPlaceholderImage(1920, 1080, "DAYAURA+Hero"),
-        mobileImage: getPlaceholderImage(800, 1200, "DAYAURA+Hero+Mobile"),
+        backgroundImage: "/images/hero-1.png",
+        mobileImage: "/images/hero-1.png",
         imageAlt: "DAYAURA model in premium activewear",
         theme: "dark" as const,
         alignment: "left" as const,
