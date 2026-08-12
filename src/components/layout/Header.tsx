@@ -144,6 +144,7 @@ export function Header({
         >
           <button
             type="button"
+            suppressHydrationWarning
             className="flex h-10 w-10 shrink-0 items-center justify-center text-[#F5F0E6] sm:h-11 sm:w-11 lg:hidden"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
@@ -292,6 +293,7 @@ export function Header({
           >
             <button
               type="button"
+              suppressHydrationWarning
               onClick={() => setSearchOpen(true)}
               className="flex h-10 w-10 items-center justify-center text-[#F5F0E6]/85 transition hover:text-[#D4AF37] sm:h-11 sm:w-11"
               aria-label="Search"
@@ -312,6 +314,7 @@ export function Header({
             </Link>
             <button
               type="button"
+              suppressHydrationWarning
               onClick={openCart}
               className="relative flex h-11 w-11 items-center justify-center text-[#F5F0E6]/85 transition hover:text-[#D4AF37]"
               aria-label="Cart"

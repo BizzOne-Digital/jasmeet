@@ -689,8 +689,11 @@ async function main() {
     },
   ];
 
-  let messageIndex = 0;
+  console.log(
+    "\n↷ Skipping legacy placeholder products — use collection seeds (seed:aurawave, seed:auraimpact, etc.)"
+  );
 
+  /*
   for (const p of productDefs) {
     const slug = p.slug || slugify(p.name);
     const existing = await Product.findOne({ slug });
@@ -744,6 +747,19 @@ async function main() {
     console.log(`✓ Product: ${p.name}`);
     counts.products++;
   }
+  */
+
+  const { CANONICAL_PRODUCT_SLUGS } = await import("./cleanup-products");
+  const removedExtras = await Product.deleteMany({
+    slug: { $nin: [...CANONICAL_PRODUCT_SLUGS] },
+  });
+  if (removedExtras.deletedCount) {
+    console.log(`✗ Removed ${removedExtras.deletedCount} non-catalog products`);
+  }
+  await Product.updateMany(
+    { slug: { $in: [...CANONICAL_PRODUCT_SLUGS] } },
+    { $set: { status: "published" } }
+  );
 
   // ── Pages ───────────────────────────────────────────────────────────────
   const pageDefs = [

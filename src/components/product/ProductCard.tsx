@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Eye, Heart, Plus } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
@@ -50,11 +50,16 @@ export function ProductCard({
 }: ProductCardProps) {
   const [quickOpen, setQuickOpen] = useState(false);
   const [colorIndex, setColorIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
   const toggleWishlist = useWishlistStore((s) => s.toggleItem);
   const inWishlist = useWishlistStore((s) =>
     s.isInWishlist(String(product._id))
   );
+
+  useEffect(() => setMounted(true), []);
+
+  const showWishlisted = mounted && inWishlist;
 
   const selectedColor = product.colors?.[colorIndex] || product.colors?.[0];
   const colorImages = selectedColor?.images?.filter(Boolean) || [];
@@ -193,19 +198,21 @@ export function ProductCard({
           <div className="absolute right-2 top-2 z-10 flex flex-col gap-1 opacity-100 transition sm:right-3 sm:top-3 sm:gap-1.5 sm:opacity-0 sm:group-hover:opacity-100">
             <button
               type="button"
+              suppressHydrationWarning
               onClick={onWishlist}
               className={cn(
                 "flex h-9 w-9 items-center justify-center bg-black/55 text-white backdrop-blur-sm transition hover:text-[#D4AF37] sm:h-10 sm:w-10",
-                inWishlist && "text-[#D4AF37]"
+                showWishlisted && "text-[#D4AF37]"
               )}
               aria-label={
-                inWishlist ? "Remove from wishlist" : "Add to wishlist"
+                showWishlisted ? "Remove from wishlist" : "Add to wishlist"
               }
             >
-              <Heart className={cn("h-4 w-4", inWishlist && "fill-current")} />
+              <Heart className={cn("h-4 w-4", showWishlisted && "fill-current")} />
             </button>
             <button
               type="button"
+              suppressHydrationWarning
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -220,6 +227,7 @@ export function ProductCard({
 
           <button
             type="button"
+            suppressHydrationWarning
             onClick={quickAdd}
             className="absolute inset-x-0 bottom-0 z-10 flex min-h-10 translate-y-0 items-center justify-center gap-2 bg-gold py-2.5 text-[9px] uppercase tracking-[0.24em] text-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:min-h-11 sm:py-3 sm:text-[10px] sm:translate-y-full sm:group-hover:translate-y-0"
           >
@@ -256,6 +264,7 @@ export function ProductCard({
                 <button
                   key={`${c.name}-${c.hex}`}
                   type="button"
+                  suppressHydrationWarning
                   title={c.name}
                   aria-label={`Select ${c.name}`}
                   aria-pressed={colorIndex === i}
