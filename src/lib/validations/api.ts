@@ -124,7 +124,7 @@ export const productCreateSchema = z.object({
   isOnSale: z.boolean().default(false),
   isBestSeller: z.boolean().default(false),
   isComingSoon: z.boolean().default(false),
-  allowPreOrder: z.boolean().default(false),
+  allowPreOrder: z.boolean().default(true),
   preOrderLeadTime: z.string().default("Pre-Order – Ships in 2–3 weeks"),
   status: z.enum(["draft", "published"]).default("draft"),
   order: z.number().int().default(0),

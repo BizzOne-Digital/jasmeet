@@ -9,7 +9,7 @@ import { SafeImage } from "@/components/ui/SafeImage";
 import { useCartStore } from "@/store/cart";
 import { useWishlistStore } from "@/store/wishlist";
 import { QuickViewModal } from "@/components/product/QuickViewModal";
-import { isVariantPurchasable } from "@/lib/inventory";
+import { isVariantPurchasable, isPreOrderOnlyProduct } from "@/lib/inventory";
 
 export interface ProductCardProduct {
   _id: string;
@@ -131,10 +131,11 @@ export function ProductCard({
     : "object-contain object-center p-1.5 sm:p-2";
 
   const showComingSoon = Boolean(product.isComingSoon);
-  const showSale = !showComingSoon && onSale;
-  const showNew = !showComingSoon && !showSale && Boolean(product.isNewArrival);
+  const preOrderOnly = !showComingSoon && isPreOrderOnlyProduct(product);
+  const showSale = !showComingSoon && !preOrderOnly && onSale;
+  const showNew = !showComingSoon && !preOrderOnly && !showSale && Boolean(product.isNewArrival);
   const showBestSeller =
-    !showComingSoon && !showSale && !showNew && Boolean(product.isBestSeller);
+    !showComingSoon && !preOrderOnly && !showSale && !showNew && Boolean(product.isBestSeller);
 
   return (
     <>
@@ -176,6 +177,11 @@ export function ProductCard({
             {showComingSoon ? (
               <Badge variant="soon" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
                 Coming soon
+              </Badge>
+            ) : null}
+            {preOrderOnly ? (
+              <Badge variant="preorder" className="px-2 py-0.5 text-[9px] sm:px-2.5 sm:py-1 sm:text-[10px]">
+                Pre-order
               </Badge>
             ) : null}
             {showSale ? (
@@ -232,7 +238,7 @@ export function ProductCard({
             className="absolute inset-x-0 bottom-0 z-10 flex min-h-10 translate-y-0 items-center justify-center gap-2 bg-gold py-2.5 text-[9px] uppercase tracking-[0.24em] text-black transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:min-h-11 sm:py-3 sm:text-[10px] sm:translate-y-full sm:group-hover:translate-y-0"
           >
             <Plus className="h-3.5 w-3.5" />
-            Quick add
+            {preOrderOnly ? "Pre-order" : "Quick add"}
           </button>
         </div>
 

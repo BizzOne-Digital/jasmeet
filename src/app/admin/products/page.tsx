@@ -25,6 +25,7 @@ interface ProductRow {
   isOnSale?: boolean;
   isBestSeller?: boolean;
   isComingSoon?: boolean;
+  allowPreOrder?: boolean;
   collection?: { name?: string } | string;
 }
 
@@ -217,6 +218,11 @@ function ProductsContent() {
           {row.isComingSoon ? (
             <span className="rounded bg-zinc-500/20 px-1.5 py-0.5 text-[10px] text-zinc-300">
               Coming soon
+            </span>
+          ) : null}
+          {row.allowPreOrder ? (
+            <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] text-amber-300">
+              Pre-order
             </span>
           ) : null}
         </div>

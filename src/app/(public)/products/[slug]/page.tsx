@@ -17,6 +17,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Accordion } from "@/components/ui/Accordion";
 import { SizeGuideTable } from "@/components/product/SizeGuideTable";
 import { sizeGuideHasContent, type SizeGuideData } from "@/lib/size-guide";
+import { productHasAnyStock } from "@/lib/inventory";
 import type { ProductCardData } from "@/components/product/ProductCard";
 
 type Params = Promise<{ slug: string }>;
@@ -120,6 +121,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
     images?: string[];
     colors?: Array<{ name: string; hex: string; images?: string[] }>;
     sizes?: Array<{ size: string; stock: number }>;
+    inventory?: Array<{ colorName: string; size: string; stock: number }>;
     shortDescription?: string;
     description?: string;
     materials?: string;
@@ -132,6 +134,10 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
     featureTabs?: Array<{ id: string; title: string; image: string }>;
     isOnSale?: boolean;
     isNewArrival?: boolean;
+    isBestSeller?: boolean;
+    isComingSoon?: boolean;
+    allowPreOrder?: boolean;
+    preOrderLeadTime?: string;
     collection?: { _id?: string; name?: string; slug?: string } | null;
     category?: { name?: string; slug?: string } | null;
   }>(productRaw);
@@ -140,6 +146,9 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
     ? await getRelatedProducts(product._id, String(product.collection._id), 4)
     : [];
   const related = serialize<ProductCardData[]>(relatedRaw);
+
+  const hasStock = productHasAnyStock(product);
+  const preOrderAvailable = Boolean(product.allowPreOrder) && !product.isComingSoon;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -153,9 +162,11 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       "@type": "Offer",
       priceCurrency: "CAD",
       price: product.price,
-      availability: product.sizes?.some((s) => s.stock > 0)
+      availability: hasStock
         ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+        : preOrderAvailable
+          ? "https://schema.org/PreOrder"
+          : "https://schema.org/OutOfStock",
       url: absoluteUrl(`/products/${slug}`),
     },
   };
@@ -254,6 +265,12 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             Standard shipping CAD $9.99. Free shipping on orders over CAD $99.
           </p>
           <p>In-stock items process in 1–2 business days; delivery 2–7 business days.</p>
+          {product.allowPreOrder ? (
+            <p>
+              Pre-order items ship when restocked — estimated timing is shown on
+              the product page and in your cart.
+            </p>
+          ) : null}
           <p>
             Returns accepted within 14 days for unworn items with tags attached.
           </p>

@@ -188,7 +188,7 @@ const emptyDefaults: ProductFormValues = {
   isOnSale: false,
   isBestSeller: false,
   isComingSoon: false,
-  allowPreOrder: false,
+  allowPreOrder: true,
   preOrderLeadTime: "Pre-Order – Ships in 2–3 weeks",
   status: "draft",
   order: 0,

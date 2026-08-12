@@ -50,6 +50,22 @@ export function getVariantStock(
   return Math.max(0, sizeRow?.stock || 0);
 }
 
+/** True if any colour/size row has stock on hand. */
+export function productHasAnyStock(product: ProductLike): boolean {
+  const inventory = product.inventory?.filter(
+    (row) => row.colorName && row.size
+  );
+  if (inventory?.length) {
+    return inventory.some((row) => (row.stock || 0) > 0);
+  }
+  return (product.sizes || []).some((s) => (s.stock || 0) > 0);
+}
+
+/** Product accepts pre-orders and has no in-stock units left. */
+export function isPreOrderOnlyProduct(product: ProductLike): boolean {
+  return Boolean(product.allowPreOrder) && !productHasAnyStock(product);
+}
+
 export function isVariantPurchasable(
   product: ProductLike,
   colorName: string,

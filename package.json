@@ -10,6 +10,7 @@
     "seed": "tsx scripts/seed.ts",
     "seed:admin": "tsx scripts/seed-admin.ts",
     "cleanup:products": "tsx scripts/cleanup-products.ts",
+    "enable:preorder": "tsx scripts/enable-preorder.ts",
     "seed:aurawave": "tsx scripts/seed-aurawave.ts",
     "seed:auraimpact": "tsx scripts/seed-auraimpact.ts",
     "seed:auraflow": "tsx scripts/seed-auraflow.ts",

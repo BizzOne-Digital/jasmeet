@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 export interface BadgeProps {
   children: React.ReactNode;
-  variant?: "gold" | "sale" | "new" | "bestseller" | "soon" | "neutral" | "outline";
+  variant?: "gold" | "sale" | "new" | "bestseller" | "soon" | "preorder" | "neutral" | "outline";
   className?: string;
 }
 
@@ -12,6 +12,7 @@ const variants = {
   new: "bg-[#F5F0E6] text-black",
   bestseller: "bg-[#D4AF37]/90 text-black",
   soon: "border border-white/30 bg-black/50 text-[#F5F0E6]",
+  preorder: "border border-[#D4AF37]/50 bg-[#D4AF37]/15 text-[#D4AF37]",
   neutral: "bg-white/10 text-[#F5F0E6]",
   outline: "border border-[#D4AF37]/60 text-[#D4AF37] bg-transparent",
 };

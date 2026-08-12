@@ -151,7 +151,7 @@ const ProductSchema = new Schema<IProduct>(
     isOnSale: { type: Boolean, default: false },
     isBestSeller: { type: Boolean, default: false },
     isComingSoon: { type: Boolean, default: false },
-    allowPreOrder: { type: Boolean, default: false },
+    allowPreOrder: { type: Boolean, default: true },
     preOrderLeadTime: {
       type: String,
       default: "Pre-Order – Ships in 2–3 weeks",

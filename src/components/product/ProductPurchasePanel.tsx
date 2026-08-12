@@ -14,7 +14,7 @@ import {
   getDualSizeLabels,
   type SizeGuideData,
 } from "@/lib/size-guide";
-import { getVariantStock, isVariantPurchasable } from "@/lib/inventory";
+import { isPreOrderOnlyProduct, getVariantStock, isVariantPurchasable } from "@/lib/inventory";
 
 interface ProductPurchaseProduct {
   _id: string;
@@ -91,6 +91,7 @@ export function ProductPurchasePanel({
   const dualLabels = getDualSizeLabels(product.sizeGuide);
   const allowPreOrder = Boolean(product.allowPreOrder);
   const comingSoon = Boolean(product.isComingSoon);
+  const preOrderOnly = !comingSoon && isPreOrderOnlyProduct(product);
 
   const [internalColor, setInternalColor] = useState(colors[0].name);
   const color = controlledColor ?? internalColor;
@@ -245,6 +246,7 @@ export function ProductPurchasePanel({
             <Badge variant="bestseller">Best seller</Badge>
           ) : null}
           {comingSoon ? <Badge variant="soon">Coming soon</Badge> : null}
+          {preOrderOnly ? <Badge variant="preorder">Pre-order</Badge> : null}
         </div>
         <h1 className="mt-3 font-heading text-4xl tracking-wide md:text-5xl">
           {safeText(product.name)}
