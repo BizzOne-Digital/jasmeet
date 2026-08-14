@@ -111,45 +111,47 @@ const PRODUCTS: AccessoriesProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: ["/images/products/dayaura-move-duffle-bag/black/01.png"],
+        images: [
+          "/images/products/dayaura-move-duffle-bag/black/01.png",
+          "/images/products/dayaura-move-duffle-bag/black/02.png",
+        ],
       },
       {
         name: "Navy Blue",
         hex: "#1B2A4A",
-        images: ["/images/products/dayaura-move-duffle-bag/navy-blue/01.png"],
+        images: [
+          "/images/products/dayaura-move-duffle-bag/navy-blue/01.png",
+          "/images/products/dayaura-move-duffle-bag/navy-blue/02.png",
+          "/images/products/dayaura-move-duffle-bag/navy-blue/03.png",
+          "/images/products/dayaura-move-duffle-bag/navy-blue/04.png",
+        ],
       },
       {
         name: "Blush Pink",
         hex: "#E8C4C4",
-        images: ["/images/products/dayaura-move-duffle-bag/blush-pink/01.png"],
+        images: [
+          "/images/products/dayaura-move-duffle-bag/blush-pink/01.png",
+          "/images/products/dayaura-move-duffle-bag/blush-pink/02.png",
+          "/images/products/dayaura-move-duffle-bag/blush-pink/03.png",
+          "/images/products/dayaura-move-duffle-bag/blush-pink/04.png",
+        ],
       },
     ],
     sizes: [{ size: "One Size", stock: 50 }],
     images: [
       "/images/products/dayaura-move-duffle-bag/black/01.png",
+      "/images/products/dayaura-move-duffle-bag/black/02.png",
       "/images/products/dayaura-move-duffle-bag/navy-blue/01.png",
+      "/images/products/dayaura-move-duffle-bag/navy-blue/02.png",
+      "/images/products/dayaura-move-duffle-bag/navy-blue/03.png",
+      "/images/products/dayaura-move-duffle-bag/navy-blue/04.png",
       "/images/products/dayaura-move-duffle-bag/blush-pink/01.png",
+      "/images/products/dayaura-move-duffle-bag/blush-pink/02.png",
+      "/images/products/dayaura-move-duffle-bag/blush-pink/03.png",
+      "/images/products/dayaura-move-duffle-bag/blush-pink/04.png",
     ],
     hoverImage: "/images/products/dayaura-move-duffle-bag/black/01.png",
-    featureTabs: [
-      {
-        id: "wear-resistant-water-resistant",
-        title: "Wear-resistant and water resistant",
-        image:
-          "/images/products/dayaura-move-duffle-bag/features/wear-resistant-water-resistant.png",
-      },
-      {
-        id: "space",
-        title: "Space",
-        image: "/images/products/dayaura-move-duffle-bag/features/space.png",
-      },
-      {
-        id: "independent-shoe-warehouse",
-        title: "Independent shoe warehouse",
-        image:
-          "/images/products/dayaura-move-duffle-bag/features/independent-shoe-warehouse.png",
-      },
-    ],
+    featureTabs: [],
     isFeatured: true,
     isNewArrival: true,
     order: 1,

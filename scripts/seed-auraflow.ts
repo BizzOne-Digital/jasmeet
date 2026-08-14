@@ -468,6 +468,91 @@ const PRODUCTS: AuraFlowProduct[] = [
     isNewArrival: true,
     order: 4,
   },
+  {
+    name: "AuraFlow Studio Wide-Leg Pants",
+    slug: "auraflow-studio-wide-leg-pants",
+    sku: "DA-AF-WIDE-LEG-PANTS",
+    categorySlug: "pants",
+    price: 59,
+    compareAtPrice: 75,
+    shortDescription:
+      "Elegant wide-leg pants with contrast piping detail — premium rayon blend for studio, lounge, and everyday wear.",
+    description:
+      "Effortlessly stylish and incredibly comfortable, the AuraFlow Studio Wide-Leg Pants are designed to move with you throughout your day. Crafted from a premium rayon blend, these pants feature a relaxed wide-leg silhouette with elegant contrast piping for a modern athletic look. The soft, breathable fabric drapes beautifully while offering natural stretch, making them perfect for workouts, travel, lounging, or everyday wear.\n\nWhether you're heading to the studio, grabbing coffee, or relaxing at home, these versatile pants deliver comfort without compromising style.",
+    materials: "49% Rayon, 45% Polyester, 6% Spandex",
+    careInstructions: [
+      "Machine wash cold (30°C or below)",
+      "Hand wash gently if preferred",
+      "Wash with similar colours",
+      "Do not bleach",
+      "Do not scrub",
+      "Flat dry",
+      "Low iron if needed",
+    ].join("\n"),
+    fitDetails:
+      "Relaxed fit. Wide-leg design. High-rise waist. True to size. Model wears Size S.",
+    highlights: [
+      "Premium soft rayon-blend fabric",
+      "Smooth, lightweight feel with excellent drape",
+      "Relaxed wide-leg silhouette",
+      "Elastic waistband with adjustable drawstring",
+      "Functional side pockets",
+      "Stylish contrast piping detail",
+      "Moisture-absorbing and quick-drying",
+      "Breathable and skin-friendly",
+      "Natural stretch with shape recovery",
+      "Lightweight 220 GSM fabric",
+      "Designed for all-day comfort",
+      "Easy to pair with sports bras, tanks, hoodies, and oversized tees",
+      "Perfect for everyday wear, travel, lounge, gym warm-up, Pilates, yoga, walking, casual streetwear, and recovery days",
+      "Signature hidden motivational message",
+      "Premium DAYAURA logo detailing",
+    ],
+    colors: [
+      {
+        name: "Black",
+        hex: "#000000",
+        images: [
+          "/images/products/AuraFlow-Studio-Wide-Leg/black/01.png",
+          "/images/products/AuraFlow-Studio-Wide-Leg/black/02.png",
+        ],
+      },
+      {
+        name: "Coffee",
+        hex: "#6F4E37",
+        images: [
+          "/images/products/AuraFlow-Studio-Wide-Leg/brown/01.png",
+          "/images/products/AuraFlow-Studio-Wide-Leg/brown/02.png",
+        ],
+      },
+    ],
+    sizes: stockSML(),
+    images: [
+      "/images/products/AuraFlow-Studio-Wide-Leg/black/01.png",
+      "/images/products/AuraFlow-Studio-Wide-Leg/black/02.png",
+      "/images/products/AuraFlow-Studio-Wide-Leg/brown/01.png",
+      "/images/products/AuraFlow-Studio-Wide-Leg/brown/02.png",
+    ],
+    sizeGuide: {
+      unit: "CM",
+      columns: [
+        "Outseam/Pants Length",
+        "1/2 Waist",
+        "1/2 Hip",
+        "Inseam",
+        "1/2 Leg Opening",
+      ],
+      rows: [
+        { size: "S", values: ["40.55", "11.81", "20.87", "28.53", "11.42"] },
+        { size: "M", values: ["41.34", "12.60", "21.65", "28.92", "11.81"] },
+        { size: "L", values: ["42.13", "13.39", "22.44", "30.31", "12.20"] },
+      ],
+    },
+    modelInfo: "Model wears Size S.",
+    isFeatured: true,
+    isNewArrival: true,
+    order: 5,
+  },
 ];
 
 async function main() {
