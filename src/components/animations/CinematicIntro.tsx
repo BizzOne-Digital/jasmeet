@@ -103,7 +103,7 @@ export function CinematicIntro() {
 
             <div className="relative z-10 flex flex-col items-center px-6 text-center">
               <motion.p
-                className="font-serif text-4xl tracking-[0.35em] text-[#F5F0E6] sm:text-5xl md:text-6xl"
+                className="font-serif text-3xl tracking-[0.25em] text-[#F5F0E6] sm:text-4xl sm:tracking-[0.35em] md:text-5xl lg:text-6xl"
                 initial={{ opacity: 0, y: 14 }}
                 animate={phase >= 2 ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
@@ -111,12 +111,12 @@ export function CinematicIntro() {
                 DAYAURA
               </motion.p>
 
-              <div className="relative mt-6 h-8 overflow-hidden">
+              <div className="relative mt-4 h-8 overflow-hidden sm:mt-6">
                 <AnimatePresence mode="wait">
                   {phase >= 3 && phase < 4 ? (
                     <motion.p
                       key="wear"
-                      className="text-xs uppercase tracking-[0.35em] text-[#D4AF37] sm:text-sm"
+                      className="text-[10px] uppercase tracking-[0.28em] text-[#D4AF37] sm:text-xs sm:tracking-[0.35em] md:text-sm"
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -20, opacity: 0 }}
@@ -128,7 +128,7 @@ export function CinematicIntro() {
                   {phase >= 4 ? (
                     <motion.p
                       key="move"
-                      className="text-xs uppercase tracking-[0.35em] text-[#F5F0E6]/80 sm:text-sm"
+                      className="text-[10px] uppercase tracking-[0.28em] text-[#F5F0E6]/80 sm:text-xs sm:tracking-[0.35em] md:text-sm"
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -20, opacity: 0 }}
@@ -144,7 +144,7 @@ export function CinematicIntro() {
             <button
               type="button"
               onClick={finish}
-              className="absolute bottom-8 right-8 min-h-11 px-3 text-xs uppercase tracking-[0.28em] text-white/80 transition hover:text-[#D4AF37]"
+              className="absolute bottom-6 right-6 min-h-10 px-3 text-[10px] uppercase tracking-[0.24em] text-white/80 transition hover:text-[#D4AF37] sm:bottom-8 sm:right-8 sm:min-h-11 sm:text-xs sm:tracking-[0.28em]"
             >
               Skip intro
             </button>

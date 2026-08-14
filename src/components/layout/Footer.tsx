@@ -43,7 +43,7 @@ export async function Footer() {
   ].filter((s) => Boolean(s.href));
 
   return (
-    <footer className="w-full max-w-full overflow-x-clip border-t border-white/10 bg-background pb-[env(safe-area-inset-bottom)] text-beige">
+    <footer className="w-full max-w-full overflow-x-clip border-t border-white/10 bg-background text-beige">
       <div className="container-lux py-20 lg:py-24">
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
           {/* Brand + contact email + social */}
@@ -143,7 +143,7 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-8 text-xs text-beige/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-8 pb-4 text-xs text-beige/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {settings.businessName || "DAYAURA"}.
             All rights reserved.

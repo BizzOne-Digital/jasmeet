@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   HeartHandshake,
   Lock,
@@ -50,58 +50,8 @@ export function TrustSection({
   const items = resolveTrustItems(section);
   const scrollContainerRef = useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    // Only enable auto-scroll on mobile (screens < 640px)
-    const isMobile = window.matchMedia("(max-width: 639px)").matches;
-    if (!isMobile) return;
-
-    let scrollInterval: NodeJS.Timeout;
-    let isUserScrolling = false;
-    let userScrollTimeout: NodeJS.Timeout;
-
-    const startAutoScroll = () => {
-      scrollInterval = setInterval(() => {
-        if (isUserScrolling || !container) return;
-
-        const itemWidth = container.scrollWidth / items.length;
-        const currentScroll = container.scrollLeft;
-        const maxScroll = container.scrollWidth - container.clientWidth;
-
-        // If we've reached the end, scroll back to start
-        if (currentScroll >= maxScroll - 10) {
-          container.scrollTo({ left: 0, behavior: "smooth" });
-        } else {
-          // Scroll to next item
-          container.scrollBy({ left: itemWidth, behavior: "smooth" });
-        }
-      }, 3000); // Scroll every 3 seconds
-    };
-
-    // Pause auto-scroll when user manually scrolls
-    const handleUserScroll = () => {
-      isUserScrolling = true;
-      clearTimeout(userScrollTimeout);
-      
-      userScrollTimeout = setTimeout(() => {
-        isUserScrolling = false;
-      }, 5000); // Resume auto-scroll 5 seconds after user stops scrolling
-    };
-
-    container.addEventListener("touchstart", handleUserScroll);
-    container.addEventListener("scroll", handleUserScroll, { passive: true });
-
-    startAutoScroll();
-
-    return () => {
-      clearInterval(scrollInterval);
-      clearTimeout(userScrollTimeout);
-      container.removeEventListener("touchstart", handleUserScroll);
-      container.removeEventListener("scroll", handleUserScroll);
-    };
-  }, [items.length]);
+  // Duplicate items for seamless infinite scroll on mobile
+  const displayItems = [...items, ...items];
 
   return (
     <section
@@ -113,26 +63,54 @@ export function TrustSection({
     >
       <div className="container-lux py-6 sm:py-10">
         <RevealOnScroll direction="up">
-          <ul 
-            ref={scrollContainerRef}
-            className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:snap-none sm:grid-cols-3 sm:gap-6 sm:overflow-visible lg:grid-cols-5 lg:gap-4 [&::-webkit-scrollbar]:hidden"
-          >
-            {items.map(({ label, Icon }) => (
-              <li
-                key={label}
-                className="flex min-w-[42%] shrink-0 snap-start flex-col items-center gap-2.5 text-center sm:min-w-0 sm:gap-3"
-              >
-                <span className="flex h-10 w-10 items-center justify-center border border-gold/30 text-gold sm:h-11 sm:w-11">
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.2} aria-hidden />
-                </span>
-                <span className="max-w-[9rem] text-[10px] uppercase leading-snug tracking-[0.16em] text-beige/75 sm:max-w-[10rem] sm:text-[11px] sm:tracking-[0.18em]">
-                  {label}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="relative overflow-hidden sm:overflow-visible">
+            <ul 
+              ref={scrollContainerRef}
+              className="flex gap-3 sm:grid sm:grid-cols-3 sm:gap-6 lg:grid-cols-5 lg:gap-4 sm:animate-none animate-scroll-mobile"
+              style={{
+                // On mobile, create continuous scroll animation
+                animation: 'scroll-mobile 20s linear infinite',
+              }}
+            >
+              {displayItems.map(({ label, Icon }, idx) => (
+                <li
+                  key={`${label}-${idx}`}
+                  className="flex min-w-[42%] shrink-0 flex-col items-center gap-2.5 text-center sm:min-w-0 sm:gap-3"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center border border-gold/30 text-gold sm:h-11 sm:w-11">
+                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.2} aria-hidden />
+                  </span>
+                  <span className="max-w-[9rem] text-[10px] uppercase leading-snug tracking-[0.16em] text-beige/75 sm:max-w-[10rem] sm:text-[11px] sm:tracking-[0.18em]">
+                    {label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </RevealOnScroll>
       </div>
+      <style jsx>{`
+        @media (max-width: 639px) {
+          @keyframes scroll-mobile {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+          
+          ul:hover {
+            animation-play-state: paused;
+          }
+        }
+        
+        @media (min-width: 640px) {
+          ul {
+            animation: none !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
