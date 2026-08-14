@@ -34,7 +34,10 @@ export function CinematicIntro() {
       seen = false;
     }
 
-    if (seen || mq.matches) {
+    // Skip intro on very small screens (phones) for better UX
+    const isSmallScreen = window.innerWidth < 640;
+    
+    if (seen || mq.matches || isSmallScreen) {
       document.body.style.overflow = "";
       setStatus("done");
       return;
