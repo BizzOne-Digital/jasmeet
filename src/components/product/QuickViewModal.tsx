@@ -116,7 +116,7 @@ export function QuickViewModal({
                 ? "bg-transparent object-contain p-4"
                 : "object-contain object-center p-2"
             }
-            sizes="400px"
+            sizes="(max-width: 768px) 100vw, 400px"
           />
           <div className="absolute left-3 top-3 flex flex-col gap-2">
             {onSale ? <Badge variant="sale">Sale</Badge> : null}
@@ -129,8 +129,8 @@ export function QuickViewModal({
             ) : null}
           </div>
         </div>
-        <div className="flex flex-col">
-          <h3 className="font-serif text-2xl text-[#F5F0E6]">{product.name}</h3>
+        <div className="flex flex-col min-h-0">
+          <h3 className="font-serif text-xl md:text-2xl text-[#F5F0E6]">{product.name}</h3>
           <div className="mt-2 flex items-center gap-2">
             <p className="text-[#D4AF37]">
               {formatPrice(product.price, currency)}
@@ -143,7 +143,7 @@ export function QuickViewModal({
           </div>
 
           {colors.length > 0 ? (
-            <div className="mt-6">
+            <div className="mt-4 md:mt-6">
               <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
                 Color — {activeColor}
               </p>
@@ -167,7 +167,7 @@ export function QuickViewModal({
           ) : null}
 
           {sizesForColor.length > 0 ? (
-            <div className="mt-6">
+            <div className="mt-4 md:mt-6">
               <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
                 Size {!activeSize && <span className="text-red-400">— Please select</span>}
               </p>
@@ -197,7 +197,7 @@ export function QuickViewModal({
             </div>
           ) : null}
 
-          <div className="mt-auto flex flex-col gap-3 pt-8">
+          <div className="mt-auto flex flex-col gap-3 pt-6 md:pt-8">
             <Button 
               onClick={addToCart} 
               fullWidth 

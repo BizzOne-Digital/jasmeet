@@ -52,7 +52,7 @@ export function Modal({
   return createPortal(
     <AnimatePresence>
       {open ? (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
           <motion.div
             className="absolute inset-0 bg-black/75 backdrop-blur-sm"
             initial={{ opacity: 0 }}
@@ -75,9 +75,9 @@ export function Modal({
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
             {(title || showClose) && (
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
                 {title ? (
-                  <h2 className="font-serif text-xl text-[#F5F0E6] tracking-wide">
+                  <h2 className="font-serif text-lg sm:text-xl text-[#F5F0E6] tracking-wide">
                     {title}
                   </h2>
                 ) : (
@@ -95,7 +95,7 @@ export function Modal({
                 ) : null}
               </div>
             )}
-            <div className="max-h-[80vh] overflow-y-auto p-5">{children}</div>
+            <div className="max-h-[calc(80vh-60px)] overflow-y-auto p-4 sm:p-5">{children}</div>
           </motion.div>
         </div>
       ) : null}
