@@ -93,6 +93,18 @@ export function CheckoutClient({
       return;
     }
 
+    const shippingAddressData = {
+      firstName: String(form.get("firstName") || ""),
+      lastName: String(form.get("lastName") || ""),
+      email: String(form.get("email") || ""),
+      phone: String(form.get("phone") || ""),
+      address: String(form.get("address") || ""),
+      city: String(form.get("city") || ""),
+      province: String(form.get("province") || ""),
+      postalCode: String(form.get("postalCode") || ""),
+      country: String(form.get("country") || "Canada"),
+    };
+
     const payload = {
       items: items.map((i) => ({
         productId: i.productId,
@@ -105,21 +117,12 @@ export function CheckoutClient({
         color: i.color,
       })),
       shippingMethod: method,
-      shippingAddress: {
-        firstName: String(form.get("firstName") || ""),
-        lastName: String(form.get("lastName") || ""),
-        email: String(form.get("email") || ""),
-        phone: String(form.get("phone") || ""),
-        address: String(form.get("address") || ""),
-        city: String(form.get("city") || ""),
-        province: String(form.get("province") || ""),
-        postalCode: String(form.get("postalCode") || ""),
-        country: String(form.get("country") || "Canada"),
-      },
+      shippingAddress: shippingAddressData,
       notes: String(form.get("notes") || "") || undefined,
     };
 
     try {
+      // Create order first
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -129,10 +132,45 @@ export function CheckoutClient({
       if (!res.ok || !json.success) {
         throw new Error(json.error || "Unable to place order");
       }
-      setOrderNumber(json.data?.orderNumber || "");
-      setHadPreOrder(cartHasPreOrderItems(items));
-      setStatus("success");
-      clearCart();
+
+      const orderId = json.data?._id;
+      const orderNumber = json.data?.orderNumber || "";
+
+      // If payment is configured, redirect to Stripe
+      if (paymentConfigured) {
+        const paymentRes = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: total,
+            orderId,
+            customerEmail: shippingAddressData.email,
+            items: items.map((i) => ({
+              name: i.name,
+              image: i.image,
+              price: i.price,
+              quantity: i.quantity,
+              size: i.size,
+              color: i.color,
+            })),
+            shippingAddress: shippingAddressData,
+          }),
+        });
+
+        const paymentJson = await paymentRes.json();
+        if (!paymentRes.ok || !paymentJson.url) {
+          throw new Error(paymentJson.error || "Unable to create payment session");
+        }
+
+        // Redirect to Stripe Checkout
+        window.location.href = paymentJson.url;
+      } else {
+        // Test mode - show success
+        setOrderNumber(orderNumber);
+        setHadPreOrder(cartHasPreOrderItems(items));
+        setStatus("success");
+        clearCart();
+      }
     } catch (err) {
       setStatus("error");
       setMessage(err instanceof Error ? err.message : "Checkout failed");
@@ -306,7 +344,7 @@ export function CheckoutClient({
         {message ? <p className="text-sm text-red-400">{message}</p> : null}
 
         <Button type="submit" loading={status === "loading"} fullWidth>
-          {paymentConfigured ? "Place order" : "Place test order"}
+          {paymentConfigured ? "Pay with Stripe" : "Place test order"}
         </Button>
       </form>
 

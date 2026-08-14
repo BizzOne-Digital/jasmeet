@@ -114,6 +114,8 @@ const PRODUCTS: AccessoriesProduct[] = [
         images: [
           "/images/products/dayaura-move-duffle-bag/black/01.png",
           "/images/products/dayaura-move-duffle-bag/black/02.png",
+          "/images/products/dayaura-move-duffle-bag/black/03.png",
+          "/images/products/dayaura-move-duffle-bag/black/04.png",
         ],
       },
       {
@@ -141,6 +143,8 @@ const PRODUCTS: AccessoriesProduct[] = [
     images: [
       "/images/products/dayaura-move-duffle-bag/black/01.png",
       "/images/products/dayaura-move-duffle-bag/black/02.png",
+      "/images/products/dayaura-move-duffle-bag/black/03.png",
+      "/images/products/dayaura-move-duffle-bag/black/04.png",
       "/images/products/dayaura-move-duffle-bag/navy-blue/01.png",
       "/images/products/dayaura-move-duffle-bag/navy-blue/02.png",
       "/images/products/dayaura-move-duffle-bag/navy-blue/03.png",

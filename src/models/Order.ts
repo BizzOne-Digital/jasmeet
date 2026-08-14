@@ -43,6 +43,8 @@ export interface IOrder extends Document {
   paymentStatus: "pending" | "paid" | "failed" | "test";
   paymentProvider?: string;
   paymentIntentId?: string;
+  stripeSessionId?: string;
+  stripePaymentIntentId?: string;
   orderStatus: OrderStatus;
   courierName?: string;
   trackingNumber?: string;
@@ -96,6 +98,8 @@ const OrderSchema = new Schema<IOrder>(
     },
     paymentProvider: { type: String },
     paymentIntentId: { type: String },
+    stripeSessionId: { type: String },
+    stripePaymentIntentId: { type: String },
     orderStatus: {
       type: String,
       enum: ORDER_STATUSES,
