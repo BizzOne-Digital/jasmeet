@@ -54,17 +54,6 @@ export default async function ContactPage() {
                   {settings.contactEmail}
                 </a>
               </li>
-              {settings.phone ? (
-                <li>
-                  <span className="text-muted">Phone: </span>
-                  <a
-                    href={`tel:${settings.phone.replace(/\s+/g, "")}`}
-                    className="hover:text-gold"
-                  >
-                    {settings.phone}
-                  </a>
-                </li>
-              ) : null}
               <li>
                 <span className="text-muted">Location: </span>
                 {settings.address}

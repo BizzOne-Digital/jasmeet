@@ -69,7 +69,7 @@ export function CollectionsShowcase({
                       src={getCollectionImage(c.slug, c.image)}
                       alt={`${c.name} collection cover`}
                       fill
-                      className="object-contain object-center transition duration-700 group-hover:scale-[1.03]"
+                      className="object-cover object-center transition duration-700 group-hover:scale-[1.03]"
                       sizes="(max-width:768px) 100vw, 33vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/5" />

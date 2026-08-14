@@ -80,6 +80,17 @@ label {
     min-height: 2.75rem;
     min-width: 2.75rem;
   }
+  
+  /* Ensure CTAs are always visible above navigation */
+  section > * {
+    position: relative;
+  }
+  
+  /* Force hardware acceleration for smoother scrolling */
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
 }
 
 /* Accessible focus rings */

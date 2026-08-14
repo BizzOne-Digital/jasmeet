@@ -126,8 +126,8 @@ export function ProductCard({
   );
 
   const imageFitClass = isAccessories
-    ? "object-contain object-center p-4"
-    : "object-contain object-center p-2 sm:p-3";
+    ? "object-contain object-center"
+    : "object-contain object-center";
 
   const showComingSoon = Boolean(product.isComingSoon);
   const preOrderOnly = !showComingSoon && isPreOrderOnlyProduct(product);
@@ -153,8 +153,7 @@ export function ProductCard({
       <article className={cn("group relative flex flex-col", className)}>
         <div
           className={cn(
-            "relative aspect-square overflow-hidden rounded-xl bg-[#141414]",
-            isAccessories && "bg-[#1c1c1c]"
+            "relative aspect-[3/4] overflow-hidden rounded-lg bg-white border border-gray-200"
           )}
         >
           <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0">

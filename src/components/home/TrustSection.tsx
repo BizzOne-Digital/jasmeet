@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   HeartHandshake,
   Lock,
@@ -47,6 +48,60 @@ export function TrustSection({
   section?: Partial<PageSectionData> | null;
 }) {
   const items = resolveTrustItems(section);
+  const scrollContainerRef = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Only enable auto-scroll on mobile (screens < 640px)
+    const isMobile = window.matchMedia("(max-width: 639px)").matches;
+    if (!isMobile) return;
+
+    let scrollInterval: NodeJS.Timeout;
+    let isUserScrolling = false;
+    let userScrollTimeout: NodeJS.Timeout;
+
+    const startAutoScroll = () => {
+      scrollInterval = setInterval(() => {
+        if (isUserScrolling || !container) return;
+
+        const itemWidth = container.scrollWidth / items.length;
+        const currentScroll = container.scrollLeft;
+        const maxScroll = container.scrollWidth - container.clientWidth;
+
+        // If we've reached the end, scroll back to start
+        if (currentScroll >= maxScroll - 10) {
+          container.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          // Scroll to next item
+          container.scrollBy({ left: itemWidth, behavior: "smooth" });
+        }
+      }, 3000); // Scroll every 3 seconds
+    };
+
+    // Pause auto-scroll when user manually scrolls
+    const handleUserScroll = () => {
+      isUserScrolling = true;
+      clearTimeout(userScrollTimeout);
+      
+      userScrollTimeout = setTimeout(() => {
+        isUserScrolling = false;
+      }, 5000); // Resume auto-scroll 5 seconds after user stops scrolling
+    };
+
+    container.addEventListener("touchstart", handleUserScroll);
+    container.addEventListener("scroll", handleUserScroll, { passive: true });
+
+    startAutoScroll();
+
+    return () => {
+      clearInterval(scrollInterval);
+      clearTimeout(userScrollTimeout);
+      container.removeEventListener("touchstart", handleUserScroll);
+      container.removeEventListener("scroll", handleUserScroll);
+    };
+  }, [items.length]);
 
   return (
     <section
@@ -58,7 +113,10 @@ export function TrustSection({
     >
       <div className="container-lux py-6 sm:py-10">
         <RevealOnScroll direction="up">
-          <ul className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:snap-none sm:grid-cols-3 sm:gap-6 sm:overflow-visible lg:grid-cols-5 lg:gap-4 [&::-webkit-scrollbar]:hidden">
+          <ul 
+            ref={scrollContainerRef}
+            className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:snap-none sm:grid-cols-3 sm:gap-6 sm:overflow-visible lg:grid-cols-5 lg:gap-4 [&::-webkit-scrollbar]:hidden"
+          >
             {items.map(({ label, Icon }) => (
               <li
                 key={label}

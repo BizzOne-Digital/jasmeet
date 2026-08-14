@@ -32,22 +32,23 @@ export function PageHero({
       {image ? (
         <>
           <div className="relative w-full bg-black">
-            <Image
-              src={image}
-              alt={imageAlt || safeText(title)}
-              width={1920}
-              height={900}
-              priority
-              unoptimized={
-                image.startsWith("/images/") || image.startsWith("/api/uploads/")
-              }
-              className={cn(
-                "h-auto max-h-[min(70vh,820px)] w-full object-contain",
-                imagePositionClass
-              )}
-              sizes="100vw"
-              quality={100}
-            />
+            <div className="relative w-full aspect-[21/9]">
+              <Image
+                src={image}
+                alt={imageAlt || safeText(title)}
+                fill
+                priority
+                unoptimized={
+                  image.startsWith("/images/") || image.startsWith("/api/uploads/")
+                }
+                className={cn(
+                  "object-cover object-center",
+                  imagePositionClass
+                )}
+                sizes="100vw"
+                quality={100}
+              />
+            </div>
           </div>
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/78 via-black/50 to-black/35" />
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />

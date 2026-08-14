@@ -241,7 +241,7 @@ export function Header({
                                 src={getCollectionImage(c.slug, c.image)}
                                 alt={c.name}
                                 fill
-                                className="object-contain object-center transition duration-700 group-hover/card:scale-[1.03]"
+                                className="object-cover object-center transition duration-700 group-hover/card:scale-[1.03]"
                                 sizes="(max-width:640px) 45vw, 260px"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />

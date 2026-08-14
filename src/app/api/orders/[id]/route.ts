@@ -120,6 +120,8 @@ export async function PATCH(
           courierName: order.courierName,
           trackingNumber: order.trackingNumber,
           hasPreOrderItems: order.hasPreOrderItems,
+          shippingAddress: order.shippingAddress,
+          notes: order.notes,
         });
       } catch (emailError) {
         console.error("[order status email]", emailError);

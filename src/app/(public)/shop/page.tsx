@@ -106,7 +106,6 @@ export default async function ShopPage({
       <PageHero
         eyebrow="Shop"
         title="All Products"
-        description={`${result.total} piece${result.total === 1 ? "" : "s"} designed for movement and presence.`}
         image={getPageHeroImage("shop")}
       />
       <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10 lg:px-8">

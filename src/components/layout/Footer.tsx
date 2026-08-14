@@ -80,14 +80,6 @@ export async function Footer() {
               >
                 {email}
               </a>
-              {settings.phone ? (
-                <a
-                  href={`tel:${settings.phone.replace(/\s+/g, "")}`}
-                  className="mt-2 block text-sm text-[#F5F0E6]/70 transition hover:text-[#D4AF37]"
-                >
-                  {settings.phone}
-                </a>
-              ) : null}
               {settings.address ? (
                 <p className="mt-2 text-sm text-white/45">{settings.address}</p>
               ) : null}
