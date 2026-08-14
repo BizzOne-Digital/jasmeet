@@ -165,7 +165,7 @@ export function HeroSection({ slides = HERO_SLIDES }: { slides?: HeroSlide[] }) 
               fetchPriority={active === 0 ? "high" : "auto"}
               unoptimized={current.image.startsWith("/images/")}
               className={cn(
-                "bg-black object-contain md:object-cover",
+                "bg-black object-cover",
                 current.imagePositionClass || "object-center"
               )}
               sizes="100vw"

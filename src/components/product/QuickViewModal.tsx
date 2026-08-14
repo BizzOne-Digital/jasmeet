@@ -76,6 +76,10 @@ export function QuickViewModal({
   const preOrderLabel = product.preOrderLeadTime || "Pre-Order";
 
   const addToCart = () => {
+    if (!activeSize && sizesForColor.length > 0) {
+      // Show message if no size selected
+      return;
+    }
     if (!purchase.ok) return;
     addItem({
       productId: String(product._id),
@@ -165,7 +169,7 @@ export function QuickViewModal({
           {sizesForColor.length > 0 ? (
             <div className="mt-6">
               <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
-                Size
+                Size {!activeSize && <span className="text-red-400">— Please select</span>}
               </p>
               <div className="flex flex-wrap gap-2">
                 {sizesForColor.map((s) => {
@@ -194,7 +198,11 @@ export function QuickViewModal({
           ) : null}
 
           <div className="mt-auto flex flex-col gap-3 pt-8">
-            <Button onClick={addToCart} fullWidth disabled={!purchase.ok}>
+            <Button 
+              onClick={addToCart} 
+              fullWidth 
+              disabled={!purchase.ok || (sizesForColor.length > 0 && !activeSize)}
+            >
               {product.isComingSoon
                 ? "Coming soon"
                 : purchase.isPreOrder

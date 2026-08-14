@@ -85,6 +85,13 @@ export function ProductCard({
   const quickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // If product has multiple sizes, open quick view modal to select size
+    if (product.sizes && product.sizes.length > 1) {
+      setQuickOpen(true);
+      return;
+    }
+    
     const colorName = selectedColor?.name || "Default";
     const check = isVariantPurchasable(product, colorName, firstSize, 1);
     if (!check.ok) {
