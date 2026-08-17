@@ -50,9 +50,6 @@ export function TrustSection({
   const items = resolveTrustItems(section);
   const scrollContainerRef = useRef<HTMLUListElement>(null);
 
-  // Duplicate items for seamless infinite scroll on mobile
-  const displayItems = [...items, ...items];
-
   return (
     <section
       className={cn(
@@ -72,7 +69,7 @@ export function TrustSection({
                 animation: 'scroll-mobile 20s linear infinite',
               }}
             >
-              {displayItems.map(({ label, Icon }, idx) => (
+              {items.map(({ label, Icon }, idx) => (
                 <li
                   key={`${label}-${idx}`}
                   className="flex min-w-[42%] shrink-0 flex-col items-center gap-2.5 text-center sm:min-w-0 sm:gap-3"
@@ -96,7 +93,7 @@ export function TrustSection({
               transform: translateX(0);
             }
             100% {
-              transform: translateX(-50%);
+              transform: translateX(-100%);
             }
           }
           
