@@ -139,7 +139,7 @@ export default async function HomePage() {
 
         switch (key) {
           case "hero":
-            return <HeroSection key="hero" slides={heroSlides} />;
+            return <HeroSection key="hero" />;
           case "trust":
             return <TrustSection key="trust" section={section} />;
           case "collections":
