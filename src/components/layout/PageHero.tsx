@@ -58,21 +58,27 @@ export function PageHero({
       <div
         className={cn(
           "relative z-10 w-full px-4 py-10 sm:px-6 sm:py-14 md:py-16 lg:px-8",
-          image && "absolute inset-x-0 bottom-0"
+          image && "absolute inset-x-0 bottom-12 sm:bottom-16 md:bottom-20"
         )}
       >
-        <div className="container-lux px-0">
+        <div className={cn(
+          "container-lux px-0",
+          align === "center" && "flex flex-col items-center"
+        )}>
           {eyebrow ? (
             <p className="eyebrow mb-4">{safeText(eyebrow)}</p>
           ) : null}
-          <h1 className="display-title max-w-4xl text-[clamp(2.1rem,5vw,3.75rem)]">
+          <h1 className={cn(
+            "display-title max-w-4xl text-[clamp(2.1rem,5vw,3.75rem)]",
+            align === "center" && "text-center"
+          )}>
             {safeText(title)}
           </h1>
           {description ? (
             <p
               className={cn(
                 "body-muted mt-5 max-w-2xl md:mt-6",
-                align === "center" && "mx-auto"
+                align === "center" && "mx-auto text-center"
               )}
             >
               {safeText(description)}

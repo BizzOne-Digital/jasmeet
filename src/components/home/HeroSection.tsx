@@ -19,7 +19,7 @@ export function HeroSection() {
           priority
           fetchPriority="high"
           unoptimized
-          className="bg-black object-cover object-[center_20%] md:object-center"
+          className="bg-black object-cover object-[40%_20%] md:object-center"
           sizes="100vw"
           quality={100}
         />

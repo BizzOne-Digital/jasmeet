@@ -39,7 +39,6 @@ export default async function CollectionsPage() {
         title="Shop by Collection"
         description="Six signatures — find the energy that matches how you move."
         align="center"
-        image={getPageHeroImage("collections")}
       />
       <div className="container-lux section-shell !pt-14 !pb-20 md:!pt-20 md:!pb-28">
         {collections.length === 0 ? (

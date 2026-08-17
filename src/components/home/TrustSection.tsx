@@ -65,8 +65,8 @@ export function TrustSection({
               ref={scrollContainerRef}
               className="flex gap-3 sm:grid sm:grid-cols-3 sm:gap-6 lg:grid-cols-5 lg:gap-4 sm:animate-none animate-scroll-mobile"
               style={{
-                // On mobile, create continuous scroll animation
-                animation: 'scroll-mobile 20s linear infinite',
+                // On mobile, create continuous scroll animation - faster speed (12s instead of 20s)
+                animation: 'scroll-mobile 12s linear infinite',
               }}
             >
               {items.map(({ label, Icon }, idx) => (

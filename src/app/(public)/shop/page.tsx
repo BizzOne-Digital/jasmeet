@@ -106,7 +106,7 @@ export default async function ShopPage({
       <PageHero
         eyebrow="Shop"
         title="All Products"
-        image={getPageHeroImage("shop")}
+        align="center"
       />
       <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10 lg:px-8">
         <Suspense fallback={<div className="text-sm text-muted">Loading filters…</div>}>
