@@ -275,29 +275,23 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Olive Green",
         hex: "#556B2F",
         images: [
-          "/images/products/scallop-one-shoulder-bra/olive-green/03.png",
-          "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
           "/images/products/scallop-one-shoulder-bra/olive-green/01.png",
-          "/images/products/scallop-one-shoulder-bra/olive-green/04.png",
+          "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
         ],
       },
       {
         name: "Black",
         hex: "#000000",
         images: [
-          "/images/products/scallop-one-shoulder-bra/black/04.png",
-          "/images/products/scallop-one-shoulder-bra/black/01.png",
           "/images/products/scallop-one-shoulder-bra/black/03.png",
-          "/images/products/scallop-one-shoulder-bra/black/02.png",
+          "/images/products/scallop-one-shoulder-bra/black/04.png",
         ],
       },
     ],
     sizes: stockSMLXL(),
     images: [
-      "/images/products/scallop-one-shoulder-bra/olive-green/03.png",
-      "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
       "/images/products/scallop-one-shoulder-bra/olive-green/01.png",
-      "/images/products/scallop-one-shoulder-bra/olive-green/04.png",
+      "/images/products/scallop-one-shoulder-bra/olive-green/02.png",
     ],
     sizeChart: SIZE_CHART.oneShoulder,
     sizeGuide: {
@@ -344,7 +338,6 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Olive Green",
         hex: "#556B2F",
         images: [
-          "/images/products/aurawave-sculpt-leggings/olive-green/03.png",
           "/images/products/aurawave-sculpt-leggings/olive-green/01.png",
           "/images/products/aurawave-sculpt-leggings/olive-green/02.png",
         ],
@@ -353,15 +346,14 @@ const PRODUCTS: AuraWaveProduct[] = [
         name: "Black",
         hex: "#000000",
         images: [
-          "/images/products/aurawave-sculpt-leggings/black/03.png",
           "/images/products/aurawave-sculpt-leggings/black/01.png",
           "/images/products/aurawave-sculpt-leggings/black/02.png",
+          "/images/products/aurawave-sculpt-leggings/black/03.png",
         ],
       },
     ],
     sizes: stockSMLXL(),
     images: [
-      "/images/products/aurawave-sculpt-leggings/olive-green/03.png",
       "/images/products/aurawave-sculpt-leggings/olive-green/01.png",
       "/images/products/aurawave-sculpt-leggings/olive-green/02.png",
     ],

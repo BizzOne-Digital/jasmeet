@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
-import { ImageUpload } from "@/components/ui/ImageUpload";
+import { LocalImageField } from "@/components/admin/LocalImageField";
 import {
   adminCardClass,
   adminCardInnerClass,
@@ -193,7 +193,7 @@ export default function AdminSettingsPage() {
                         </p>
                       ) : null}
                     </div>
-                    <ImageUpload
+                    <LocalImageField
                       label="Logo"
                       value={logo || ""}
                       onChange={(url) =>
@@ -202,7 +202,7 @@ export default function AdminSettingsPage() {
                       onClear={() => setValue("logo", "", { shouldDirty: true })}
                       folder="misc"
                     />
-                    <ImageUpload
+                    <LocalImageField
                       label="Favicon"
                       value={favicon || ""}
                       onChange={(url) =>

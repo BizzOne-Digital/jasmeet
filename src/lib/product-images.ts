@@ -1,10 +1,13 @@
-import { parseStoredUploadUrl } from "@/lib/upload-folders";
+import { isLegacyLocalUploadUrl, parseStoredUploadUrl } from "@/lib/upload-folders";
 
 /** Normalize and validate a single product image URL. */
 export function sanitizeImageUrl(url: unknown): string | null {
   if (typeof url !== "string") return null;
   const trimmed = url.trim();
   if (!trimmed || trimmed === "undefined" || trimmed === "null") return null;
+
+  // Legacy disk paths do not work on serverless — reject on save
+  if (isLegacyLocalUploadUrl(trimmed)) return null;
 
   const validPrefix =
     trimmed.startsWith("/images/") ||

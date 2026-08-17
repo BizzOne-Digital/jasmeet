@@ -8,7 +8,7 @@ import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
-import { ImageUpload } from "@/components/ui/ImageUpload";
+import { LocalImageField } from "@/components/admin/LocalImageField";
 import {
   adminCardClass,
   adminCardInnerClass,
@@ -221,14 +221,12 @@ export default function AdminCollectionsPage() {
               <label className={labelClass}>Description</label>
               <textarea rows={3} className={fieldClass} {...register("description")} />
             </div>
-            <ImageUpload
+            <LocalImageField
               label="Cover image"
               value={image}
               folder="pages"
               onChange={(url) => setValue("image", url, { shouldDirty: true })}
               onClear={() => setValue("image", "", { shouldDirty: true })}
-              onSuccess={success}
-              onError={toastError}
             />
             <div>
               <label className={labelClass}>Image alt text</label>

@@ -5,7 +5,8 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, Plus, Trash2 } from "lucide-react";
-import { ImageUpload } from "@/components/ui/ImageUpload";
+import { LocalImageField } from "@/components/admin/LocalImageField";
+import { deleteStoredUploadByUrl } from "@/lib/stored-uploads-client";
 import { adminFetch } from "@/lib/admin-fetch";
 import { buildInventoryMatrix } from "@/lib/inventory";
 import {
@@ -475,7 +476,7 @@ export default function ProductForm({
           image last (paths containing &quot;size-chart&quot; display with contain, not crop).
         </p>
         <div className="grid gap-4 md:grid-cols-2">
-          <ImageUpload
+          <LocalImageField
             label="Add product image"
             value=""
             onChange={(url) => {
@@ -483,7 +484,7 @@ export default function ProductForm({
             }}
             folder="products"
           />
-          <ImageUpload
+          <LocalImageField
             label="Hover image"
             value={hoverImage || ""}
             onChange={(url) => setValue("hoverImage", url, { shouldDirty: true })}
@@ -499,13 +500,14 @@ export default function ProductForm({
                 <img src={img} alt="" className="aspect-square w-full object-cover" />
                 <button
                   type="button"
-                  onClick={() =>
+                  onClick={() => {
+                    void deleteStoredUploadByUrl(img);
                     setValue(
                       "images",
                       images.filter((_, idx) => idx !== i),
                       { shouldDirty: true }
-                    )
-                  }
+                    );
+                  }}
                   className="absolute right-2 top-2 rounded bg-black/70 p-1.5 text-red-300"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -556,7 +558,7 @@ export default function ProductForm({
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <ImageUpload
+                <LocalImageField
                   label={`${watch(`colors.${index}.name`) || "Color"} gallery images`}
                   value=""
                   folder="products"

@@ -12,7 +12,7 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { ImageUpload } from "@/components/ui/ImageUpload";
+import { LocalImageField } from "@/components/admin/LocalImageField";
 import type { PageSectionData } from "@/types";
 
 const sectionSchema = z.object({
@@ -220,7 +220,7 @@ export default function SectionEditor({
           </select>
         </div>
 
-        <ImageUpload
+        <LocalImageField
           label="Background image"
           value={bgImage}
           onChange={(url) =>
@@ -235,14 +235,14 @@ export default function SectionEditor({
           <label className={labelClass}>Image alt text</label>
           <input className={fieldClass} {...register("imageAlt")} />
         </div>
-        <ImageUpload
+        <LocalImageField
           label="Side image"
           value={sideImage}
           onChange={(url) => setValue("sideImage", url, { shouldDirty: true })}
           onClear={() => setValue("sideImage", "", { shouldDirty: true })}
           folder="pages"
         />
-        <ImageUpload
+        <LocalImageField
           label="Mobile image"
           value={mobileImage}
           onChange={(url) => setValue("mobileImage", url, { shouldDirty: true })}

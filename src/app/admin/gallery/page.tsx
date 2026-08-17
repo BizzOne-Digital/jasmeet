@@ -15,7 +15,7 @@ import {
 import AdminHeader from "@/components/admin/AdminHeader";
 import { useAdminShell } from "@/components/admin/AdminShell";
 import ConfirmDialog from "@/components/admin/ConfirmDialog";
-import { ImageUpload } from "@/components/ui/ImageUpload";
+import { LocalImageField } from "@/components/admin/LocalImageField";
 import {
   adminCardClass,
   adminCardInnerClass,
@@ -240,7 +240,7 @@ export default function AdminGalleryPage() {
               {editing ? "Edit gallery item" : "New gallery item"}
             </h2>
             <div className="grid gap-4 md:grid-cols-2">
-              <ImageUpload
+              <LocalImageField
                 label="Image"
                 value={image}
                 onChange={(url: string) =>

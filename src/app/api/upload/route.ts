@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import {
   deleteStoredUploadByUrl,
@@ -7,13 +7,11 @@ import {
 import { normalizeUploadFolder } from "@/lib/upload-folders";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return jsonError("Unauthorized", 401);
-    }
+    await requireAdmin();
 
     const formData = await request.formData();
     const file = formData.get("file");
@@ -44,10 +42,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const session = await auth();
-    if (!session?.user) {
-      return jsonError("Unauthorized", 401);
-    }
+    await requireAdmin();
 
     const body = (await request.json()) as { url?: string };
     if (!body.url) {
