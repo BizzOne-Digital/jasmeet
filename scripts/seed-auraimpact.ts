@@ -899,17 +899,19 @@ const PRODUCTS: AuraImpactProduct[] = [
       {
         name: "Black",
         hex: "#000000",
-        images: modelFirstGallery(
-          "/images/products/auraimpact-sculpt-flared-leggings/black",
-          3
-        ),
+        images: [
+          "/images/products/auraimpact-sculpt-flared-leggings/black/04.png",
+          "/images/products/auraimpact-sculpt-flared-leggings/black/03.png",
+        ],
       },
     ],
     sizes: stockSML(),
-    images: modelFirstGallery(
-      "/images/products/auraimpact-sculpt-flared-leggings/black",
-      3
-    ),
+    images: [
+      "/images/products/auraimpact-sculpt-flared-leggings/black/04.png",
+      "/images/products/auraimpact-sculpt-flared-leggings/black/03.png",
+    ],
+    hoverImage:
+      "/images/products/auraimpact-sculpt-flared-leggings/black/03.png",
     sizeGuide: FLARED_LEGGINGS_SIZE_GUIDE,
     isFeatured: true,
     isNewArrival: true,

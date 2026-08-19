@@ -80,7 +80,7 @@ export function HeroSection() {
             priority
             fetchPriority="high"
             unoptimized
-            className="object-cover object-left object-[left_28%]"
+            className="object-cover object-[88%_26%]"
             sizes="100vw"
             quality={100}
           />

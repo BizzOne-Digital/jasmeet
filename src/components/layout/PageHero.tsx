@@ -10,6 +10,7 @@ export function PageHero({
   image,
   imageAlt,
   imagePositionClass = "object-center",
+  imageFit = "cover",
 }: {
   eyebrow?: string;
   title: string;
@@ -19,6 +20,8 @@ export function PageHero({
   imageAlt?: string;
   /** Tailwind object-position class, e.g. object-top */
   imagePositionClass?: string;
+  /** cover = fill & crop; contain = show full image (best for collection banners) */
+  imageFit?: "cover" | "contain";
 }) {
   return (
     <header
@@ -32,7 +35,14 @@ export function PageHero({
       {image ? (
         <>
           <div className="relative w-full bg-black">
-            <div className="relative w-full aspect-[21/9]">
+            <div
+              className={cn(
+                "relative w-full",
+                imageFit === "contain"
+                  ? "aspect-[3/2] sm:aspect-[16/9] lg:aspect-[21/9]"
+                  : "aspect-[21/9]"
+              )}
+            >
               <Image
                 src={image}
                 alt={imageAlt || safeText(title)}
@@ -42,7 +52,7 @@ export function PageHero({
                   image.startsWith("/images/") || image.startsWith("/api/uploads/")
                 }
                 className={cn(
-                  "object-cover object-center",
+                  imageFit === "contain" ? "object-contain" : "object-cover",
                   imagePositionClass
                 )}
                 sizes="100vw"
@@ -50,8 +60,17 @@ export function PageHero({
               />
             </div>
           </div>
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/78 via-black/50 to-black/35" />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-0",
+              imageFit === "contain"
+                ? "bg-gradient-to-t from-black/85 via-black/25 to-transparent"
+                : "bg-gradient-to-r from-black/78 via-black/50 to-black/35"
+            )}
+          />
+          {imageFit === "cover" ? (
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+          ) : null}
         </>
       ) : null}
 
