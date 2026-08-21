@@ -15,6 +15,8 @@ export interface ModalProps {
   showClose?: boolean;
   /** Bottom sheet on mobile (better for size pickers). */
   mobileSheet?: boolean;
+  /** Panel background theme. */
+  surface?: "dark" | "beige";
 }
 
 const sizeClasses = {
@@ -34,6 +36,7 @@ export function Modal({
   size = "md",
   showClose = true,
   mobileSheet = false,
+  surface = "dark",
 }: ModalProps) {
   useEffect(() => {
     if (!open) return;
@@ -50,6 +53,8 @@ export function Modal({
   }, [open, onClose]);
 
   if (typeof document === "undefined" || !open) return null;
+
+  const isBeige = surface === "beige";
 
   return createPortal(
     <div
@@ -77,15 +82,28 @@ export function Modal({
           aria-modal="true"
           aria-label={title}
           className={cn(
-            "pointer-events-auto relative flex w-full max-h-[min(92dvh,820px)] flex-col rounded-t-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl sm:max-h-[85vh] sm:rounded-none",
+            "pointer-events-auto relative flex w-full max-h-[min(92dvh,820px)] flex-col rounded-t-2xl border shadow-2xl sm:max-h-[85vh] sm:rounded-none",
+            isBeige
+              ? "border-black/10 bg-beige"
+              : "border-white/10 bg-[#0a0a0a]",
             sizeClasses[size],
             className
           )}
         >
           {(title || showClose) && (
-            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
+            <div
+              className={cn(
+                "flex shrink-0 items-center justify-between border-b px-4 py-3 sm:px-5 sm:py-4",
+                isBeige ? "border-black/10" : "border-white/10"
+              )}
+            >
               {title ? (
-                <h2 className="font-serif text-lg text-[#F5F0E6] tracking-wide sm:text-xl">
+                <h2
+                  className={cn(
+                    "font-serif text-lg tracking-wide sm:text-xl",
+                    isBeige ? "text-black/90" : "text-[#F5F0E6]"
+                  )}
+                >
                   {title}
                 </h2>
               ) : (
@@ -95,7 +113,12 @@ export function Modal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-2 text-white/60 transition hover:text-[#D4AF37]"
+                  className={cn(
+                    "p-2 transition",
+                    isBeige
+                      ? "text-black/50 hover:text-[#8a6d00]"
+                      : "text-white/60 hover:text-[#D4AF37]"
+                  )}
                   aria-label="Close"
                 >
                   <X className="h-5 w-5" />

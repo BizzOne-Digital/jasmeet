@@ -55,8 +55,8 @@ export function ProductDetailClient({
   );
 
   return (
-    <div className="grid w-full max-w-full gap-10 lg:grid-cols-[minmax(0,520px)_minmax(0,1fr)] lg:items-start lg:gap-12 xl:gap-16">
-      <div className="min-w-0 space-y-4 lg:justify-self-center">
+    <div className="grid w-full max-w-full gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="min-w-0 space-y-4">
         <ProductGallery
           key={color}
           images={galleryImages}

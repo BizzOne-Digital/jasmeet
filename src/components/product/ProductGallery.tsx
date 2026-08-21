@@ -174,9 +174,9 @@ export function ProductGallery({
         ))}
       </div>
 
-      <div className="order-1 mx-auto w-full max-w-[min(100%,400px)] sm:max-w-[440px] lg:order-2 lg:max-w-[480px]">
+      <div className="order-1 w-full min-w-0 lg:order-2">
         <div
-          className="group relative aspect-[3/4] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 bg-beige"
+          className="group relative mx-auto aspect-[3/4] w-full max-w-[92%] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 bg-beige sm:max-w-[94%] lg:max-w-[88%]"
           onClick={openLightbox}
           role="button"
           tabIndex={0}
@@ -196,10 +196,10 @@ export function ProductGallery({
             unoptimized
             quality={100}
             className={cn(
-              "bg-beige object-contain p-2 sm:p-3",
-              activeIsChart && "p-2"
+              "bg-beige object-contain p-3 sm:p-4",
+              activeIsChart && "p-3"
             )}
-            sizes="(max-width:640px) 400px, (max-width:1024px) 440px, 480px"
+            sizes="(max-width:1024px) 100vw, 44vw"
             onError={() => setMainBroken(true)}
           />
 

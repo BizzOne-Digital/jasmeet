@@ -78,7 +78,6 @@ export function QuickViewModal({
   const activeHex = activeColorObj?.hex;
   const colorImages = activeColorObj?.images?.filter(Boolean) || [];
   const image = colorImages[0] || product.images?.[0];
-  const isAccessories = product.collection?.slug === "accessories";
   const onSale =
     product.isOnSale ||
     (product.compareAtPrice != null && product.compareAtPrice > product.price);
@@ -112,7 +111,7 @@ export function QuickViewModal({
     <>
       {colors.length > 0 ? (
         <div>
-          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
+          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-black/45">
             Color — {activeColor}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -127,7 +126,7 @@ export function QuickViewModal({
                 className={`h-9 w-9 rounded-full border-2 ${
                   activeColor === c.name
                     ? "border-[#D4AF37]"
-                    : "border-transparent"
+                    : "border-black/15"
                 }`}
                 style={{ backgroundColor: c.hex }}
                 aria-label={c.name}
@@ -139,10 +138,10 @@ export function QuickViewModal({
 
       {hasSizes ? (
         <div className={colors.length > 0 ? "mt-5" : ""}>
-          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
+          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-black/45">
             Size{" "}
             {!activeSize ? (
-              <span className="text-red-400">— Please select</span>
+              <span className="text-red-600">— Please select</span>
             ) : null}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -156,8 +155,8 @@ export function QuickViewModal({
                   onClick={() => setSize(s.size)}
                   className={`min-h-11 min-w-11 border px-3 py-2 text-xs uppercase tracking-wider transition disabled:opacity-30 ${
                     activeSize === s.size
-                      ? "border-[#D4AF37] text-[#D4AF37]"
-                      : "border-white/20 text-[#F5F0E6] hover:border-white/50"
+                      ? "border-[#D4AF37] text-[#8a6d00]"
+                      : "border-black/20 text-black/85 hover:border-black/40"
                   }`}
                 >
                   {s.size}
@@ -166,7 +165,7 @@ export function QuickViewModal({
             })}
           </div>
           {purchase.isPreOrder ? (
-            <p className="mt-2 text-xs text-amber-400">{preOrderLabel}</p>
+            <p className="mt-2 text-xs text-amber-700">{preOrderLabel}</p>
           ) : null}
         </div>
       ) : null}
@@ -184,7 +183,11 @@ export function QuickViewModal({
               : "Add to cart"}
         </Button>
         <Link href={`/products/${product.slug}`} onClick={onClose}>
-          <Button variant="ghost" fullWidth>
+          <Button
+            fullWidth
+            variant="outline"
+            className="border-black/20 text-black/70 hover:border-[#D4AF37] hover:text-[#8a6d00]"
+          >
             View full details
           </Button>
         </Link>
@@ -199,19 +202,19 @@ export function QuickViewModal({
       title={modalTitle}
       size="lg"
       mobileSheet
+      surface="beige"
     >
       <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:gap-6">
-        {/* Size/color first on mobile so it is visible without scrolling */}
         <div className="order-1 md:order-2">
-          <h3 className="font-serif text-xl text-[#F5F0E6] md:text-2xl">
+          <h3 className="font-serif text-xl text-black/90 md:text-2xl">
             {product.name}
           </h3>
           <div className="mt-2 flex items-center gap-2">
-            <p className="text-[#D4AF37]">
+            <p className="text-[#8a6d00]">
               {formatPrice(product.price, currency)}
             </p>
             {onSale && product.compareAtPrice ? (
-              <span className="text-sm text-white/40 line-through">
+              <span className="text-sm text-black/40 line-through">
                 {formatPrice(product.compareAtPrice, currency)}
               </span>
             ) : null}
@@ -219,22 +222,13 @@ export function QuickViewModal({
           <div className="mt-5 md:mt-6">{selectors}</div>
         </div>
 
-        <div
-          className={
-            isAccessories
-              ? "relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden bg-white md:order-1 md:max-h-none md:aspect-[3/4]"
-              : "relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden bg-[#141414] md:order-1 md:max-h-none md:aspect-[3/4]"
-          }
-        >
+        <div className="relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden rounded-lg border border-black/10 bg-beige md:order-1 md:max-h-none md:aspect-[3/4]">
           <SafeImage
             src={image}
             alt={product.name}
             fill
-            className={
-              isAccessories
-                ? "bg-transparent object-contain p-4"
-                : "object-contain object-center p-2"
-            }
+            unoptimized
+            className="bg-beige object-contain object-center p-2"
             sizes="(max-width: 768px) 100vw, 400px"
           />
           <div className="absolute left-3 top-3 flex flex-col gap-2">
