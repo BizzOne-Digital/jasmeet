@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image, { type ImageProps } from "next/image";
+import { shouldServeImageUnoptimized } from "@/lib/image-delivery";
 import { cn, getPlaceholderImage } from "@/lib/utils";
 import { isLegacyLocalUploadUrl } from "@/lib/upload-folders";
 
@@ -48,14 +49,12 @@ export function SafeImage({
     failed || !validSrc || legacyBroken ? placeholder : validSrc;
   const resolvedSizes =
     sizes ||
-    (fill ? "(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw" : undefined);
-  const isLocalAsset =
-    typeof resolvedSrc === "string" &&
-    (resolvedSrc.startsWith("/images/") ||
-      resolvedSrc.startsWith("/api/uploads/"));
+    (fill ? "(max-width:768px) 100vw, (max-width:1200px) 50vw, 50vw" : undefined);
   const skipOptimize =
     unoptimized ??
-    (resolvedSrc.includes("placehold.co") || isLocalAsset);
+    (typeof resolvedSrc === "string"
+      ? shouldServeImageUnoptimized(resolvedSrc)
+      : true);
 
   return (
     <Image
@@ -64,7 +63,11 @@ export function SafeImage({
       fill={fill}
       width={fill ? undefined : (width ?? fallbackWidth)}
       height={fill ? undefined : (height ?? fallbackHeight)}
-      className={cn("bg-[#1a1a1a]", className)}
+      className={cn(
+        "bg-[#1a1a1a]",
+        fill && "h-full w-full max-w-none",
+        className
+      )}
       onError={() => {
         setFailed(true);
         onError?.();

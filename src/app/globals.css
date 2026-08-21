@@ -85,12 +85,6 @@ label {
   section > * {
     position: relative;
   }
-  
-  /* Force hardware acceleration for smoother scrolling */
-  * {
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-  }
 }
 
 /* Accessible focus rings */

@@ -21,8 +21,19 @@ export function storedUploadUrl(folder: string, filename: string): string {
 export function parseStoredUploadUrl(
   url?: string | null
 ): { folder: string; filename: string } | null {
-  if (!url?.startsWith("/api/uploads/")) return null;
-  const parts = url.replace(/^\/+/, "").split("/");
+  if (!url) return null;
+
+  let path = url;
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    try {
+      path = new URL(url).pathname;
+    } catch {
+      return null;
+    }
+  }
+
+  if (!path.startsWith("/api/uploads/")) return null;
+  const parts = path.replace(/^\/+/, "").split("/");
   if (parts.length !== 4 || parts[0] !== "api" || parts[1] !== "uploads") {
     return null;
   }

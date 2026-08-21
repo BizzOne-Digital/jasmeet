@@ -182,11 +182,12 @@ export function ProductCard({
               fill
               priority={priority}
               className={cn(
-                "bg-beige transition duration-700 ease-out group-hover:scale-[1.03]",
+                "bg-beige transition-opacity duration-700 ease-out",
                 imageFitClass,
                 hover && "group-hover:opacity-0"
               )}
-              sizes="(max-width:768px) 50vw, 25vw"
+              sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 320px"
+              quality={100}
             />
             {hover ? (
               <SafeImage
@@ -194,10 +195,11 @@ export function ProductCard({
                 alt=""
                 fill
                 className={cn(
-                  "bg-beige opacity-0 transition duration-700 ease-out group-hover:scale-[1.03] group-hover:opacity-100",
+                  "bg-beige opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100",
                   imageFitClass
                 )}
-                sizes="(max-width:768px) 50vw, 25vw"
+                sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 320px"
+                quality={100}
               />
             ) : null}
           </Link>

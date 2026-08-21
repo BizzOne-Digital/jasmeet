@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { shouldServeImageUnoptimized } from "@/lib/image-delivery";
 import { cn, safeText } from "@/lib/utils";
 
 export function PageHero({
@@ -48,9 +49,7 @@ export function PageHero({
                 alt={imageAlt || safeText(title)}
                 fill
                 priority
-                unoptimized={
-                  image.startsWith("/images/") || image.startsWith("/api/uploads/")
-                }
+                unoptimized={shouldServeImageUnoptimized(image)}
                 className={cn(
                   imageFit === "contain" ? "object-contain" : "object-cover",
                   imagePositionClass
