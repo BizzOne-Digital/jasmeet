@@ -213,10 +213,6 @@ const PRODUCTS: AccessoriesProduct[] = [
         images: ["/images/products/dayaura-performance-headband/brown/01.png"],
       },
       {
-        name: "Grey",
-        hex: "#6B6E73",
-      },
-      {
         name: "Blue",
         hex: "#5BA3D9",
         images: ["/images/products/dayaura-performance-headband/blue/01.png"],
@@ -362,6 +358,12 @@ async function main() {
         ...payload,
         images: keepImages,
         colors: keepColors,
+        inventory: (existing.inventory || []).filter(
+          (row: { colorName: string }) =>
+            keepColors.some(
+              (c) => c.name.toLowerCase() === row.colorName.toLowerCase()
+            )
+        ),
         hoverImage: payloadHasRealImages
           ? payload.hoverImage
           : existing.hoverImage &&
