@@ -41,6 +41,8 @@ const settingsSchema = z.object({
   announcementMessages: z.array(z.string()),
   shippingThreshold: z.coerce.number().min(0),
   standardShippingRate: z.coerce.number().min(0),
+  shippingProcessingTime: z.string().optional(),
+  shippingDeliveryEstimate: z.string().optional(),
   localDeliveryEnabled: z.boolean(),
   localDeliveryFee: z.coerce.number().min(0),
   localDeliveryPostalCodesText: z.string().optional(),
@@ -87,6 +89,12 @@ export default function AdminSettingsPage() {
           ...result.data,
           announcementMessages: result.data.announcementMessages || [],
           standardShippingRate: result.data.standardShippingRate ?? 9.99,
+          shippingProcessingTime:
+            result.data.shippingProcessingTime ??
+            "1–2 business days for in-stock products",
+          shippingDeliveryEstimate:
+            result.data.shippingDeliveryEstimate ??
+            "2–7 business days after dispatch",
           shippingThreshold: result.data.shippingThreshold ?? 99,
           localDeliveryEnabled: result.data.localDeliveryEnabled ?? false,
           localDeliveryFee: result.data.localDeliveryFee ?? 0,
@@ -368,6 +376,26 @@ export default function AdminSettingsPage() {
                         type="number"
                         className={adminFieldClass}
                         {...register("shippingThreshold")}
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className={adminLabelClass}>
+                        Processing time (shown at checkout & policy page)
+                      </label>
+                      <input
+                        className={adminFieldClass}
+                        placeholder="1–2 business days for in-stock products"
+                        {...register("shippingProcessingTime")}
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className={adminLabelClass}>
+                        Delivery estimate (shown at checkout & policy page)
+                      </label>
+                      <input
+                        className={adminFieldClass}
+                        placeholder="2–7 business days after dispatch"
+                        {...register("shippingDeliveryEstimate")}
                       />
                     </div>
                     <label className="flex items-center gap-2 text-sm text-zinc-300 md:col-span-2">

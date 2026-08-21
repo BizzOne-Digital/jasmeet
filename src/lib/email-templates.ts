@@ -1,4 +1,9 @@
 import { formatPrice } from "@/lib/utils";
+import {
+  ORDER_STATUS_LABELS,
+  SHIPPING_METHOD_LABELS,
+  type OrderStatus,
+} from "@/lib/order-status";
 
 interface OrderItem {
   name: string;
@@ -7,6 +12,8 @@ interface OrderItem {
   quantity: number;
   price: number;
   image?: string;
+  isPreOrder?: boolean;
+  preOrderLeadTime?: string;
 }
 
 interface OrderDetails {
@@ -29,6 +36,138 @@ interface OrderDetails {
   tax: number;
   total: number;
   currency?: string;
+  orderStatus?: OrderStatus;
+  shippingMethod?: string;
+  hasPreOrderItems?: boolean;
+  courierName?: string;
+  trackingNumber?: string;
+}
+
+function preOrderBadge(item: OrderItem): string {
+  if (!item.isPreOrder) return "";
+  const lead =
+    item.preOrderLeadTime?.trim() ||
+    "Pre-Order – Ships in approximately 2–3 weeks";
+  return `<div style="margin-top: 6px; padding: 6px 10px; background: #fff8e6; border-left: 3px solid #D4AF37; font-size: 13px; color: #5c4a00;"><strong>PRE-ORDER</strong> – ${lead}</div>`;
+}
+
+function renderOrderItems(items: OrderItem[], currency?: string): string {
+  return items
+    .map(
+      (item) => `
+    <div class="order-item">
+      ${
+        item.image
+          ? `<div class="item-image"><img src="${item.image}" alt="${item.name}" /></div>`
+          : ""
+      }
+      <div class="item-details">
+        <div class="item-name">${item.name}</div>
+        <div class="item-meta">
+          Size: ${item.size} | Color: ${item.color} | Quantity: ${item.quantity}
+        </div>
+        ${preOrderBadge(item)}
+        <div class="item-meta" style="margin-top: 5px;">
+          ${formatPrice(item.price, currency)} × ${item.quantity} = ${formatPrice(item.price * item.quantity, currency)}
+        </div>
+      </div>
+    </div>
+  `
+    )
+    .join("");
+}
+
+function renderTotals(order: OrderDetails): string {
+  return `
+    <div class="totals">
+      <div class="total-row">
+        <span>Subtotal:</span>
+        <span>${formatPrice(order.subtotal, order.currency)}</span>
+      </div>
+      <div class="total-row">
+        <span>Shipping:</span>
+        <span>${formatPrice(order.shipping, order.currency)}</span>
+      </div>
+      <div class="total-row">
+        <span>Tax:</span>
+        <span>${formatPrice(order.tax, order.currency)}</span>
+      </div>
+      <div class="total-row grand-total">
+        <span>Total:</span>
+        <span>${formatPrice(order.total, order.currency)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderShippingAddress(order: OrderDetails): string {
+  return `
+    <h3 class="section-title">Shipping Address</h3>
+    <div class="address-box">
+      ${order.shippingAddress.firstName} ${order.shippingAddress.lastName}<br>
+      ${order.shippingAddress.address}<br>
+      ${order.shippingAddress.city}, ${order.shippingAddress.province} ${order.shippingAddress.postalCode}<br>
+      ${order.shippingAddress.country}
+    </div>
+  `;
+}
+
+function statusIntro(order: OrderDetails): { heading: string; body: string } {
+  const status = order.orderStatus || "order_received";
+  const trackingBlock =
+    order.trackingNumber?.trim() && order.courierName?.trim()
+      ? `<p><strong>Courier:</strong> ${order.courierName}<br><strong>Tracking Number:</strong> ${order.trackingNumber}</p>`
+      : order.trackingNumber?.trim()
+        ? `<p><strong>Tracking Number:</strong> ${order.trackingNumber}</p>`
+        : "";
+
+  const preOrderNote = order.hasPreOrderItems
+    ? `<p style="padding: 12px; background: #fff8e6; border-left: 4px solid #D4AF37; color: #5c4a00;">This order includes pre-order item(s). Estimated dispatch times are shown below each product.</p>`
+    : "";
+
+  switch (status) {
+    case "processing":
+      return {
+        heading: "We're Preparing Your Order",
+        body: `<p>Hi ${order.customerName},</p><p>Your order ${order.orderNumber} is now being processed. We'll notify you when it's packed and ready to ship.</p>${preOrderNote}`,
+      };
+    case "packed":
+      return {
+        heading: "Your Order Has Been Packed",
+        body: `<p>Hi ${order.customerName},</p><p>Good news — your order ${order.orderNumber} has been packed and will ship soon.</p>${preOrderNote}`,
+      };
+    case "shipped":
+      return {
+        heading: "Your Order Has Shipped",
+        body: `<p>Hi ${order.customerName},</p><p>Your order ${order.orderNumber} is on its way.</p>${trackingBlock}<p>You can track your order anytime from our website using your order number.</p>`,
+      };
+    case "out_for_local_delivery":
+      return {
+        heading: "Out for Local Delivery",
+        body: `<p>Hi ${order.customerName},</p><p>Your order ${order.orderNumber} is out for local delivery and should arrive soon. No tracking number is required for local delivery.</p>`,
+      };
+    case "delivered":
+      return {
+        heading: "Your Order Has Been Delivered",
+        body: `<p>Hi ${order.customerName},</p><p>Your order ${order.orderNumber} has been delivered. We hope you love your DAYAURA pieces!</p>`,
+      };
+    case "cancelled":
+      return {
+        heading: "Order Cancelled",
+        body: `<p>Hi ${order.customerName},</p><p>Your order ${order.orderNumber} has been cancelled. If you have questions, please contact us.</p>`,
+      };
+    case "refunded":
+      return {
+        heading: "Order Refunded",
+        body: `<p>Hi ${order.customerName},</p><p>Your order ${order.orderNumber} has been refunded. Please allow a few business days for the refund to appear on your statement.</p>`,
+      };
+    case "order_received":
+    default:
+      return {
+        heading: "Thank You for Your Order!",
+        body: `<p>Hi ${order.customerName},</p><p>We've received your order and we're getting it ready. You'll receive updates as your order progresses.</p>${preOrderNote}`,
+      };
+  }
 }
 
 // Email styles
@@ -160,30 +299,17 @@ const emailStyles = `
   </style>
 `;
 
-// Customer Order Confirmation Email
-export function generateCustomerOrderEmail(order: OrderDetails): string {
-  const itemsHtml = order.items
-    .map(
-      (item) => `
-    <div class="order-item">
-      ${
-        item.image
-          ? `<div class="item-image"><img src="${item.image}" alt="${item.name}" /></div>`
-          : ""
-      }
-      <div class="item-details">
-        <div class="item-name">${item.name}</div>
-        <div class="item-meta">
-          Size: ${item.size} | Color: ${item.color} | Quantity: ${item.quantity}
-        </div>
-        <div class="item-meta" style="margin-top: 5px;">
-          ${formatPrice(item.price, order.currency)} × ${item.quantity} = ${formatPrice(item.price * item.quantity, order.currency)}
-        </div>
-      </div>
-    </div>
-  `
-    )
-    .join("");
+// Customer order email for any fulfillment status
+export function generateOrderStatusEmail(order: OrderDetails): string {
+  const itemsHtml = renderOrderItems(order.items, order.currency);
+  const { heading, body } = statusIntro(order);
+  const statusLabel = order.orderStatus
+    ? ORDER_STATUS_LABELS[order.orderStatus]
+    : "Order Received";
+  const methodLabel =
+    order.shippingMethod === "local"
+      ? SHIPPING_METHOD_LABELS.local
+      : SHIPPING_METHOD_LABELS.standard;
 
   return `
     <!DOCTYPE html>
@@ -191,7 +317,7 @@ export function generateCustomerOrderEmail(order: OrderDetails): string {
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Order Confirmation - ${order.orderNumber}</title>
+      <title>${statusLabel} - ${order.orderNumber}</title>
       ${emailStyles}
     </head>
     <body>
@@ -202,13 +328,14 @@ export function generateCustomerOrderEmail(order: OrderDetails): string {
         </div>
         
         <div class="content">
-          <h2 style="color: #000; margin-top: 0;">Thank You for Your Order!</h2>
-          <p>Hi ${order.customerName},</p>
-          <p>We've received your order and we're getting it ready. You'll receive a shipping confirmation email with tracking information once your order ships.</p>
+          <h2 style="color: #000; margin-top: 0;">${heading}</h2>
+          ${body}
           
           <div class="order-number">
             <strong>Order Number:</strong> ${order.orderNumber}<br>
-            <strong>Order Date:</strong> ${order.orderDate}
+            <strong>Order Date:</strong> ${order.orderDate}<br>
+            <strong>Status:</strong> ${statusLabel}<br>
+            <strong>Shipping Method:</strong> ${methodLabel}
           </div>
 
           <h3 class="section-title">Order Summary</h3>
@@ -216,32 +343,8 @@ export function generateCustomerOrderEmail(order: OrderDetails): string {
             ${itemsHtml}
           </div>
 
-          <div class="totals">
-            <div class="total-row">
-              <span>Subtotal:</span>
-              <span>${formatPrice(order.subtotal, order.currency)}</span>
-            </div>
-            <div class="total-row">
-              <span>Shipping:</span>
-              <span>${formatPrice(order.shipping, order.currency)}</span>
-            </div>
-            <div class="total-row">
-              <span>Tax:</span>
-              <span>${formatPrice(order.tax, order.currency)}</span>
-            </div>
-            <div class="total-row grand-total">
-              <span>Total:</span>
-              <span>${formatPrice(order.total, order.currency)}</span>
-            </div>
-          </div>
-
-          <h3 class="section-title">Shipping Address</h3>
-          <div class="address-box">
-            ${order.shippingAddress.firstName} ${order.shippingAddress.lastName}<br>
-            ${order.shippingAddress.address}<br>
-            ${order.shippingAddress.city}, ${order.shippingAddress.province} ${order.shippingAddress.postalCode}<br>
-            ${order.shippingAddress.country}
-          </div>
+          ${renderTotals(order)}
+          ${renderShippingAddress(order)}
 
           <p style="margin-top: 30px;">If you have any questions about your order, please contact us at <a href="mailto:dayauraofficial@gmail.com" style="color: #D4AF37;">dayauraofficial@gmail.com</a></p>
         </div>
@@ -259,13 +362,30 @@ export function generateCustomerOrderEmail(order: OrderDetails): string {
   `;
 }
 
+/** @deprecated Use generateOrderStatusEmail */
+export function generateCustomerOrderEmail(order: OrderDetails): string {
+  return generateOrderStatusEmail({
+    ...order,
+    orderStatus: order.orderStatus || "order_received",
+  });
+}
+
 // Admin Order Notification Email
 export function generateAdminOrderEmail(order: OrderDetails): string {
   const itemsHtml = order.items
     .map(
       (item) => `
     <tr>
-      <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${item.name}</td>
+      <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">
+        ${item.name}
+        ${
+          item.isPreOrder
+            ? `<br><span style="color:#8a6d00;font-size:12px;">PRE-ORDER${
+                item.preOrderLeadTime ? ` – ${item.preOrderLeadTime}` : ""
+              }</span>`
+            : ""
+        }
+      </td>
       <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${item.size}</td>
       <td style="padding: 10px; border-bottom: 1px solid #e5e5e5;">${item.color}</td>
       <td style="padding: 10px; border-bottom: 1px solid #e5e5e5; text-align: center;">${item.quantity}</td>

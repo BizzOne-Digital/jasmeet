@@ -8,7 +8,11 @@ import { Badge } from "@/components/ui/Badge";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cart";
-import { getVariantStock, isVariantPurchasable } from "@/lib/inventory";
+import {
+  getVariantStock,
+  getProductSizeOptions,
+  isVariantPurchasable,
+} from "@/lib/inventory";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
 
 export interface QuickViewModalProps {
@@ -27,7 +31,10 @@ export function QuickViewModal({
   initialColor,
 }: QuickViewModalProps) {
   const addItem = useCartStore((s) => s.addItem);
-  const baseSizes = product?.sizes || [];
+  const baseSizes = useMemo(
+    () => (product ? getProductSizeOptions(product) : []),
+    [product]
+  );
   const colors = product?.colors || [];
   const allowPreOrder = Boolean(product?.allowPreOrder);
 
@@ -46,21 +53,26 @@ export function QuickViewModal({
     }));
   }, [product, baseSizes, color, colors]);
 
-  const availableSizes = useMemo(
-    () => sizesForColor.filter((s) => s.stock > 0 || allowPreOrder),
-    [sizesForColor, allowPreOrder]
-  );
-
   useEffect(() => {
     if (!open || !product) return;
-    setColor(initialColor || colors[0]?.name || "");
-    setSize(availableSizes[0]?.size || sizesForColor[0]?.size || "");
-  }, [open, product?._id, initialColor]); // eslint-disable-line react-hooks/exhaustive-deps
+    const nextColor = initialColor || colors[0]?.name || "";
+    setColor(nextColor);
+    setSize("");
+  }, [open, product?._id, initialColor, colors]);
+
+  useEffect(() => {
+    if (!open || !product || size) return;
+    const preferred =
+      sizesForColor.find((s) => s.stock > 0 || allowPreOrder)?.size ||
+      sizesForColor[0]?.size ||
+      "";
+    if (preferred) setSize(preferred);
+  }, [open, product, sizesForColor, allowPreOrder, size]);
 
   if (!product) return null;
 
   const activeSize =
-    size || availableSizes[0]?.size || sizesForColor[0]?.size || "";
+    size || sizesForColor.find((s) => s.stock > 0 || allowPreOrder)?.size || "";
   const activeColor = color || colors[0]?.name || "Default";
   const activeColorObj = colors.find((c) => c.name === activeColor);
   const activeHex = activeColorObj?.hex;
@@ -74,12 +86,11 @@ export function QuickViewModal({
     ? { ok: false, stock: 0, isPreOrder: false }
     : isVariantPurchasable(product, activeColor, activeSize, 1);
   const preOrderLabel = product.preOrderLeadTime || "Pre-Order";
+  const hasSizes = sizesForColor.length > 0;
+  const modalTitle = hasSizes ? "Select size" : "Quick view";
 
   const addToCart = () => {
-    if (!activeSize && sizesForColor.length > 0) {
-      // Show message if no size selected
-      return;
-    }
+    if (hasSizes && !activeSize) return;
     if (!purchase.ok) return;
     addItem({
       productId: String(product._id),
@@ -97,14 +108,122 @@ export function QuickViewModal({
     onClose();
   };
 
+  const selectors = (
+    <>
+      {colors.length > 0 ? (
+        <div>
+          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
+            Color — {activeColor}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {colors.map((c) => (
+              <button
+                key={c.name}
+                type="button"
+                onClick={() => {
+                  setColor(c.name);
+                  setSize("");
+                }}
+                className={`h-9 w-9 rounded-full border-2 ${
+                  activeColor === c.name
+                    ? "border-[#D4AF37]"
+                    : "border-transparent"
+                }`}
+                style={{ backgroundColor: c.hex }}
+                aria-label={c.name}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {hasSizes ? (
+        <div className={colors.length > 0 ? "mt-5" : ""}>
+          <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
+            Size{" "}
+            {!activeSize ? (
+              <span className="text-red-400">— Please select</span>
+            ) : null}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {sizesForColor.map((s) => {
+              const soldOut = s.stock <= 0 && !allowPreOrder;
+              return (
+                <button
+                  key={s.size}
+                  type="button"
+                  disabled={soldOut}
+                  onClick={() => setSize(s.size)}
+                  className={`min-h-11 min-w-11 border px-3 py-2 text-xs uppercase tracking-wider transition disabled:opacity-30 ${
+                    activeSize === s.size
+                      ? "border-[#D4AF37] text-[#D4AF37]"
+                      : "border-white/20 text-[#F5F0E6] hover:border-white/50"
+                  }`}
+                >
+                  {s.size}
+                </button>
+              );
+            })}
+          </div>
+          {purchase.isPreOrder ? (
+            <p className="mt-2 text-xs text-amber-400">{preOrderLabel}</p>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="mt-6 flex flex-col gap-3">
+        <Button
+          onClick={addToCart}
+          fullWidth
+          disabled={!purchase.ok || (hasSizes && !activeSize)}
+        >
+          {product.isComingSoon
+            ? "Coming soon"
+            : purchase.isPreOrder
+              ? "Pre-order"
+              : "Add to cart"}
+        </Button>
+        <Link href={`/products/${product.slug}`} onClick={onClose}>
+          <Button variant="ghost" fullWidth>
+            View full details
+          </Button>
+        </Link>
+      </div>
+    </>
+  );
+
   return (
-    <Modal open={open} onClose={onClose} title="Quick view" size="lg">
-      <div className="grid gap-6 md:grid-cols-2">
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={modalTitle}
+      size="lg"
+      mobileSheet
+    >
+      <div className="flex flex-col gap-5 md:grid md:grid-cols-2 md:gap-6">
+        {/* Size/color first on mobile so it is visible without scrolling */}
+        <div className="order-1 md:order-2">
+          <h3 className="font-serif text-xl text-[#F5F0E6] md:text-2xl">
+            {product.name}
+          </h3>
+          <div className="mt-2 flex items-center gap-2">
+            <p className="text-[#D4AF37]">
+              {formatPrice(product.price, currency)}
+            </p>
+            {onSale && product.compareAtPrice ? (
+              <span className="text-sm text-white/40 line-through">
+                {formatPrice(product.compareAtPrice, currency)}
+              </span>
+            ) : null}
+          </div>
+          <div className="mt-5 md:mt-6">{selectors}</div>
+        </div>
+
         <div
           className={
             isAccessories
-              ? "relative aspect-[3/4] overflow-hidden bg-white"
-              : "relative aspect-[3/4] overflow-hidden bg-[#141414]"
+              ? "relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden bg-white md:order-1 md:max-h-none md:aspect-[3/4]"
+              : "relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden bg-[#141414] md:order-1 md:max-h-none md:aspect-[3/4]"
           }
         >
           <SafeImage
@@ -127,93 +246,6 @@ export function QuickViewModal({
             {product.isComingSoon ? (
               <Badge variant="soon">Coming soon</Badge>
             ) : null}
-          </div>
-        </div>
-        <div className="flex flex-col min-h-0">
-          <h3 className="font-serif text-xl md:text-2xl text-[#F5F0E6]">{product.name}</h3>
-          <div className="mt-2 flex items-center gap-2">
-            <p className="text-[#D4AF37]">
-              {formatPrice(product.price, currency)}
-            </p>
-            {onSale && product.compareAtPrice ? (
-              <span className="text-sm text-white/40 line-through">
-                {formatPrice(product.compareAtPrice, currency)}
-              </span>
-            ) : null}
-          </div>
-
-          {colors.length > 0 ? (
-            <div className="mt-4 md:mt-6">
-              <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
-                Color — {activeColor}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {colors.map((c) => (
-                  <button
-                    key={c.name}
-                    type="button"
-                    onClick={() => setColor(c.name)}
-                    className={`h-7 w-7 rounded-full border-2 ${
-                      activeColor === c.name
-                        ? "border-[#D4AF37]"
-                        : "border-transparent"
-                    }`}
-                    style={{ backgroundColor: c.hex }}
-                    aria-label={c.name}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          {sizesForColor.length > 0 ? (
-            <div className="mt-4 md:mt-6">
-              <p className="mb-2 text-[10px] uppercase tracking-[0.22em] text-white/50">
-                Size {!activeSize && <span className="text-red-400">— Please select</span>}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {sizesForColor.map((s) => {
-                  const soldOut = s.stock <= 0 && !allowPreOrder;
-                  return (
-                    <button
-                      key={s.size}
-                      type="button"
-                      disabled={soldOut}
-                      onClick={() => setSize(s.size)}
-                      className={`min-w-10 border px-3 py-2 text-xs uppercase tracking-wider transition disabled:opacity-30 ${
-                        activeSize === s.size
-                          ? "border-[#D4AF37] text-[#D4AF37]"
-                          : "border-white/20 text-[#F5F0E6] hover:border-white/50"
-                      }`}
-                    >
-                      {s.size}
-                    </button>
-                  );
-                })}
-              </div>
-              {purchase.isPreOrder ? (
-                <p className="mt-2 text-xs text-amber-400">{preOrderLabel}</p>
-              ) : null}
-            </div>
-          ) : null}
-
-          <div className="mt-auto flex flex-col gap-3 pt-6 md:pt-8">
-            <Button 
-              onClick={addToCart} 
-              fullWidth 
-              disabled={!purchase.ok || (sizesForColor.length > 0 && !activeSize)}
-            >
-              {product.isComingSoon
-                ? "Coming soon"
-                : purchase.isPreOrder
-                  ? "Pre-order"
-                  : "Quick add to cart"}
-            </Button>
-            <Link href={`/products/${product.slug}`} onClick={onClose}>
-              <Button variant="ghost" fullWidth>
-                View full details
-              </Button>
-            </Link>
           </div>
         </div>
       </div>

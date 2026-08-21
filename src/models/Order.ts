@@ -40,7 +40,7 @@ export interface IOrder extends Document {
   total: number;
   shippingMethod: ShippingMethod;
   shippingAddress: IShippingAddress;
-  paymentStatus: "pending" | "paid" | "failed" | "test";
+  paymentStatus: "pending" | "paid" | "failed" | "test" | "refunded";
   paymentProvider?: string;
   paymentIntentId?: string;
   stripeSessionId?: string;
@@ -93,7 +93,7 @@ const OrderSchema = new Schema<IOrder>(
     },
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed", "test"],
+      enum: ["pending", "paid", "failed", "test", "refunded"],
       default: "pending",
     },
     paymentProvider: { type: String },

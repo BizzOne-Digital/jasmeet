@@ -69,7 +69,7 @@ export function Drawer({
             exit={{ x: from }}
             transition={{ type: "spring", stiffness: 320, damping: 34 }}
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
               {title ? (
                 <h2 className="text-xs uppercase tracking-[0.25em] text-[#F5F0E6]">
                   {title}
@@ -86,7 +86,9 @@ export function Drawer({
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto">{children}</div>
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+              {children}
+            </div>
           </motion.aside>
         </div>
       ) : null}

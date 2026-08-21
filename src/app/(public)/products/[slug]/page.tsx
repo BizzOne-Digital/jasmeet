@@ -18,6 +18,7 @@ import { Accordion } from "@/components/ui/Accordion";
 import { SizeGuideTable } from "@/components/product/SizeGuideTable";
 import { sizeGuideHasContent, type SizeGuideData } from "@/lib/size-guide";
 import { productHasAnyStock } from "@/lib/inventory";
+import { getSiteSettings } from "@/lib/data/settings";
 import type { ProductCardData } from "@/components/product/ProductCard";
 
 type Params = Promise<{ slug: string }>;
@@ -109,7 +110,10 @@ export async function generateMetadata({
 
 export default async function ProductDetailPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const productRaw = await getProductBySlug(slug);
+  const [productRaw, settings] = await Promise.all([
+    getProductBySlug(slug),
+    getSiteSettings(),
+  ]);
   if (!productRaw) notFound();
 
   const product = serialize<{
@@ -262,9 +266,13 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
       content: (
         <div className="space-y-3 text-sm leading-relaxed text-beige/70">
           <p>
-            Standard shipping CAD $9.99. Free shipping on orders over CAD $99.
+            Standard shipping CAD ${settings.standardShippingRate.toFixed(2)}. Free
+            shipping on orders over CAD ${settings.shippingThreshold}.
           </p>
-          <p>In-stock items process in 1–2 business days; delivery 2–7 business days.</p>
+          <p>
+            In-stock items: {settings.shippingProcessingTime}; delivery{" "}
+            {settings.shippingDeliveryEstimate}.
+          </p>
           {product.allowPreOrder ? (
             <p>
               Pre-order items ship when restocked — estimated timing is shown on

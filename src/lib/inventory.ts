@@ -25,6 +25,39 @@ export function parseCompoundSize(size: string): string[] {
     .filter(Boolean);
 }
 
+/** Size rows for product cards / quick view (from sizes[] or inventory matrix). */
+export function getProductSizeOptions(
+  product: ProductLike
+): Array<{ size: string; stock: number }> {
+  if (product.sizes?.length) {
+    return product.sizes.map((s) => ({
+      size: s.size,
+      stock: s.stock ?? 0,
+    }));
+  }
+
+  if (product.inventory?.length) {
+    const bySize = new Map<string, number>();
+    for (const row of product.inventory) {
+      if (!row.size) continue;
+      const key = row.size;
+      bySize.set(key, (bySize.get(key) || 0) + Math.max(0, row.stock || 0));
+    }
+    if (bySize.size > 0) {
+      return [...bySize.entries()].map(([size, stock]) => ({ size, stock }));
+    }
+  }
+
+  return [{ size: "One Size", stock: 0 }];
+}
+
+/** True when quick add should open the size/color picker instead of adding directly. */
+export function productNeedsVariantPicker(product: ProductLike): boolean {
+  const sizes = getProductSizeOptions(product);
+  const colors = (product as { colors?: unknown[] }).colors;
+  return sizes.length > 1 || (colors?.length || 0) > 1;
+}
+
 /** Resolve stock for a colour + size combination. */
 export function getVariantStock(
   product: ProductLike,

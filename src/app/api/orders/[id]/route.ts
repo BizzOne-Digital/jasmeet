@@ -1,12 +1,13 @@
 import { connectDB } from "@/lib/mongodb";
 import Order from "@/models/Order";
-import Product from "@/models/Product";
 import { requireAdmin } from "@/lib/auth";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import { ORDER_STATUSES, EMAIL_ON_STATUS } from "@/lib/order-status";
-import { sendOrderStatusEmail } from "@/lib/email/order-emails";
-import { getSiteSettings } from "@/lib/data/settings";
-import { restoreInventory } from "@/lib/inventory";
+import {
+  hasInventoryRestored,
+  restoreOrderInventory,
+  sendStatusChangeEmail,
+} from "@/lib/order-fulfillment";
 import { z } from "zod";
 
 const updateSchema = z.object({
@@ -14,7 +15,9 @@ const updateSchema = z.object({
   courierName: z.string().optional(),
   trackingNumber: z.string().optional(),
   notes: z.string().optional(),
-  paymentStatus: z.enum(["pending", "paid", "failed", "test"]).optional(),
+  paymentStatus: z
+    .enum(["pending", "paid", "failed", "test", "refunded"])
+    .optional(),
 });
 
 type Params = Promise<{ id: string }>;
@@ -51,7 +54,6 @@ export async function PATCH(
     if (!order) return jsonError("Order not found", 404);
 
     const prevStatus = order.orderStatus;
-    const inventoryWasRestored = Boolean(order.notes?.includes("[inventory-restored]"));
 
     if (body.orderStatus) order.orderStatus = body.orderStatus;
     if (body.courierName !== undefined) order.courierName = body.courierName;
@@ -72,20 +74,10 @@ export async function PATCH(
     const shouldRestore =
       RESTORE_STATUSES.has(order.orderStatus) &&
       !RESTORE_STATUSES.has(prevStatus) &&
-      !inventoryWasRestored;
+      !hasInventoryRestored(order);
 
     if (shouldRestore) {
-      for (const item of order.items) {
-        if (item.isPreOrder) continue;
-        const product = await Product.findById(item.productId);
-        if (!product) continue;
-        restoreInventory(product, item.color, item.size, item.quantity);
-        await product.save();
-      }
-      const noteTag = "[inventory-restored]";
-      order.notes = order.notes?.includes(noteTag)
-        ? order.notes
-        : `${order.notes ? `${order.notes}\n` : ""}${noteTag}`;
+      await restoreOrderInventory(order);
     }
 
     await order.save();
@@ -97,32 +89,7 @@ export async function PATCH(
       EMAIL_ON_STATUS.includes(order.orderStatus)
     ) {
       try {
-        const settings = await getSiteSettings();
-        await sendOrderStatusEmail({
-          orderNumber: order.orderNumber,
-          orderStatus: order.orderStatus,
-          shippingMethod: order.shippingMethod,
-          items: order.items.map((i) => ({
-            name: i.name,
-            quantity: i.quantity,
-            size: i.size,
-            color: i.color,
-            price: i.price,
-            isPreOrder: i.isPreOrder,
-            preOrderLeadTime: i.preOrderLeadTime,
-          })),
-          subtotal: order.subtotal,
-          shipping: order.shipping,
-          total: order.total,
-          currency: settings.currency,
-          customerName: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`.trim(),
-          customerEmail: order.shippingAddress.email,
-          courierName: order.courierName,
-          trackingNumber: order.trackingNumber,
-          hasPreOrderItems: order.hasPreOrderItems,
-          shippingAddress: order.shippingAddress,
-          notes: order.notes,
-        });
+        await sendStatusChangeEmail(order);
       } catch (emailError) {
         console.error("[order status email]", emailError);
       }

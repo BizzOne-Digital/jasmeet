@@ -81,8 +81,7 @@ export function CheckoutSuccess() {
       <p className="mt-4 text-sm text-muted">
         Your order{" "}
         <strong className="text-beige">{orderNumber}</strong>{" "}
-        has been created. A confirmation email is on its way. Payment
-        confirmation will follow separately.
+        has been confirmed. A confirmation email is on its way.
       </p>
       <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
         <Button onClick={() => router.push("/shop")}>Continue shopping</Button>

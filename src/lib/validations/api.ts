@@ -210,6 +210,8 @@ export const siteSettingsUpdateSchema = z.object({
   announcementMessages: z.array(z.string()).optional(),
   shippingThreshold: z.number().min(0).optional(),
   standardShippingRate: z.number().min(0).optional(),
+  shippingProcessingTime: z.string().optional(),
+  shippingDeliveryEstimate: z.string().optional(),
   localDeliveryEnabled: z.boolean().optional(),
   localDeliveryFee: z.number().min(0).optional(),
   localDeliveryPostalCodes: z.array(z.string()).optional(),

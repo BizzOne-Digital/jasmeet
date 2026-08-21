@@ -23,6 +23,8 @@ export default async function CheckoutPage() {
         <CheckoutClient
           shippingThreshold={settings.shippingThreshold}
           standardShippingRate={settings.standardShippingRate}
+          shippingProcessingTime={settings.shippingProcessingTime}
+          shippingDeliveryEstimate={settings.shippingDeliveryEstimate}
           localDeliveryEnabled={settings.localDeliveryEnabled}
           localDeliveryFee={settings.localDeliveryFee}
           localDeliveryPostalCodes={settings.localDeliveryPostalCodes}

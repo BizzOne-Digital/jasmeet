@@ -222,9 +222,10 @@ export default function AdminOrderDetailPage() {
           </button>
           <p className="text-xs text-zinc-500">
             Status updates appear on the customer Track Order page
-            (/track-order). Changing status to Processing, Shipped, Out for Local
-            Delivery, Delivered, Cancelled, or Refunded also emails the customer.
-            Shipped (standard) requires courier + tracking.
+            (/track-order). Changing status to Order Received, Processing, Packed,
+            Shipped, Out for Local Delivery, Delivered, Cancelled, or Refunded
+            emails the customer with status-appropriate details. Shipped
+            (standard) requires courier + tracking.
           </p>
         </div>
 

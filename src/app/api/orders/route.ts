@@ -6,10 +6,16 @@ import { generateOrderNumber, isPaymentProviderConfigured } from "@/lib/orders";
 import { getSiteSettings } from "@/lib/data/settings";
 import { calculateShipping } from "@/lib/shipping";
 import {
-  decrementPurchasableInventory,
   isVariantPurchasable,
 } from "@/lib/inventory";
-import { sendOrderStatusEmail, sendAdminNewOrderEmail } from "@/lib/email/order-emails";
+import {
+  sendOrderStatusEmail,
+  sendAdminNewOrderEmail,
+} from "@/lib/email/order-emails";
+import {
+  buildOrderEmailPayload,
+  decrementOrderInventory,
+} from "@/lib/order-fulfillment";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import { requireAdmin } from "@/lib/auth";
 
@@ -39,6 +45,7 @@ export async function POST(request: Request) {
 
     await connectDB();
     const settings = await getSiteSettings();
+    const paymentConfigured = isPaymentProviderConfigured();
 
     const lineItems = [];
     let hasPreOrderItems = false;
@@ -55,7 +62,6 @@ export async function POST(request: Request) {
         );
       }
 
-      // Prefer server price
       const price = product.price;
       const check = isVariantPurchasable(
         product,
@@ -73,20 +79,6 @@ export async function POST(request: Request) {
       if (check.isPreOrder) {
         hasPreOrderItems = true;
       }
-
-      const ok = decrementPurchasableInventory(
-        product,
-        item.color,
-        item.size,
-        item.quantity
-      );
-      if (!ok) {
-        return jsonError(
-          `Insufficient stock for ${product.name} (${item.color} / ${item.size}).`,
-          400
-        );
-      }
-      await product.save();
 
       lineItems.push({
         productId: String(product._id),
@@ -127,7 +119,6 @@ export async function POST(request: Request) {
     const tax = 0;
     const total = subtotal + shippingCalc.shipping + tax;
     const orderNumber = await generateOrderNumber();
-    const paymentConfigured = isPaymentProviderConfigured();
 
     const order = await Order.create({
       orderNumber,
@@ -145,51 +136,33 @@ export async function POST(request: Request) {
       notes,
     });
 
-    try {
-      const emailPayload = {
-        orderNumber: order.orderNumber,
-        orderStatus: "order_received" as const,
-        shippingMethod: order.shippingMethod,
-        items: order.items.map((i) => ({
-          name: i.name,
-          quantity: i.quantity,
-          size: i.size,
-          color: i.color,
-          price: i.price,
-          isPreOrder: i.isPreOrder,
-          preOrderLeadTime: i.preOrderLeadTime,
-        })),
-        subtotal: order.subtotal,
-        shipping: order.shipping,
-        total: order.total,
-        currency: settings.currency,
-        customerName: `${shippingAddress.firstName} ${shippingAddress.lastName}`.trim(),
-        customerEmail: shippingAddress.email,
-        hasPreOrderItems: order.hasPreOrderItems,
-        shippingAddress: {
-          firstName: shippingAddress.firstName,
-          lastName: shippingAddress.lastName,
-          email: shippingAddress.email,
-          phone: shippingAddress.phone,
-          address: shippingAddress.address,
-          city: shippingAddress.city,
-          province: shippingAddress.province,
-          postalCode: shippingAddress.postalCode,
-          country: shippingAddress.country,
-        },
-        notes: notes || "",
-      };
+    if (!paymentConfigured) {
+      const ok = await decrementOrderInventory(order);
+      if (!ok) {
+        await Order.findByIdAndDelete(order._id);
+        return jsonError(
+          "Insufficient stock to complete order. Please try again.",
+          400
+        );
+      }
+      await order.save();
 
-      await sendOrderStatusEmail(emailPayload);
+      try {
+        const payload = buildOrderEmailPayload(order, settings.currency);
+        await sendOrderStatusEmail({
+          ...payload,
+          orderStatus: "order_received",
+        });
 
-      const adminInbox =
-        process.env.ADMIN_ORDER_EMAIL ||
-        settings.contactEmail ||
-        process.env.ADMIN_EMAIL ||
-        "";
-      await sendAdminNewOrderEmail(emailPayload, adminInbox);
-    } catch (emailError) {
-      console.error("[order emails]", emailError);
+        const adminInbox =
+          process.env.ADMIN_ORDER_EMAIL ||
+          settings.contactEmail ||
+          process.env.ADMIN_EMAIL ||
+          "";
+        await sendAdminNewOrderEmail(payload, adminInbox);
+      } catch (emailError) {
+        console.error("[order emails]", emailError);
+      }
     }
 
     return jsonSuccess(order, 201);

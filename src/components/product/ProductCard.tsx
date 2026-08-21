@@ -9,7 +9,12 @@ import { SafeImage } from "@/components/ui/SafeImage";
 import { useCartStore } from "@/store/cart";
 import { useWishlistStore } from "@/store/wishlist";
 import { QuickViewModal } from "@/components/product/QuickViewModal";
-import { isVariantPurchasable, isPreOrderOnlyProduct } from "@/lib/inventory";
+import {
+  getProductSizeOptions,
+  isVariantPurchasable,
+  isPreOrderOnlyProduct,
+  productNeedsVariantPicker,
+} from "@/lib/inventory";
 import { sanitizeImageList } from "@/lib/product-images";
 
 export interface ProductCardProduct {
@@ -74,24 +79,31 @@ export function ProductCard({
     product.isOnSale ||
     (product.compareAtPrice != null && product.compareAtPrice > product.price);
 
+  const sizeOptions = useMemo(() => getProductSizeOptions(product), [product]);
+
   const firstSize =
-    product.sizes?.find((s) => {
+    sizeOptions.find((s) => {
       const colorName = selectedColor?.name || "Default";
       return isVariantPurchasable(product, colorName, s.size, 1).ok;
     })?.size ||
-    product.sizes?.[0]?.size ||
+    sizeOptions[0]?.size ||
     "M";
 
-  const quickAdd = (e: React.MouseEvent) => {
+  const openQuickView = (e: React.SyntheticEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    // If product has multiple sizes, open quick view modal to select size
-    if (product.sizes && product.sizes.length > 1) {
+    setQuickOpen(true);
+  };
+
+  const quickAdd = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (productNeedsVariantPicker(product)) {
       setQuickOpen(true);
       return;
     }
-    
+
     const colorName = selectedColor?.name || "Default";
     const check = isVariantPurchasable(product, colorName, firstSize, 1);
     if (!check.ok) {
@@ -160,17 +172,17 @@ export function ProductCard({
       <article className={cn("group relative flex flex-col", className)}>
         <div
           className={cn(
-            "relative aspect-[3/4] overflow-hidden rounded-lg bg-white border border-gray-200"
+            "relative aspect-[3/4] overflow-hidden rounded-lg border border-white/15 bg-beige"
           )}
         >
-          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0">
+          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0 bg-beige">
             <SafeImage
               src={image}
               alt={product.name}
               fill
               priority={priority}
               className={cn(
-                "transition duration-700 ease-out group-hover:scale-[1.03]",
+                "bg-beige transition duration-700 ease-out group-hover:scale-[1.03]",
                 imageFitClass,
                 hover && "group-hover:opacity-0"
               )}
@@ -182,7 +194,7 @@ export function ProductCard({
                 alt=""
                 fill
                 className={cn(
-                  "opacity-0 transition duration-700 ease-out group-hover:scale-[1.03] group-hover:opacity-100",
+                  "bg-beige opacity-0 transition duration-700 ease-out group-hover:scale-[1.03] group-hover:opacity-100",
                   imageFitClass
                 )}
                 sizes="(max-width:768px) 50vw, 25vw"
@@ -219,12 +231,8 @@ export function ProductCard({
             <button
               type="button"
               suppressHydrationWarning
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setQuickOpen(true);
-              }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white opacity-0 backdrop-blur-sm transition hover:bg-black/55 group-hover:opacity-100"
+              onClick={openQuickView}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/55 sm:opacity-0 sm:group-hover:opacity-100"
               aria-label="Quick view"
             >
               <Eye className="h-[18px] w-[18px]" />
@@ -235,7 +243,8 @@ export function ProductCard({
             type="button"
             suppressHydrationWarning
             onClick={quickAdd}
-            className="absolute inset-x-0 bottom-0 z-10 flex min-h-10 translate-y-0 items-center justify-center gap-2 bg-[#D4AF37] py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 ease-out sm:translate-y-full sm:group-hover:translate-y-0"
+            onTouchEnd={(e) => e.stopPropagation()}
+            className="absolute inset-x-0 bottom-0 z-20 flex min-h-11 translate-y-0 touch-manipulation items-center justify-center gap-2 bg-[#D4AF37] py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 ease-out sm:translate-y-full sm:group-hover:translate-y-0"
           >
             <Plus className="h-3.5 w-3.5" />
             {preOrderOnly ? "Pre-order" : "Quick add"}

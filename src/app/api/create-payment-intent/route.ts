@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
     const settings = await getSiteSettings();
     const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-    // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: items.map((item: any) => ({
@@ -43,6 +42,11 @@ export async function POST(request: NextRequest) {
         orderId: orderId || "",
         store: settings.businessName || "DAYAURA",
         shippingAddress: JSON.stringify(shippingAddress),
+      },
+      payment_intent_data: {
+        metadata: {
+          orderId: orderId || "",
+        },
       },
       shipping_address_collection: {
         allowed_countries: ['CA'],

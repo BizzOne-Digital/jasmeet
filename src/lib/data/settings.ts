@@ -22,6 +22,8 @@ const defaultSettings: SiteSettingsData = {
   ],
   shippingThreshold: 99,
   standardShippingRate: 9.99,
+  shippingProcessingTime: "1–2 business days for in-stock products",
+  shippingDeliveryEstimate: "2–7 business days after dispatch",
   localDeliveryEnabled: false,
   localDeliveryFee: 0,
   localDeliveryPostalCodes: [],
@@ -60,6 +62,11 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
         settings.shippingThreshold ?? defaultSettings.shippingThreshold,
       standardShippingRate:
         settings.standardShippingRate ?? defaultSettings.standardShippingRate,
+      shippingProcessingTime:
+        settings.shippingProcessingTime ?? defaultSettings.shippingProcessingTime,
+      shippingDeliveryEstimate:
+        settings.shippingDeliveryEstimate ??
+        defaultSettings.shippingDeliveryEstimate,
       localDeliveryEnabled:
         settings.localDeliveryEnabled ?? defaultSettings.localDeliveryEnabled,
       localDeliveryFee:

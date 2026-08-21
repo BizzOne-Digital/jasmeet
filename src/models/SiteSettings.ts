@@ -19,6 +19,10 @@ export interface ISiteSettings extends Document {
   shippingThreshold: number;
   /** Flat Canada standard shipping rate when under threshold. */
   standardShippingRate: number;
+  /** e.g. "1–2 business days for in-stock products" */
+  shippingProcessingTime: string;
+  /** e.g. "2–7 business days after dispatch" */
+  shippingDeliveryEstimate: string;
   /** Enable personal/local delivery for matching postal codes. */
   localDeliveryEnabled: boolean;
   localDeliveryFee: number;
@@ -57,6 +61,14 @@ const SiteSettingsSchema = new Schema<ISiteSettings>(
     },
     shippingThreshold: { type: Number, default: 99 },
     standardShippingRate: { type: Number, default: 9.99 },
+    shippingProcessingTime: {
+      type: String,
+      default: "1–2 business days for in-stock products",
+    },
+    shippingDeliveryEstimate: {
+      type: String,
+      default: "2–7 business days after dispatch",
+    },
     localDeliveryEnabled: { type: Boolean, default: false },
     localDeliveryFee: { type: Number, default: 0 },
     localDeliveryPostalCodes: { type: [String], default: [] },

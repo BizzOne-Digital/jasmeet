@@ -56,6 +56,8 @@ export interface SiteSettingsData {
   announcementMessages: string[];
   shippingThreshold: number;
   standardShippingRate: number;
+  shippingProcessingTime: string;
+  shippingDeliveryEstimate: string;
   localDeliveryEnabled: boolean;
   localDeliveryFee: number;
   localDeliveryPostalCodes: string[];

@@ -47,10 +47,10 @@ export default async function ShippingReturnsPage() {
               {settings.shippingThreshold}.
             </li>
             <li>
-              Processing time: 1–2 business days for in-stock items.
+              Processing time: {settings.shippingProcessingTime}.
             </li>
             <li>
-              Estimated delivery: 2–7 business days after dispatch, depending on
+              Estimated delivery: {settings.shippingDeliveryEstimate}, depending on
               location.
             </li>
             {settings.localDeliveryEnabled ? (

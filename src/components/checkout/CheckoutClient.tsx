@@ -19,6 +19,8 @@ import {
 export function CheckoutClient({
   shippingThreshold = 99,
   standardShippingRate = 9.99,
+  shippingProcessingTime = "1–2 business days for in-stock products",
+  shippingDeliveryEstimate = "2–7 business days after dispatch",
   localDeliveryEnabled = false,
   localDeliveryFee = 0,
   localDeliveryPostalCodes = [],
@@ -26,6 +28,8 @@ export function CheckoutClient({
 }: {
   shippingThreshold?: number;
   standardShippingRate?: number;
+  shippingProcessingTime?: string;
+  shippingDeliveryEstimate?: string;
   localDeliveryEnabled?: boolean;
   localDeliveryFee?: number;
   localDeliveryPostalCodes?: string[];
@@ -298,8 +302,8 @@ export function CheckoutClient({
                 </span>
                 <span className="mt-1 block text-xs text-muted">
                   CAD ${standardShippingRate.toFixed(2)} · Free on orders over
-                  CAD ${shippingThreshold.toFixed(0)} · 1–2 business days
-                  processing · 2–7 business days delivery
+                  CAD ${shippingThreshold.toFixed(0)} · {shippingProcessingTime} ·{" "}
+                  {shippingDeliveryEstimate}
                 </span>
               </span>
             </label>

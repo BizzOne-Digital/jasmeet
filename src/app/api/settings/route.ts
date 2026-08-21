@@ -22,6 +22,8 @@ const publicSettingsFields = [
   "announcementMessages",
   "shippingThreshold",
   "standardShippingRate",
+  "shippingProcessingTime",
+  "shippingDeliveryEstimate",
   "localDeliveryEnabled",
   "localDeliveryFee",
   "localDeliveryPostalCodes",

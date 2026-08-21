@@ -14,6 +14,8 @@ export interface ModalProps {
   className?: string;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   showClose?: boolean;
+  /** Bottom sheet on mobile (better for size pickers). */
+  mobileSheet?: boolean;
 }
 
 const sizeClasses = {
@@ -32,6 +34,7 @@ export function Modal({
   className,
   size = "md",
   showClose = true,
+  mobileSheet = false,
 }: ModalProps) {
   useEffect(() => {
     if (!open) return;
@@ -50,14 +53,22 @@ export function Modal({
   if (typeof document === "undefined") return null;
 
   return createPortal(
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {open ? (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+        <div
+          className={cn(
+            "fixed inset-0 z-[120] flex justify-center",
+            mobileSheet
+              ? "items-end p-0 sm:items-center sm:p-6"
+              : "items-end p-0 sm:items-center sm:p-4 md:p-6"
+          )}
+        >
           <motion.div
-            className="absolute inset-0 bg-black/75 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={onClose}
           />
           <motion.div
@@ -65,19 +76,22 @@ export function Modal({
             aria-modal="true"
             aria-label={title}
             className={cn(
-              "relative z-10 w-full border border-white/10 bg-[#0a0a0a] shadow-2xl",
+              "relative z-10 flex w-full max-h-[92dvh] flex-col border border-white/10 bg-[#0a0a0a] shadow-2xl sm:max-h-[85vh]",
+              mobileSheet
+                ? "rounded-t-2xl sm:rounded-none"
+                : "rounded-t-2xl sm:rounded-none",
               sizeClasses[size],
               className
             )}
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.98 }}
+            initial={{ opacity: 1, y: mobileSheet ? "100%" : 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: mobileSheet ? "100%" : 16 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
             {(title || showClose) && (
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
+              <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
                 {title ? (
-                  <h2 className="font-serif text-lg sm:text-xl text-[#F5F0E6] tracking-wide">
+                  <h2 className="font-serif text-lg text-[#F5F0E6] tracking-wide sm:text-xl">
                     {title}
                   </h2>
                 ) : (
@@ -95,7 +109,9 @@ export function Modal({
                 ) : null}
               </div>
             )}
-            <div className="max-h-[calc(80vh-60px)] overflow-y-auto p-4 sm:p-5">{children}</div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
+              {children}
+            </div>
           </motion.div>
         </div>
       ) : null}
