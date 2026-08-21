@@ -41,7 +41,7 @@ function GalleryThumb({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border transition sm:h-28 sm:w-20",
+        "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border bg-beige transition sm:h-28 sm:w-20",
         active
           ? "border-[#D4AF37]"
           : "border-transparent opacity-70 hover:opacity-100"
@@ -52,7 +52,7 @@ function GalleryThumb({
         alt=""
         fill
         quality={100}
-        className="object-contain bg-[#141414] p-1"
+        className="bg-beige object-contain p-1"
         sizes="96px"
         onError={() => {
           setBroken(true);
@@ -176,7 +176,7 @@ export function ProductGallery({
 
       <div className="order-1 lg:order-2">
         <div
-          className="group relative aspect-[3/4] cursor-zoom-in overflow-hidden bg-[#141414]"
+          className="group relative aspect-[3/4] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 bg-beige"
           onClick={openLightbox}
           role="button"
           tabIndex={0}
@@ -195,7 +195,7 @@ export function ProductGallery({
             priority
             quality={100}
             className={cn(
-              "object-contain p-3 sm:p-6",
+              "bg-beige object-contain p-3 sm:p-6",
               activeIsChart && "p-3"
             )}
             sizes="(max-width:1024px) 100vw, 55vw"

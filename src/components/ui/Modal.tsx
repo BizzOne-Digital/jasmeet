@@ -2,7 +2,6 @@
 
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -50,72 +49,66 @@ export function Modal({
     };
   }, [open, onClose]);
 
-  if (typeof document === "undefined") return null;
+  if (typeof document === "undefined" || !open) return null;
 
   return createPortal(
-    <AnimatePresence mode="wait">
-      {open ? (
+    <div
+      className="fixed inset-0 z-[200] isolate"
+      role="presentation"
+      aria-hidden={false}
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+        aria-label="Close dialog"
+        onClick={onClose}
+      />
+
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0 flex",
+          mobileSheet
+            ? "items-end justify-center sm:items-center sm:p-6"
+            : "items-end justify-center p-0 sm:items-center sm:p-4 md:p-6"
+        )}
+      >
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
           className={cn(
-            "fixed inset-0 z-[120] flex justify-center",
-            mobileSheet
-              ? "items-end p-0 sm:items-center sm:p-6"
-              : "items-end p-0 sm:items-center sm:p-4 md:p-6"
+            "pointer-events-auto relative flex w-full max-h-[min(92dvh,820px)] flex-col rounded-t-2xl border border-white/10 bg-[#0a0a0a] shadow-2xl sm:max-h-[85vh] sm:rounded-none",
+            sizeClasses[size],
+            className
           )}
         >
-          <motion.div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={onClose}
-          />
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={title}
-            className={cn(
-              "relative z-10 flex w-full max-h-[92dvh] flex-col border border-white/10 bg-[#0a0a0a] shadow-2xl sm:max-h-[85vh]",
-              mobileSheet
-                ? "rounded-t-2xl sm:rounded-none"
-                : "rounded-t-2xl sm:rounded-none",
-              sizeClasses[size],
-              className
-            )}
-            initial={{ opacity: 1, y: mobileSheet ? "100%" : 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: mobileSheet ? "100%" : 16 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {(title || showClose) && (
-              <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
-                {title ? (
-                  <h2 className="font-serif text-lg text-[#F5F0E6] tracking-wide sm:text-xl">
-                    {title}
-                  </h2>
-                ) : (
-                  <span />
-                )}
-                {showClose ? (
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="p-2 text-white/60 transition hover:text-[#D4AF37]"
-                    aria-label="Close"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                ) : null}
-              </div>
-            )}
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
-              {children}
+          {(title || showClose) && (
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
+              {title ? (
+                <h2 className="font-serif text-lg text-[#F5F0E6] tracking-wide sm:text-xl">
+                  {title}
+                </h2>
+              ) : (
+                <span />
+              )}
+              {showClose ? (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="p-2 text-white/60 transition hover:text-[#D4AF37]"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              ) : null}
             </div>
-          </motion.div>
+          )}
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
+            {children}
+          </div>
         </div>
-      ) : null}
-    </AnimatePresence>,
+      </div>
+    </div>,
     document.body
   );
 }

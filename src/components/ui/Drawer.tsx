@@ -2,7 +2,6 @@
 
 import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,60 +38,51 @@ export function Drawer({
     };
   }, [open, onClose]);
 
-  if (typeof document === "undefined") return null;
-
-  const from = side === "right" ? "100%" : "-100%";
+  if (typeof document === "undefined" || !open) return null;
 
   return createPortal(
-    <AnimatePresence>
-      {open ? (
-        <div className="fixed inset-0 z-[70]">
-          <motion.div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+    <div className="fixed inset-0 z-[150] isolate" role="presentation">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+        aria-label="Close drawer"
+        onClick={onClose}
+      />
+
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label={title || "Drawer"}
+        className={cn(
+          "absolute top-0 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden border-white/10 bg-[#0a0a0a] shadow-2xl",
+          side === "right" ? "right-0 border-l" : "left-0 border-r",
+          widthClassName,
+          className
+        )}
+      >
+        <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
+          {title ? (
+            <h2 className="text-xs uppercase tracking-[0.25em] text-[#F5F0E6]">
+              {title}
+            </h2>
+          ) : (
+            <span />
+          )}
+          <button
+            type="button"
             onClick={onClose}
-          />
-          <motion.aside
-            role="dialog"
-            aria-modal="true"
-            aria-label={title || "Drawer"}
-            className={cn(
-              "absolute top-0 bottom-0 flex w-full flex-col border-white/10 bg-[#0a0a0a]",
-              side === "right" ? "right-0 border-l" : "left-0 border-r",
-              widthClassName,
-              className
-            )}
-            initial={{ x: from }}
-            animate={{ x: 0 }}
-            exit={{ x: from }}
-            transition={{ type: "spring", stiffness: 320, damping: 34 }}
+            className="p-2 text-white/60 transition hover:text-[#D4AF37]"
+            aria-label="Close"
           >
-            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-5 py-4">
-              {title ? (
-                <h2 className="text-xs uppercase tracking-[0.25em] text-[#F5F0E6]">
-                  {title}
-                </h2>
-              ) : (
-                <span />
-              )}
-              <button
-                type="button"
-                onClick={onClose}
-                className="p-2 text-white/60 transition hover:text-[#D4AF37]"
-                aria-label="Close"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-              {children}
-            </div>
-          </motion.aside>
+            <X className="h-5 w-5" />
+          </button>
         </div>
-      ) : null}
-    </AnimatePresence>,
+
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          {children}
+        </div>
+      </aside>
+    </div>,
     document.body
   );
 }
