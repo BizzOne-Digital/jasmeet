@@ -174,7 +174,7 @@ export function ProductGallery({
         ))}
       </div>
 
-      <div className="order-1 lg:order-2">
+      <div className="order-1 mx-auto w-full max-w-[min(100%,400px)] sm:max-w-[440px] lg:order-2 lg:max-w-[480px]">
         <div
           className="group relative aspect-[3/4] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 bg-beige"
           onClick={openLightbox}
@@ -193,12 +193,13 @@ export function ProductGallery({
             alt={activeIsChart ? `${alt} size chart` : alt}
             fill
             priority
+            unoptimized
             quality={100}
             className={cn(
-              "bg-beige object-contain p-3 sm:p-6",
-              activeIsChart && "p-3"
+              "bg-beige object-contain p-2 sm:p-3",
+              activeIsChart && "p-2"
             )}
-            sizes="(max-width:1024px) 100vw, 55vw"
+            sizes="(max-width:640px) 400px, (max-width:1024px) 440px, 480px"
             onError={() => setMainBroken(true)}
           />
 
@@ -268,7 +269,7 @@ export function ProductGallery({
       <AnimatePresence>
         {lightbox ? (
           <motion.div
-            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/92 p-4"
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-beige p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -276,7 +277,7 @@ export function ProductGallery({
           >
             <button
               type="button"
-              className="absolute right-5 top-5 z-10 p-2 text-white/70 hover:text-[#D4AF37]"
+              className="absolute right-5 top-5 z-10 rounded-full bg-black/10 p-2 text-black/60 transition hover:bg-black/15 hover:text-[#8a6d00]"
               onClick={closeLightbox}
               aria-label="Close"
             >
@@ -287,7 +288,7 @@ export function ProductGallery({
               <>
                 <button
                   type="button"
-                  className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-white/70 hover:text-[#D4AF37] md:left-8"
+                  className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/10 text-black/60 backdrop-blur-sm transition hover:bg-black/15 hover:text-[#8a6d00] md:left-8"
                   aria-label="Previous image"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -298,7 +299,7 @@ export function ProductGallery({
                 </button>
                 <button
                   type="button"
-                  className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-white/70 hover:text-[#D4AF37] md:right-8"
+                  className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/10 text-black/60 backdrop-blur-sm transition hover:bg-black/15 hover:text-[#8a6d00] md:right-8"
                   aria-label="Next image"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -313,7 +314,7 @@ export function ProductGallery({
             <div
               ref={lightboxImgRef}
               className={cn(
-                "relative h-[85vh] w-full max-w-5xl overflow-hidden",
+                "relative h-[85vh] w-full max-w-5xl overflow-hidden rounded-lg bg-beige",
                 activeIsChart
                   ? "cursor-default"
                   : lbZoomed
@@ -327,9 +328,10 @@ export function ProductGallery({
                 src={mainSrc}
                 alt={alt}
                 fill
+                unoptimized
                 quality={100}
                 className={cn(
-                  "object-contain transition-transform duration-200 ease-out",
+                  "bg-beige object-contain transition-transform duration-200 ease-out",
                   lbZoomed && !activeIsChart && "scale-[2.4]"
                 )}
                 style={
@@ -343,7 +345,7 @@ export function ProductGallery({
             </div>
 
             {!activeIsChart ? (
-              <p className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.2em] text-white/45">
+              <p className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.2em] text-black/45">
                 {lbZoomed ? "Click to zoom out" : "Click image to zoom in"}
               </p>
             ) : null}

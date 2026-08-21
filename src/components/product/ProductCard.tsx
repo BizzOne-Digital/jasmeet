@@ -232,7 +232,7 @@ export function ProductCard({
               type="button"
               suppressHydrationWarning
               onClick={openQuickView}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/55 sm:opacity-0 sm:group-hover:opacity-100"
+              className="hidden h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/55 sm:flex sm:opacity-0 sm:group-hover:opacity-100"
               aria-label="Quick view"
             >
               <Eye className="h-[18px] w-[18px]" />
@@ -244,7 +244,7 @@ export function ProductCard({
             suppressHydrationWarning
             onClick={quickAdd}
             onTouchEnd={(e) => e.stopPropagation()}
-            className="absolute inset-x-0 bottom-0 z-20 flex min-h-11 translate-y-0 touch-manipulation items-center justify-center gap-2 bg-[#D4AF37] py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 ease-out sm:translate-y-full sm:group-hover:translate-y-0"
+            className="absolute inset-x-0 bottom-0 z-20 hidden min-h-11 touch-manipulation items-center justify-center gap-2 bg-[#D4AF37] py-2.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-black transition-transform duration-300 ease-out sm:flex sm:translate-y-full sm:group-hover:translate-y-0"
           >
             <Plus className="h-3.5 w-3.5" />
             {preOrderOnly ? "Pre-order" : "Quick add"}

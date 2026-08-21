@@ -16,12 +16,19 @@ import type { PageSectionData } from "@/types";
 const DEFAULT_TRUST_ITEMS: Array<{ label: string; Icon: LucideIcon }> = [
   { label: "Premium Performance Fabric", Icon: Sparkles },
   { label: "Hidden Motivational Messages", Icon: HeartHandshake },
-  { label: "Free Shipping over $99", Icon: Truck },
+  { label: "Free Shipping over $100", Icon: Truck },
   { label: "30-Day Returns", Icon: RefreshCw },
   { label: "Secure Checkout", Icon: Lock },
 ];
 
 const TRUST_ICONS = [Sparkles, HeartHandshake, Truck, RefreshCw, Lock];
+
+function normalizeTrustLabel(label: string) {
+  return label.replace(
+    /free shipping over (\$|CAD \$)?99\b/i,
+    "Free Shipping over $100"
+  );
+}
 
 function resolveTrustItems(section?: Partial<PageSectionData> | null) {
   const body = section?.body?.trim();
@@ -29,7 +36,7 @@ function resolveTrustItems(section?: Partial<PageSectionData> | null) {
 
   const labels = body
     .split("\n")
-    .map((line) => line.trim())
+    .map((line) => normalizeTrustLabel(line.trim()))
     .filter(Boolean);
 
   if (!labels.length) return DEFAULT_TRUST_ITEMS;
