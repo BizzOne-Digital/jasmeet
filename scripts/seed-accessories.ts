@@ -213,6 +213,11 @@ const PRODUCTS: AccessoriesProduct[] = [
         images: ["/images/products/dayaura-performance-headband/brown/01.png"],
       },
       {
+        name: "Grey",
+        hex: "#6B6E73",
+        images: ["/images/products/dayaura-performance-headband/grey/01.png"],
+      },
+      {
         name: "Blue",
         hex: "#5BA3D9",
         images: ["/images/products/dayaura-performance-headband/blue/01.png"],
@@ -223,6 +228,7 @@ const PRODUCTS: AccessoriesProduct[] = [
       "/images/products/dayaura-performance-headband/black/01.png",
       "/images/products/dayaura-performance-headband/blue/01.png",
       "/images/products/dayaura-performance-headband/brown/01.png",
+      "/images/products/dayaura-performance-headband/grey/01.png",
     ],
     hoverImage: "/images/products/dayaura-performance-headband/black/01.png",
     isFeatured: true,
