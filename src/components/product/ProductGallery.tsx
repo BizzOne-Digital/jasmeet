@@ -41,7 +41,7 @@ function GalleryThumb({
       type="button"
       onClick={onSelect}
       className={cn(
-        "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border bg-beige transition sm:h-28 sm:w-20",
+        "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border bg-product-image transition sm:h-28 sm:w-20",
         active
           ? "border-[#D4AF37]"
           : "border-transparent opacity-70 hover:opacity-100"
@@ -52,7 +52,7 @@ function GalleryThumb({
         alt=""
         fill
         quality={100}
-        className="bg-beige object-contain p-1"
+        className="bg-product-image object-contain p-1"
         sizes="96px"
         onError={() => {
           setBroken(true);
@@ -176,7 +176,7 @@ export function ProductGallery({
 
       <div className="order-1 w-full min-w-0 lg:order-2">
         <div
-          className="group relative mx-auto aspect-[3/4] w-full max-w-[92%] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 bg-beige sm:max-w-[94%] lg:max-w-[88%]"
+          className="group relative mx-auto aspect-[3/4] w-full max-w-[92%] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 bg-product-image sm:max-w-[94%] lg:max-w-[88%]"
           onClick={openLightbox}
           role="button"
           tabIndex={0}
@@ -196,7 +196,7 @@ export function ProductGallery({
             unoptimized
             quality={100}
             className={cn(
-              "bg-beige object-contain p-3 sm:p-4",
+              "bg-product-image object-contain p-3 sm:p-4",
               activeIsChart && "p-3"
             )}
             sizes="(max-width:1024px) 100vw, 44vw"
@@ -269,7 +269,7 @@ export function ProductGallery({
       <AnimatePresence>
         {lightbox ? (
           <motion.div
-            className="fixed inset-0 z-[90] flex items-center justify-center bg-beige p-4"
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-product-image p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -314,7 +314,7 @@ export function ProductGallery({
             <div
               ref={lightboxImgRef}
               className={cn(
-                "relative h-[85vh] w-full max-w-5xl overflow-hidden rounded-lg bg-beige",
+                "relative h-[85vh] w-full max-w-5xl overflow-hidden rounded-lg bg-product-image",
                 activeIsChart
                   ? "cursor-default"
                   : lbZoomed
@@ -331,7 +331,7 @@ export function ProductGallery({
                 unoptimized
                 quality={100}
                 className={cn(
-                  "bg-beige object-contain transition-transform duration-200 ease-out",
+                  "bg-product-image object-contain transition-transform duration-200 ease-out",
                   lbZoomed && !activeIsChart && "scale-[2.4]"
                 )}
                 style={

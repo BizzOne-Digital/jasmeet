@@ -26,12 +26,12 @@ export function WishlistPageClient() {
     <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
       {items.map((item) => (
         <article key={item.productId} className="group">
-          <Link href={`/products/${item.slug}`} className="relative block aspect-[3/4] overflow-hidden bg-surface">
+          <Link href={`/products/${item.slug}`} className="relative block aspect-[3/4] overflow-hidden bg-product-image">
             <SafeImage
               src={item.image}
               alt={item.name}
               fill
-              className="object-cover"
+              className="bg-product-image object-contain object-center p-2"
               sizes="(max-width:768px) 50vw, 25vw"
             />
           </Link>

@@ -172,17 +172,17 @@ export function ProductCard({
       <article className={cn("group relative flex flex-col", className)}>
         <div
           className={cn(
-            "relative aspect-[3/4] overflow-hidden rounded-lg border border-white/15 bg-beige"
+            "relative aspect-[3/4] overflow-hidden rounded-lg border border-white/15 bg-product-image"
           )}
         >
-          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0 bg-beige">
+          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0 bg-product-image">
             <SafeImage
               src={image}
               alt={product.name}
               fill
               priority={priority}
               className={cn(
-                "bg-beige transition-opacity duration-700 ease-out",
+                "bg-product-image transition-opacity duration-700 ease-out",
                 imageFitClass,
                 hover && "group-hover:opacity-0"
               )}
@@ -195,7 +195,7 @@ export function ProductCard({
                 alt=""
                 fill
                 className={cn(
-                  "bg-beige opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100",
+                  "bg-product-image opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100",
                   imageFitClass
                 )}
                 sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 320px"

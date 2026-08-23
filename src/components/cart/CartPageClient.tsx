@@ -45,13 +45,13 @@ export function CartPageClient({ shippingThreshold = 99 }: { shippingThreshold?:
             <li key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-4 py-6">
               <Link
                 href={`/products/${item.slug}`}
-                className="relative h-28 w-24 shrink-0 overflow-hidden bg-surface"
+                className="relative h-28 w-24 shrink-0 overflow-hidden bg-product-image"
               >
                 <SafeImage
                   src={item.image}
                   alt={item.name}
                   fill
-                  className="object-cover"
+                  className="bg-product-image object-contain p-1"
                   sizes="96px"
                 />
               </Link>

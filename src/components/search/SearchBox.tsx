@@ -271,12 +271,12 @@ export function SearchBox({
                   }}
                   className="flex items-center gap-3 px-2 py-2 hover:bg-white/5"
                 >
-                  <span className="relative h-12 w-9 shrink-0 overflow-hidden bg-[#141414]">
+                  <span className="relative h-12 w-9 shrink-0 overflow-hidden bg-product-image">
                     <SafeImage
                       src={p.images?.[0]}
                       alt={p.name}
                       fill
-                      className="object-cover"
+                      className="bg-product-image object-contain p-0.5"
                       sizes="36px"
                     />
                   </span>

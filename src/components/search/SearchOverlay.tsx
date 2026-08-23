@@ -402,12 +402,12 @@ export function SearchOverlay({
                               activeIndex === index && "bg-white/5"
                             )}
                           >
-                            <span className="relative h-14 w-11 shrink-0 overflow-hidden bg-[#141414]">
+                            <span className="relative h-14 w-11 shrink-0 overflow-hidden bg-product-image">
                               <SafeImage
                                 src={p.images?.[0]}
                                 alt={p.name}
                                 fill
-                                className="object-cover"
+                                className="bg-product-image object-contain p-0.5"
                                 sizes="44px"
                               />
                             </span>

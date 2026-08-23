@@ -55,13 +55,13 @@ export function CartDrawer({
                     <Link
                       href={`/products/${item.slug}`}
                       onClick={closeCart}
-                      className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md border border-white/10 bg-beige"
-                    >
+                      className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md border border-white/10 bg-product-image"
+                      >
                       <SafeImage
                         src={item.image}
                         alt={item.name}
                         fill
-                        className="bg-beige object-contain p-1"
+                        className="bg-product-image object-contain p-1"
                         sizes="64px"
                       />
                     </Link>
