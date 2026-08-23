@@ -39,7 +39,6 @@ export async function Footer() {
   const socials = [
     { href: settings.instagramUrl, label: "Instagram" },
     { href: settings.tiktokUrl, label: "TikTok" },
-    { href: settings.facebookUrl, label: "Facebook" },
   ].filter((s) => Boolean(s.href));
 
   return (

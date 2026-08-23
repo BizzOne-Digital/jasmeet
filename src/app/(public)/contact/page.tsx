@@ -104,18 +104,6 @@ export default async function ContactPage() {
                   </a>
                 </li>
               ) : null}
-              {settings.facebookUrl ? (
-                <li>
-                  <a
-                    href={settings.facebookUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-gold"
-                  >
-                    Facebook
-                  </a>
-                </li>
-              ) : null}
             </ul>
           </div>
 

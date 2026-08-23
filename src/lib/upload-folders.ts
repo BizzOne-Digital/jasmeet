@@ -14,6 +14,16 @@ export function normalizeUploadFolder(folder?: string | null): UploadFolder {
   return "misc";
 }
 
+/** Reject unknown folder values (API whitelist). */
+export function parseUploadFolderInput(
+  folder?: string | null
+): UploadFolder | null {
+  const raw = (folder || "").trim().toLowerCase();
+  if (!raw) return null;
+  if (isUploadFolder(raw)) return raw;
+  return null;
+}
+
 export function storedUploadUrl(folder: string, filename: string): string {
   return `/api/uploads/${folder}/${filename}`;
 }
@@ -46,5 +56,10 @@ export function parseStoredUploadUrl(
 }
 
 export function isLegacyLocalUploadUrl(url?: string | null): boolean {
-  return Boolean(url?.startsWith("/uploads/"));
+  if (!url) return false;
+  const trimmed = url.trim();
+  return (
+    trimmed.startsWith("/uploads/") ||
+    trimmed.startsWith("/public/uploads/")
+  );
 }

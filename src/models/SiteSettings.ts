@@ -13,7 +13,6 @@ export interface ISiteSettings extends Document {
   responseTime: string;
   instagramUrl: string;
   tiktokUrl: string;
-  facebookUrl: string;
   announcementMessages: string[];
   /** Free standard shipping when subtotal >= this (CAD). */
   shippingThreshold: number;
@@ -51,7 +50,6 @@ const SiteSettingsSchema = new Schema<ISiteSettings>(
     responseTime: { type: String, default: "Typically within 24 hours" },
     instagramUrl: { type: String, default: "https://instagram.com/dayauraofficial" },
     tiktokUrl: { type: String, default: "https://tiktok.com/@dayauraofficial" },
-    facebookUrl: { type: String, default: "https://facebook.com/DAYAURA" },
     announcementMessages: {
       type: [String],
       default: [

@@ -52,7 +52,6 @@ export interface SiteSettingsData {
   responseTime: string;
   instagramUrl: string;
   tiktokUrl: string;
-  facebookUrl: string;
   announcementMessages: string[];
   shippingThreshold: number;
   standardShippingRate: number;

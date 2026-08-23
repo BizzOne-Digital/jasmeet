@@ -1190,7 +1190,6 @@ async function main() {
     responseTime: "Typically within 24 hours",
     instagramUrl: "https://instagram.com/dayauraofficial",
     tiktokUrl: "https://tiktok.com/@dayauraofficial",
-    facebookUrl: "https://facebook.com/DAYAURA",
     announcementMessages: [
       "10% OFF your first order when you join our email list",
       "Free shipping on orders over CAD $100",

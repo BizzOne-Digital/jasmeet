@@ -1,12 +1,14 @@
+import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import {
   deleteStoredUploadByUrl,
   saveStoredUpload,
 } from "@/lib/stored-uploads";
-import { normalizeUploadFolder } from "@/lib/upload-folders";
+import { parseUploadFolderInput } from "@/lib/upload-folders";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function POST(request: Request) {
@@ -20,10 +22,18 @@ export async function POST(request: Request) {
       return jsonError("No file provided", 400);
     }
 
-    const folder = normalizeUploadFolder(formData.get("folder") as string | null);
+    const folder = parseUploadFolderInput(formData.get("folder") as string | null);
+    if (!folder) {
+      return jsonError(
+        "Invalid folder. Use products, gallery, pages, or misc.",
+        400
+      );
+    }
+
     const result = await saveStoredUpload(file, folder);
 
-    return jsonSuccess({
+    return NextResponse.json({
+      success: true,
       url: result.url,
       filename: result.filename,
       size: result.size,

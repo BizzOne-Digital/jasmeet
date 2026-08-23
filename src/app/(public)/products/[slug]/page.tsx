@@ -332,14 +332,6 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         <div className="flex flex-wrap gap-4 text-xs uppercase tracking-[0.16em] text-muted">
           <span>Share</span>
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(absoluteUrl(`/products/${slug}`))}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-gold"
-          >
-            Facebook
-          </a>
-          <a
             href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(absoluteUrl(`/products/${slug}`))}&text=${encodeURIComponent(product.name)}`}
             target="_blank"
             rel="noopener noreferrer"

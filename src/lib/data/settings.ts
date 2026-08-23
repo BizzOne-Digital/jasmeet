@@ -15,7 +15,6 @@ const defaultSettings: SiteSettingsData = {
   responseTime: "Typically within 24 hours",
   instagramUrl: "https://instagram.com/dayauraofficial",
   tiktokUrl: "https://tiktok.com/@dayauraofficial",
-  facebookUrl: "https://facebook.com/DAYAURA",
   announcementMessages: [
     "10% OFF your first order when you join our email list",
     "Free shipping on orders over CAD $99",
@@ -54,7 +53,6 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
       responseTime: settings.responseTime || defaultSettings.responseTime,
       instagramUrl: settings.instagramUrl || defaultSettings.instagramUrl,
       tiktokUrl: settings.tiktokUrl || defaultSettings.tiktokUrl,
-      facebookUrl: settings.facebookUrl || defaultSettings.facebookUrl,
       announcementMessages: settings.announcementMessages?.length
         ? settings.announcementMessages
         : defaultSettings.announcementMessages,

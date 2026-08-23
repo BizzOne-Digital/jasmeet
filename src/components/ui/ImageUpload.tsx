@@ -71,13 +71,21 @@ export function ImageUpload({
         formData.append("folder", resolvedFolder);
         const res = await fetch("/api/upload", {
           method: "POST",
+          credentials: "same-origin",
           body: formData,
         });
         const data = await res.json();
+        if (res.status === 401) {
+          window.location.href = "/admin/login?expired=1";
+          return;
+        }
         if (!res.ok || !data?.success) {
           throw new Error(data?.error || "Upload failed");
         }
-        const url = data.data.url as string;
+        const url = (data.url ?? data.data?.url) as string | undefined;
+        if (!url) {
+          throw new Error("Upload succeeded but no URL was returned");
+        }
         onChange(url);
         if (previousUrl && previousUrl !== url) {
           void deleteStoredUploadByUrl(previousUrl);
@@ -143,6 +151,11 @@ export function ImageUpload({
               className="object-cover"
               sizes="400px"
             />
+            {uploading ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/55">
+                <Loader2 className="h-7 w-7 animate-spin text-[#D4AF37]" />
+              </div>
+            ) : null}
             <div className="absolute right-2 top-2 flex gap-1.5">
               <button
                 type="button"
@@ -195,8 +208,5 @@ export function ImageUpload({
     </div>
   );
 }
-
-/** Alias matching the requested component name. */
-export const LocalImageField = ImageUpload;
 
 export default ImageUpload;

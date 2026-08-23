@@ -18,7 +18,6 @@ const publicSettingsFields = [
   "responseTime",
   "instagramUrl",
   "tiktokUrl",
-  "facebookUrl",
   "announcementMessages",
   "shippingThreshold",
   "standardShippingRate",
@@ -66,6 +65,8 @@ export async function PUT(request: Request) {
       upsert: true,
       runValidators: true,
     });
+
+    await SiteSettings.updateOne({}, { $unset: { facebookUrl: "" } });
 
     revalidatePublicPaths();
     return jsonSuccess(settings);

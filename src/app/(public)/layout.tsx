@@ -43,11 +43,7 @@ export default async function PublicLayout({
     url: absoluteUrl(),
     logo: absoluteUrl(settings.logo || "/images/logo.png"),
     email: settings.contactEmail,
-    sameAs: [
-      settings.instagramUrl,
-      settings.tiktokUrl,
-      settings.facebookUrl,
-    ].filter(Boolean),
+    sameAs: [settings.instagramUrl, settings.tiktokUrl].filter(Boolean),
   };
 
   const websiteJsonLd = {

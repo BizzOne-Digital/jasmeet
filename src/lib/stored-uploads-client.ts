@@ -1,11 +1,15 @@
 "use client";
 
-/** Client-side helper — calls delete API when replacing/removing stored uploads. */
+import { parseStoredUploadUrl } from "@/lib/upload-folders";
+
+/** Client-side helper — deletes MongoDB blob when replacing/removing stored uploads. */
 export async function deleteStoredUploadByUrl(url?: string | null): Promise<void> {
-  if (!url?.startsWith("/api/uploads/")) return;
+  if (!parseStoredUploadUrl(url)) return;
+
   try {
     await fetch("/api/upload", {
       method: "DELETE",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url }),
     });

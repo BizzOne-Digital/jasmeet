@@ -11,6 +11,7 @@ import {
 export {
   UPLOAD_FOLDERS,
   normalizeUploadFolder,
+  parseUploadFolderInput,
   parseStoredUploadUrl,
   storedUploadUrl,
   isLegacyLocalUploadUrl,

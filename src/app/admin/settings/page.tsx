@@ -37,7 +37,6 @@ const settingsSchema = z.object({
   responseTime: z.string().optional(),
   instagramUrl: z.string().optional(),
   tiktokUrl: z.string().optional(),
-  facebookUrl: z.string().optional(),
   announcementMessages: z.array(z.string()),
   shippingThreshold: z.coerce.number().min(0),
   standardShippingRate: z.coerce.number().min(0),
@@ -281,7 +280,7 @@ export default function AdminSettingsPage() {
             {tab === "social" ? (
               <section className={cn(adminCardClass, adminCardInnerClass)}>
                 <h2 className={cn(adminSectionTitleClass, "mb-5")}>Social links</h2>
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <label className={adminLabelClass}>Instagram URL</label>
                     <input
@@ -292,13 +291,6 @@ export default function AdminSettingsPage() {
                   <div>
                     <label className={adminLabelClass}>TikTok URL</label>
                     <input className={adminFieldClass} {...register("tiktokUrl")} />
-                  </div>
-                  <div>
-                    <label className={adminLabelClass}>Facebook URL</label>
-                    <input
-                      className={adminFieldClass}
-                      {...register("facebookUrl")}
-                    />
                   </div>
                 </div>
               </section>

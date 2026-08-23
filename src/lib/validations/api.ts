@@ -206,7 +206,6 @@ export const siteSettingsUpdateSchema = z.object({
   responseTime: z.string().optional(),
   instagramUrl: z.string().optional(),
   tiktokUrl: z.string().optional(),
-  facebookUrl: z.string().optional(),
   announcementMessages: z.array(z.string()).optional(),
   shippingThreshold: z.number().min(0).optional(),
   standardShippingRate: z.number().min(0).optional(),

@@ -3,6 +3,7 @@ import { getStoredUpload } from "@/lib/stored-uploads";
 import { isUploadFolder } from "@/lib/upload-folders";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 function isSafeFilename(filename: string): boolean {
   if (!filename || filename.includes("..") || filename.includes("/")) {
