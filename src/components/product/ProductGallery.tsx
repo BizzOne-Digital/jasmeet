@@ -6,7 +6,8 @@ import { ChevronLeft, ChevronRight, Expand, ImageOff, X, ZoomIn } from "lucide-r
 import { cn, getPlaceholderImage } from "@/lib/utils";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { sanitizeImageList } from "@/lib/product-images";
-import { useProductImageBackdrop } from "@/hooks/useProductImageBackdrop";
+
+const productImageBgClass = "bg-product-image";
 
 export interface ProductGalleryProps {
   images: string[];
@@ -30,8 +31,6 @@ function GalleryThumb({
   onBroken: (src: string) => void;
 }) {
   const [broken, setBroken] = useState(false);
-  const thumbBackdrop = useProductImageBackdrop(src);
-  const thumbBgStyle = { backgroundColor: thumbBackdrop };
 
   useEffect(() => {
     setBroken(false);
@@ -45,19 +44,18 @@ function GalleryThumb({
       onClick={onSelect}
       className={cn(
         "relative h-24 w-[4.5rem] shrink-0 overflow-hidden border transition sm:h-28 sm:w-20",
+        productImageBgClass,
         active
           ? "border-[#D4AF37]"
           : "border-transparent opacity-70 hover:opacity-100"
       )}
-      style={thumbBgStyle}
     >
       <SafeImage
         src={src}
         alt=""
         fill
         quality={100}
-        style={thumbBgStyle}
-        className="object-contain p-1"
+        className={cn(productImageBgClass, "object-contain p-1")}
         sizes="96px"
         onError={() => {
           setBroken(true);
@@ -107,8 +105,6 @@ export function ProductGallery({
 
   const activeIsChart = isSizeChartImage(gallery[active] || "");
   const mainSrc = mainBroken ? fallback : gallery[active] || fallback;
-  const mainBackdrop = useProductImageBackdrop(mainSrc);
-  const mainBgStyle = { backgroundColor: mainBackdrop };
 
   const go = useCallback(
     (dir: -1 | 1) => {
@@ -183,8 +179,10 @@ export function ProductGallery({
 
       <div className="order-1 w-full min-w-0 lg:order-2">
         <div
-          className="group relative mx-auto aspect-[3/4] w-full max-w-[92%] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 sm:max-w-[94%] lg:max-w-[88%]"
-          style={mainBgStyle}
+          className={cn(
+            "group relative mx-auto aspect-[3/4] w-full max-w-[92%] cursor-zoom-in overflow-hidden rounded-lg border border-white/15 sm:max-w-[94%] lg:max-w-[88%]",
+            productImageBgClass
+          )}
           onClick={openLightbox}
           role="button"
           tabIndex={0}
@@ -203,8 +201,8 @@ export function ProductGallery({
             priority
             unoptimized
             quality={100}
-            style={mainBgStyle}
             className={cn(
+              productImageBgClass,
               "object-contain p-3 sm:p-4",
               activeIsChart && "p-3"
             )}
@@ -278,8 +276,7 @@ export function ProductGallery({
       <AnimatePresence>
         {lightbox ? (
           <motion.div
-            className="fixed inset-0 z-[90] flex items-center justify-center p-4"
-            style={mainBgStyle}
+            className={cn("fixed inset-0 z-[90] flex items-center justify-center p-4", productImageBgClass)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -325,13 +322,13 @@ export function ProductGallery({
               ref={lightboxImgRef}
               className={cn(
                 "relative h-[85vh] w-full max-w-5xl overflow-hidden rounded-lg",
+                productImageBgClass,
                 activeIsChart
                   ? "cursor-default"
                   : lbZoomed
                     ? "cursor-zoom-out"
                     : "cursor-zoom-in"
               )}
-              style={mainBgStyle}
               onClick={onLightboxClick}
               onMouseMove={onLightboxMove}
             >
@@ -342,15 +339,15 @@ export function ProductGallery({
                 unoptimized
                 quality={100}
                 className={cn(
+                  productImageBgClass,
                   "object-contain transition-transform duration-200 ease-out",
                   lbZoomed && !activeIsChart && "scale-[2.4]"
                 )}
-                style={{
-                  backgroundColor: mainBackdrop,
-                  ...(lbZoomed && !activeIsChart
+                style={
+                  lbZoomed && !activeIsChart
                     ? { transformOrigin: `${lbOrigin.x}% ${lbOrigin.y}%` }
-                    : {}),
-                }}
+                    : undefined
+                }
                 sizes="100vw"
                 onError={() => setMainBroken(true)}
               />

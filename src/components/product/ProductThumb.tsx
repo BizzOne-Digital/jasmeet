@@ -1,7 +1,6 @@
 "use client";
 
 import { SafeImage } from "@/components/ui/SafeImage";
-import { useProductImageBackdrop } from "@/hooks/useProductImageBackdrop";
 import { cn } from "@/lib/utils";
 
 export interface ProductThumbProps {
@@ -12,7 +11,7 @@ export interface ProductThumbProps {
   sizes?: string;
 }
 
-/** Small product image with backdrop sampled from the photo edges. */
+/** Small product image with fixed studio backdrop (#c4bbb2). */
 export function ProductThumb({
   src,
   alt,
@@ -20,17 +19,13 @@ export function ProductThumb({
   imageClassName,
   sizes = "96px",
 }: ProductThumbProps) {
-  const backdrop = useProductImageBackdrop(src);
-  const bgStyle = { backgroundColor: backdrop };
-
   return (
-    <div className={cn("relative overflow-hidden", className)} style={bgStyle}>
+    <div className={cn("relative overflow-hidden bg-product-image", className)}>
       <SafeImage
         src={src}
         alt={alt}
         fill
-        style={bgStyle}
-        className={cn("object-contain p-1", imageClassName)}
+        className={cn("bg-product-image object-contain p-1", imageClassName)}
         sizes={sizes}
       />
     </div>

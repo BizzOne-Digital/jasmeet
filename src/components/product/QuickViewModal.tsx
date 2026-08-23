@@ -14,7 +14,6 @@ import {
   isVariantPurchasable,
 } from "@/lib/inventory";
 import type { ProductCardProduct } from "@/components/product/ProductCard";
-import { useProductImageBackdrop } from "@/hooks/useProductImageBackdrop";
 
 export interface QuickViewModalProps {
   open: boolean;
@@ -74,8 +73,6 @@ export function QuickViewModal({
   const previewColorObj = product?.colors?.find((c) => c.name === previewColor);
   const previewImage =
     previewColorObj?.images?.filter(Boolean)[0] || product?.images?.[0];
-  const imageBackdrop = useProductImageBackdrop(previewImage);
-  const imageBgStyle = { backgroundColor: imageBackdrop };
 
   if (!product) return null;
 
@@ -230,17 +227,13 @@ export function QuickViewModal({
           <div className="mt-5 md:mt-6">{selectors}</div>
         </div>
 
-        <div
-          className="relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden rounded-lg border border-black/10 md:order-1 md:max-h-none md:aspect-[3/4]"
-          style={imageBgStyle}
-        >
+        <div className="relative order-2 aspect-[4/5] max-h-[28vh] overflow-hidden rounded-lg border border-black/10 bg-product-image md:order-1 md:max-h-none md:aspect-[3/4]">
           <SafeImage
             src={image}
             alt={product.name}
             fill
             unoptimized
-            style={imageBgStyle}
-            className="object-contain object-center p-2"
+            className="bg-product-image object-contain object-center p-2"
             sizes="(max-width: 768px) 100vw, 400px"
           />
           <div className="absolute left-3 top-3 flex flex-col gap-2">
