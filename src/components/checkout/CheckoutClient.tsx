@@ -7,7 +7,7 @@ import { useCartStore } from "@/store/cart";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
-import { SafeImage } from "@/components/ui/SafeImage";
+import { ProductThumb } from "@/components/product/ProductThumb";
 import { formatPrice, cn } from "@/lib/utils";
 import { calculateShipping, isLocalDeliveryEligible } from "@/lib/shipping";
 import type { ShippingMethod } from "@/lib/order-status";
@@ -366,15 +366,12 @@ export function CheckoutClient({
               key={`${item.productId}-${item.size}-${item.color}`}
               className="flex gap-3"
             >
-              <div className="relative h-16 w-14 shrink-0 overflow-hidden bg-product-image">
-                <SafeImage
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="bg-product-image object-contain p-1"
-                  sizes="56px"
-                />
-              </div>
+              <ProductThumb
+                src={item.image}
+                alt={item.name}
+                className="h-16 w-14 shrink-0"
+                sizes="56px"
+              />
               <div className="flex-1 text-sm">
                 <p>{item.name}</p>
                 <p className="text-xs text-muted">

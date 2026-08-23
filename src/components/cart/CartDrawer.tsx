@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Minus, Plus, ShoppingBag } from "lucide-react";
 import { Drawer } from "@/components/ui/Drawer";
 import { Button } from "@/components/ui/Button";
-import { SafeImage } from "@/components/ui/SafeImage";
+import { ProductThumb } from "@/components/product/ProductThumb";
 import { useCartStore } from "@/store/cart";
 import { cn, formatPrice } from "@/lib/utils";
 import {
@@ -55,13 +55,12 @@ export function CartDrawer({
                     <Link
                       href={`/products/${item.slug}`}
                       onClick={closeCart}
-                      className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md border border-white/10 bg-product-image"
-                      >
-                      <SafeImage
+                      className="shrink-0"
+                    >
+                      <ProductThumb
                         src={item.image}
                         alt={item.name}
-                        fill
-                        className="bg-product-image object-contain p-1"
+                        className="h-20 w-16 rounded-md border border-white/10"
                         sizes="64px"
                       />
                     </Link>

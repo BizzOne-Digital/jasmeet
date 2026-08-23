@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Clock, Search, X } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
+import { ProductThumb } from "@/components/product/ProductThumb";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { getCollectionImage } from "@/lib/images";
 import { useRecentSearchesStore } from "@/store/recent-searches";
@@ -271,15 +272,13 @@ export function SearchBox({
                   }}
                   className="flex items-center gap-3 px-2 py-2 hover:bg-white/5"
                 >
-                  <span className="relative h-12 w-9 shrink-0 overflow-hidden bg-product-image">
-                    <SafeImage
-                      src={p.images?.[0]}
-                      alt={p.name}
-                      fill
-                      className="bg-product-image object-contain p-0.5"
-                      sizes="36px"
-                    />
-                  </span>
+                  <ProductThumb
+                    src={p.images?.[0]}
+                    alt={p.name}
+                    className="h-12 w-9 shrink-0"
+                    imageClassName="p-0.5"
+                    sizes="36px"
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm">{p.name}</span>
                     <span className="text-xs text-white/40">

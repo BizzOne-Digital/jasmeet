@@ -4,8 +4,8 @@
   --background: #050505;
   --foreground: #f5f0e6;
   --beige: #f5f0e6;
-  /** Studio greige behind product photography (cards, PDP, zoom). */
-  --product-image-bg: #ccc6be;
+  /** Studio backdrop fallback until per-image sampling runs (see product-image-backdrop). */
+  --product-image-bg: #f0f0ee;
   --gold: #d4af37;
   --gold-soft: #e8dfd0;
   --gold-muted: rgba(212, 175, 55, 0.55);

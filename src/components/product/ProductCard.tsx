@@ -16,6 +16,7 @@ import {
   productNeedsVariantPicker,
 } from "@/lib/inventory";
 import { sanitizeImageList } from "@/lib/product-images";
+import { useProductImageBackdrop } from "@/hooks/useProductImageBackdrop";
 
 export interface ProductCardProduct {
   _id: string;
@@ -148,6 +149,9 @@ export function ProductCard({
     ? "object-contain object-center"
     : "object-contain object-center";
 
+  const imageBackdrop = useProductImageBackdrop(image);
+  const imageBgStyle = { backgroundColor: imageBackdrop };
+
   const showComingSoon = Boolean(product.isComingSoon);
   const preOrderOnly = !showComingSoon && isPreOrderOnlyProduct(product);
   const showSale = !showComingSoon && !preOrderOnly && onSale;
@@ -172,17 +176,23 @@ export function ProductCard({
       <article className={cn("group relative flex flex-col", className)}>
         <div
           className={cn(
-            "relative aspect-[3/4] overflow-hidden rounded-lg border border-white/15 bg-product-image"
+            "relative aspect-[3/4] overflow-hidden rounded-lg border border-white/15"
           )}
+          style={imageBgStyle}
         >
-          <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0 bg-product-image">
+          <Link
+            href={`/products/${product.slug}`}
+            className="absolute inset-0 z-0"
+            style={imageBgStyle}
+          >
             <SafeImage
               src={image}
               alt={product.name}
               fill
               priority={priority}
+              style={imageBgStyle}
               className={cn(
-                "bg-product-image transition-opacity duration-700 ease-out",
+                "transition-opacity duration-700 ease-out",
                 imageFitClass,
                 hover && "group-hover:opacity-0"
               )}
@@ -194,8 +204,9 @@ export function ProductCard({
                 src={hover}
                 alt=""
                 fill
+                style={imageBgStyle}
                 className={cn(
-                  "bg-product-image opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100",
+                  "opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100",
                   imageFitClass
                 )}
                 sizes="(max-width:768px) 50vw, (max-width:1280px) 33vw, 320px"

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCartStore } from "@/store/cart";
-import { SafeImage } from "@/components/ui/SafeImage";
+import { ProductThumb } from "@/components/product/ProductThumb";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils";
 import {
@@ -43,15 +43,11 @@ export function CartPageClient({ shippingThreshold = 99 }: { shippingThreshold?:
         <ul className="divide-y divide-white/10 border-y border-white/10">
           {items.map((item) => (
             <li key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-4 py-6">
-              <Link
-                href={`/products/${item.slug}`}
-                className="relative h-28 w-24 shrink-0 overflow-hidden bg-product-image"
-              >
-                <SafeImage
+              <Link href={`/products/${item.slug}`} className="shrink-0">
+                <ProductThumb
                   src={item.image}
                   alt={item.name}
-                  fill
-                  className="bg-product-image object-contain p-1"
+                  className="h-28 w-24"
                   sizes="96px"
                 />
               </Link>
