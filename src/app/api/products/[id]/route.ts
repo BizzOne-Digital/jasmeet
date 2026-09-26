@@ -1,11 +1,14 @@
 import { connectDB } from "@/lib/mongodb";
 import { requireAdmin } from "@/lib/auth";
 import Product from "@/models/Product";
+import "@/models/Collection";
+import "@/models/Category";
 import { productUpdateSchema } from "@/lib/validations/api";
 import { revalidateProductPaths } from "@/lib/revalidate";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { jsonSuccess, jsonError, handleRouteError } from "@/lib/api-response";
 import { sanitizeProductImagePayload } from "@/lib/product-images-server";
+import { serialize } from "@/lib/serialize";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,7 +31,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
       return jsonError("Product not found", 404);
     }
 
-    return jsonSuccess(product);
+    return jsonSuccess(serialize(product));
   } catch (error) {
     return handleRouteError(error);
   }
@@ -79,7 +82,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
       console.error("[products PUT] revalidate failed:", revalidateError);
     }
 
-    return jsonSuccess(product);
+    return jsonSuccess(serialize(product));
   } catch (error) {
     return handleRouteError(error);
   }

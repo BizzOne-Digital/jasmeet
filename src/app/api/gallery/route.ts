@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import { requireAdmin } from "@/lib/auth";
 import Collection from "@/models/Collection";
+import "@/models/Category";
 import GalleryItem from "@/models/GalleryItem";
 import { galleryCreateSchema } from "@/lib/validations/api";
 import { revalidatePublicPaths } from "@/lib/revalidate";

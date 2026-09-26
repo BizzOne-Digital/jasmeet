@@ -35,6 +35,10 @@ export function handleRouteError(error: unknown) {
   if (error instanceof mongoose.Error.CastError) {
     return jsonError(`Invalid value for ${error.path}`, 400);
   }
+  if (error instanceof mongoose.Error.MissingSchemaError) {
+    console.error(error);
+    return jsonError("Server configuration error", 500);
+  }
   if (isDuplicateKeyError(error)) {
     return jsonError("A record with this slug or SKU already exists", 409);
   }
