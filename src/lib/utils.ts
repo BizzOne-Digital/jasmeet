@@ -22,9 +22,28 @@ export function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+const PRODUCTION_SITE_URL = "https://dayaura.com";
+
+/** Canonical public site origin for metadata, sitemap, and emails. */
+export function getSiteUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (configured) {
+    // Vercel default URL should not be the canonical domain in Google.
+    if (/\.vercel\.app$/i.test(new URL(configured).hostname)) {
+      return PRODUCTION_SITE_URL;
+    }
+    return configured;
+  }
+  if (process.env.NODE_ENV === "production") {
+    return PRODUCTION_SITE_URL;
+  }
+  return "http://localhost:3000";
+}
+
 export function absoluteUrl(path = ""): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+  const base = getSiteUrl();
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${normalizedPath === "/" ? "" : normalizedPath}`;
 }
 
 export function getPlaceholderImage(

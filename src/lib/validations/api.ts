@@ -1,3 +1,4 @@
+import { isSeoSpam } from "@/lib/seo";
 import { z } from "zod";
 import mongoose from "mongoose";
 
@@ -193,6 +194,22 @@ export const pageSectionCreateSchema = z.object({
 
 export const pageSectionUpdateSchema = pageSectionCreateSchema.partial();
 
+const seoTitleField = z
+  .string()
+  .max(120, "SEO title is too long")
+  .refine((value) => !isSeoSpam(value), {
+    message: "SEO title contains blocked spam content",
+  })
+  .optional();
+
+const seoDescriptionField = z
+  .string()
+  .max(320, "SEO description is too long")
+  .refine((value) => !isSeoSpam(value), {
+    message: "SEO description contains blocked spam content",
+  })
+  .optional();
+
 export const siteSettingsUpdateSchema = z.object({
   businessName: z.string().optional(),
   logo: z.string().optional(),
@@ -216,7 +233,7 @@ export const siteSettingsUpdateSchema = z.object({
   localDeliveryPostalCodes: z.array(z.string()).optional(),
   firstOrderDiscountText: z.string().optional(),
   footerDescription: z.string().optional(),
-  seoTitle: z.string().optional(),
-  seoDescription: z.string().optional(),
+  seoTitle: seoTitleField,
+  seoDescription: seoDescriptionField,
   currency: z.string().optional(),
 });

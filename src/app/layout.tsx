@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { getSiteSettings } from "@/lib/data/settings";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl, getSiteUrl } from "@/lib/utils";
 import "./globals.css";
 
 const heading = Cormorant_Garamond({
@@ -26,11 +26,13 @@ export async function generateMetadata(): Promise<Metadata> {
     "Premium women's activewear combining style, comfort, and performance.";
   const ogImage = absoluteUrl("/images/hero-1.png");
 
+  const brand = settings.businessName || "DAYAURA";
+
   return {
-    metadataBase: new URL(absoluteUrl()),
+    metadataBase: new URL(getSiteUrl()),
     title: {
       default: title,
-      template: `%s | ${settings.businessName || "DAYAURA"}`,
+      template: `%s | ${brand}`,
     },
     description,
     icons: {

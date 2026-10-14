@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
 import SiteSettings from "@/models/SiteSettings";
+import { sanitizeSeoText } from "@/lib/seo";
 import type { SiteSettingsData } from "@/types";
 
 const defaultSettings: SiteSettingsData = {
@@ -76,8 +77,14 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
         settings.firstOrderDiscountText || defaultSettings.firstOrderDiscountText,
       footerDescription:
         settings.footerDescription || defaultSettings.footerDescription,
-      seoTitle: settings.seoTitle || defaultSettings.seoTitle,
-      seoDescription: settings.seoDescription || defaultSettings.seoDescription,
+      seoTitle: sanitizeSeoText(
+        settings.seoTitle,
+        defaultSettings.seoTitle
+      ),
+      seoDescription: sanitizeSeoText(
+        settings.seoDescription,
+        defaultSettings.seoDescription
+      ),
       currency: settings.currency || defaultSettings.currency,
     };
   } catch {

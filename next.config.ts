@@ -1,6 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "dayaura.vercel.app" }],
+        destination: "https://dayaura.com/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.dayaura.vercel.app" }],
+        destination: "https://dayaura.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     /** Full-resolution uploads — no AVIF/WebP downscale blur on product photos. */
     unoptimized: true,

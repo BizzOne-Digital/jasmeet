@@ -17,7 +17,8 @@
     "seed:auramesh": "tsx scripts/seed-auramesh.ts",
     "seed:outerwear": "tsx scripts/seed-outerwear.ts",
     "seed:accessories": "tsx scripts/seed-accessories.ts",
-    "verify:atlas": "tsx scripts/verify-atlas.ts"
+    "verify:atlas": "tsx scripts/verify-atlas.ts",
+    "fix:seo-spam": "tsx scripts/fix-seo-spam.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.5.7",

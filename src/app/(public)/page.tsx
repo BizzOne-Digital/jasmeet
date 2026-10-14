@@ -9,6 +9,7 @@ import {
 } from "@/lib/data/queries";
 import { getSiteSettings } from "@/lib/data/settings";
 import { serialize } from "@/lib/serialize";
+import { resolveMetadataTitle, sanitizeSeoText } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/utils";
 import { getCollectionImage } from "@/lib/images";
 import type { PageSectionData } from "@/types";
@@ -47,13 +48,18 @@ export async function generateMetadata(): Promise<Metadata> {
     getSiteSettings(),
   ]);
 
-  const title = page?.seoTitle || settings.seoTitle;
-  const description =
-    page?.seoDescription || page?.description || settings.seoDescription;
+  const title = sanitizeSeoText(
+    page?.seoTitle || settings.seoTitle,
+    settings.seoTitle
+  );
+  const description = sanitizeSeoText(
+    page?.seoDescription || page?.description || settings.seoDescription,
+    settings.seoDescription
+  );
   const ogImage = absoluteUrl("/images/hero-1.png");
 
   return {
-    title,
+    title: resolveMetadataTitle(title, settings.businessName || "DAYAURA"),
     description,
     alternates: { canonical: "/" },
     openGraph: {
